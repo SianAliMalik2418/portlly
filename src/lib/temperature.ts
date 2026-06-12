@@ -9,4 +9,9 @@ const colors = [
 ]
 
 export const getTemperatureColor = (temperature: number) =>
-  colors[Math.min(colors.length - 1, Math.floor(Math.max(0, Math.min(1, temperature)) * colors.length))]
+  colors[
+    Math.min(
+      colors.length - 1,
+      Math.floor(Math.max(0, Math.min(1, temperature)) * colors.length)
+    )
+  ]

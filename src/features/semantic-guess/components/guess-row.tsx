@@ -29,9 +29,11 @@ export const GuessRow = ({ guess, isNew }: GuessRowProps) => {
       <span className="w-[3.25rem] shrink-0 font-mono text-[11px] text-muted-foreground">
         {guess.rank === 1 ? "★" : `#${guess.rank.toLocaleString()}`}
       </span>
-      <span className="flex-1 text-[1.0625rem] font-semibold lowercase">{guess.word}</span>
+      <span className="flex-1 text-[1.0625rem] font-semibold lowercase">
+        {guess.word}
+      </span>
       <span
-        className="saturate-150 brightness-[0.66] font-mono text-[10px] font-bold tracking-[0.05em]"
+        className="font-mono text-[10px] font-bold tracking-[0.05em] brightness-[0.66] saturate-150"
         style={{ color }}
       >
         {label}

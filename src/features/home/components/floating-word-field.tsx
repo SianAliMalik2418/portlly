@@ -14,7 +14,13 @@ export const FloatingWordField = () => (
           background: getTemperatureColor(floatingWord.temperature),
           rotate: `${floatingWord.rotation}deg`,
         }}
-        animate={{ transform: ["translateY(0px)", "translateY(-14px)", "translateY(0px)"] }}
+        animate={{
+          transform: [
+            "translateY(0px)",
+            "translateY(-14px)",
+            "translateY(0px)",
+          ],
+        }}
         transition={{
           duration: 6,
           repeat: Infinity,

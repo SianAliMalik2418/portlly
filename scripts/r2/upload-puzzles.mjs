@@ -129,6 +129,8 @@ const main = async () => {
 
     if (options.local) {
       args.push("--local")
+    } else {
+      args.push("--remote")
     }
 
     await run("bunx", args, options)

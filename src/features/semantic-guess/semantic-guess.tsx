@@ -10,7 +10,7 @@ export const SemanticGuess = () => {
 
   return (
     <div className="flex h-dvh flex-col">
-      <div className="mx-auto flex w-full max-w-[36.25rem] min-h-0 flex-1 flex-col">
+      <div className="mx-auto flex min-h-0 w-full max-w-[36.25rem] flex-1 flex-col">
         <GameNav />
         <StatusCard
           bestScore={game.bestScore}

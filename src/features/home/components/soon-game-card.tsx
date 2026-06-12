@@ -21,7 +21,16 @@ export const SoonGameCard = ({ game }: SoonGameCardProps) => {
     <motion.div
       animate={
         wiggling
-          ? { transform: ["translateX(0px)", "translateX(-5px)", "translateX(5px)", "translateX(-3px)", "translateX(3px)", "translateX(0px)"] }
+          ? {
+              transform: [
+                "translateX(0px)",
+                "translateX(-5px)",
+                "translateX(5px)",
+                "translateX(-3px)",
+                "translateX(3px)",
+                "translateX(0px)",
+              ],
+            }
           : { transform: "translateX(0px)" }
       }
       transition={{ duration: 0.3, ease: "easeInOut" }}

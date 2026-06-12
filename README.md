@@ -108,15 +108,16 @@ curl -L http://127.0.0.1:3000/api/puzzles/today
 If Vite selects another port, use the printed local URL. Local R2 data is stored
 under `.wrangler/state` and is gitignored.
 
-Remote Cloudflare setup requires authentication in your terminal:
+Remote Cloudflare setup requires an Account API token with R2 and Workers write
+permissions:
 
 ```bash
-wrangler login
-# or export CLOUDFLARE_API_TOKEN=...
+export CLOUDFLARE_API_TOKEN=...
 bun run r2:create-bucket
 bun run r2:upload
 ```
 
 `r2:upload` is idempotent: it overwrites the same keys and uploads only files
 listed by the current `puzzle_index.json`, so stale local puzzle files are not
-pushed accidentally.
+pushed accidentally. The script passes `--remote` for `r2:upload`; use
+`r2:upload:local` only for local Wrangler R2 state.

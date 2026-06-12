@@ -20,7 +20,7 @@ export const GameNav = () => (
 
     <div className="flex-1 text-center leading-tight">
       <b className="block font-display text-[0.9375rem] font-bold">Closer</b>
-      <span className="font-mono text-[10px] text-muted-foreground tracking-[0.04em]">
+      <span className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground">
         #{PUZZLE_NUMBER} · {DATE_LABEL}
       </span>
     </div>

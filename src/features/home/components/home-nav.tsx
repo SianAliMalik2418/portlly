@@ -13,7 +13,9 @@ export const HomeNav = ({ scrolled }: HomeNavProps) => (
       "sticky top-0 z-50 border-b backdrop-blur-[0.875rem] transition-[border-color] duration-200",
       scrolled ? "border-border" : "border-transparent"
     )}
-    style={{ background: "color-mix(in srgb, var(--background) 84%, transparent)" }}
+    style={{
+      background: "color-mix(in srgb, var(--background) 84%, transparent)",
+    }}
   >
     <div className="mx-auto flex h-[3.625rem] max-w-[70rem] items-center gap-2.5 px-4.5">
       <BrandLink animated />

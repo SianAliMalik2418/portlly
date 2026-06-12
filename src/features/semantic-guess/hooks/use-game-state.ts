@@ -16,7 +16,9 @@ export const useGameState = () => {
   const [showWin, setShowWin] = useState(false)
 
   const nextIdRef = useRef(1)
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  )
 
   useEffect(() => {
     const saved = loadGameState(PUZZLE_ID)
@@ -32,16 +34,26 @@ export const useGameState = () => {
   }, [guesses, won])
 
   const bestScore = useMemo(
-    () => (guesses.length === 0 ? null : guesses.reduce((m, g) => Math.max(m, g.score), -Infinity)),
-    [guesses],
+    () =>
+      guesses.length === 0
+        ? null
+        : guesses.reduce((m, g) => Math.max(m, g.score), -Infinity),
+    [guesses]
   )
 
   const bestGuess = useMemo(
-    () => guesses.reduce<GuessEntry | null>((b, g) => (!b || g.score > b.score ? g : b), null),
-    [guesses],
+    () =>
+      guesses.reduce<GuessEntry | null>(
+        (b, g) => (!b || g.score > b.score ? g : b),
+        null
+      ),
+    [guesses]
   )
 
-  const status = useMemo(() => getStatusMessage(bestScore, bestGuess), [bestScore, bestGuess])
+  const status = useMemo(
+    () => getStatusMessage(bestScore, bestGuess),
+    [bestScore, bestGuess]
+  )
 
   const sortedGuesses = useMemo(() => sortGuesses(guesses), [guesses])
 
@@ -93,12 +105,17 @@ export const useGameState = () => {
       }
 
       const id = nextIdRef.current++
-      const entry: GuessEntry = { id, word, score: result.score, rank: result.rank }
+      const entry: GuessEntry = {
+        id,
+        word,
+        score: result.score,
+        rank: result.rank,
+      }
       setGuesses((prev) => [...prev, entry])
       setLatestId(id)
       setInput("")
     },
-    [input, won, guesses, flashToast, triggerShake],
+    [input, won, guesses, flashToast, triggerShake]
   )
 
   const hint = useCallback(() => {
