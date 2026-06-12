@@ -16,7 +16,7 @@ export const BrandLink = ({ animated = false }: BrandLinkProps) => {
     >
       {animated ? (
         <motion.span
-          whileTap={{ rotate: -8, scale: 0.92 }}
+          whileTap={{ transform: "rotate(-8deg) scale(0.92)" }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
           className={`${markClassName} shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]`}
         >

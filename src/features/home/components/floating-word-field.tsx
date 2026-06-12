@@ -1,6 +1,6 @@
 import { motion } from "framer-motion"
 import { floatingWords } from "../lib/games"
-import { getTemperatureColor } from "../lib/temperature"
+import { getTemperatureColor } from "@/lib/temperature"
 
 export const FloatingWordField = () => (
   <div className="pointer-events-none absolute inset-0 z-0 hidden overflow-hidden lg:block">
@@ -14,7 +14,7 @@ export const FloatingWordField = () => (
           background: getTemperatureColor(floatingWord.temperature),
           rotate: `${floatingWord.rotation}deg`,
         }}
-        animate={{ y: [0, -14, 0] }}
+        animate={{ transform: ["translateY(0px)", "translateY(-14px)", "translateY(0px)"] }}
         transition={{
           duration: 6,
           repeat: Infinity,

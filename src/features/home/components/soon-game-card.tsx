@@ -19,8 +19,12 @@ export const SoonGameCard = ({ game }: SoonGameCardProps) => {
 
   return (
     <motion.div
-      animate={wiggling ? { x: [0, -5, 5, -3, 3, 0] } : { x: 0 }}
-      transition={{ duration: 0.3 }}
+      animate={
+        wiggling
+          ? { transform: ["translateX(0px)", "translateX(-5px)", "translateX(5px)", "translateX(-3px)", "translateX(3px)", "translateX(0px)"] }
+          : { transform: "translateX(0px)" }
+      }
+      transition={{ duration: 0.3, ease: "easeInOut" }}
       onClick={handleClick}
       className="relative flex min-h-[12.25rem] cursor-default flex-col rounded-[1.625rem] border border-border bg-card p-4.5 opacity-[0.92]"
     >

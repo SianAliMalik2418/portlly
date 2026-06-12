@@ -17,12 +17,12 @@ export const GameFilterList = ({
       <motion.button
         key={filter}
         type="button"
-        whileTap={{ scale: 0.95 }}
+        whileTap={{ transform: "scale(0.95)" }}
         transition={{ type: "spring", stiffness: 500, damping: 20 }}
         onClick={() => onFilterChange(filter)}
         aria-pressed={activeFilter === filter}
         className={cn(
-          "rounded-full border px-3.5 py-2 font-mono text-xs font-medium whitespace-nowrap transition-all duration-200",
+          "rounded-full border px-3.5 py-2 font-mono text-xs font-medium whitespace-nowrap transition-colors duration-200",
           activeFilter === filter
             ? "border-foreground bg-foreground text-background"
             : "border-border bg-card text-muted-foreground"

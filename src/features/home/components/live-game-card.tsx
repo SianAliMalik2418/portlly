@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import type { Game } from "../lib/games"
 import { demoGuesses } from "../lib/games"
-import { getTemperatureColor } from "../lib/temperature"
+import { getTemperatureColor } from "@/lib/temperature"
 import { GameMetaList } from "./game-meta-list"
 
 type LiveGameCardProps = {
@@ -12,8 +12,8 @@ type LiveGameCardProps = {
 export const LiveGameCard = ({ game }: LiveGameCardProps) => (
   <motion.div
     className="relative col-span-1 flex min-h-[14.375rem] flex-col overflow-hidden rounded-[1.625rem] border border-transparent bg-foreground p-4.5 text-background sm:col-span-2 lg:col-span-3"
-    whileHover={{ y: -4 }}
-    whileTap={{ y: -1, scale: 0.99 }}
+    whileHover={{ transform: "translateY(-4px)" }}
+    whileTap={{ transform: "translateY(-1px) scale(0.99)" }}
     transition={{ type: "spring", stiffness: 400, damping: 25 }}
   >
     <a
@@ -52,11 +52,8 @@ export const LiveGameCard = ({ game }: LiveGameCardProps) => (
       {demoGuesses.map((guess) => (
         <span
           key={guess.word}
-          className="inline-flex items-center gap-1.75 rounded-full px-2.75 py-1.5 font-mono text-xs font-semibold"
-          style={{
-            background: getTemperatureColor(guess.temperature),
-            color: "#1a1813",
-          }}
+          className="inline-flex items-center gap-1.75 rounded-full px-2.75 py-1.5 font-mono text-xs font-semibold text-[#1a1813]"
+          style={{ background: getTemperatureColor(guess.temperature) }}
         >
           {guess.word} <b>{Math.round(guess.temperature * 100)}</b>
         </span>
