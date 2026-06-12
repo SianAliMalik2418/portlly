@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
+import { Route as ApiPuzzlesTodayRouteImport } from './routes/api/puzzles/today'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const PuzzlesFileNameRoute = PuzzlesFileNameRouteImport.update({
+  id: '/puzzles/$fileName',
+  path: '/puzzles/$fileName',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPuzzlesTodayRoute = ApiPuzzlesTodayRouteImport.update({
+  id: '/api/puzzles/today',
+  path: '/api/puzzles/today',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/puzzles/$fileName' | '/api/puzzles/today'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/puzzles/$fileName' | '/api/puzzles/today'
+  id: '__root__' | '/' | '/puzzles/$fileName' | '/api/puzzles/today'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  PuzzlesFileNameRoute: typeof PuzzlesFileNameRoute
+  ApiPuzzlesTodayRoute: typeof ApiPuzzlesTodayRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/puzzles/$fileName': {
+      id: '/puzzles/$fileName'
+      path: '/puzzles/$fileName'
+      fullPath: '/puzzles/$fileName'
+      preLoaderRoute: typeof PuzzlesFileNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/puzzles/today': {
+      id: '/api/puzzles/today'
+      path: '/api/puzzles/today'
+      fullPath: '/api/puzzles/today'
+      preLoaderRoute: typeof ApiPuzzlesTodayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  PuzzlesFileNameRoute: PuzzlesFileNameRoute,
+  ApiPuzzlesTodayRoute: ApiPuzzlesTodayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

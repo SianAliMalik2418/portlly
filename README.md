@@ -22,6 +22,11 @@ bun run check
 bun run typecheck
 bun run preprocess:smoke
 bun run preprocess:puzzles
+bun run cf-typegen
+bun run r2:upload:local
+bun run r2:create-bucket
+bun run r2:upload
+bun run deploy
 ```
 
 ## Folder Conventions
@@ -72,3 +77,46 @@ Review `data/preprocess/answer_set.txt` manually before production upload. That
 file is intentionally generated from heuristics first, then narrowed to roughly
 200 fair daily answers by a human pass. Puzzle JSON never includes the plaintext
 answer; the answer is omitted from score/rank maps and checked later by hash.
+
+## Phase 2 R2 Data Access
+
+Cloudflare is wired through the official Vite plugin in `vite.config.ts`.
+`wrangler.toml` binds the R2 bucket as `PUZZLE_BUCKET` and uses
+`@tanstack/react-start/server-entry` for the Worker entry.
+
+Puzzle artifacts are uploaded to R2 with:
+
+- `puzzles/<hashed-file>.json` - immutable puzzle files, served by
+  `GET /puzzles/$fileName` with one-year immutable cache headers.
+- `manifests/daily_manifest.json` and `manifests/puzzle_index.json` - private
+  lookup files used only server-side by `GET /api/puzzles/today`.
+
+The client should use `getTodaysPuzzle()` from `src/games/word/data/puzzle.ts`.
+That function fetches `/api/puzzles/today`; the Worker resolves the current UTC
+date to a single `puzzleId`, redirects to that hashed file, and never exposes the
+future date-to-file map to the browser.
+
+Local verification:
+
+```bash
+bun run preprocess:puzzles
+bun run r2:upload:local
+bun run dev
+curl -L http://127.0.0.1:3000/api/puzzles/today
+```
+
+If Vite selects another port, use the printed local URL. Local R2 data is stored
+under `.wrangler/state` and is gitignored.
+
+Remote Cloudflare setup requires authentication in your terminal:
+
+```bash
+wrangler login
+# or export CLOUDFLARE_API_TOKEN=...
+bun run r2:create-bucket
+bun run r2:upload
+```
+
+`r2:upload` is idempotent: it overwrites the same keys and uploads only files
+listed by the current `puzzle_index.json`, so stale local puzzle files are not
+pushed accidentally.

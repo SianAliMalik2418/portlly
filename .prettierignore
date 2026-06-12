@@ -1,12 +1,9 @@
-package-lock.json
-pnpm-lock.yaml
-yarn.lock
-node_modules
-dist
 .claude
 .tanstack
 .wrangler
-.output
-.vinxi
+dist
+dist-ssr
+node_modules
 src/components/ui
 src/routeTree.gen.ts
+worker-configuration.d.ts
