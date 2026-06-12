@@ -10,7 +10,9 @@
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
     "check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "preprocess:smoke": "python3 scripts/preprocess/pipeline.py smoke",
+    "preprocess:puzzles": "scripts/preprocess/.venv/bin/python scripts/preprocess/pipeline.py all"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",

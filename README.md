@@ -20,6 +20,8 @@ bun run lint
 bun run format
 bun run check
 bun run typecheck
+bun run preprocess:smoke
+bun run preprocess:puzzles
 ```
 
 ## Folder Conventions
@@ -48,3 +50,25 @@ Tailwind is wired through `vite.config.ts` and `src/styles.css`. ESLint and
 Prettier are configured for project-owned source. Generated shadcn primitives,
 TanStack route output, local skill templates, build output, and local data are
 excluded from baseline formatting/linting so the commands stay stable.
+
+## Phase 1 Preprocessing
+
+The word game uses static puzzle JSON generated offline. Set up the isolated
+Python environment before running the full pipeline:
+
+```bash
+python3 -m venv scripts/preprocess/.venv
+scripts/preprocess/.venv/bin/python -m pip install -r scripts/preprocess/requirements.txt
+```
+
+Use `bun run preprocess:smoke` for a tiny no-network fixture run. Use
+`bun run preprocess:puzzles` for production artifacts; it downloads and verifies
+GloVe 6B 300d, builds `guess_set.txt`, drafts `answer_candidates.txt` from a
+curated seed list plus frequency heuristics, drafts `answer_set.txt`, and writes
+hashed puzzle files plus local manifests to
+`dist/puzzles/`.
+
+Review `data/preprocess/answer_set.txt` manually before production upload. That
+file is intentionally generated from heuristics first, then narrowed to roughly
+200 fair daily answers by a human pass. Puzzle JSON never includes the plaintext
+answer; the answer is omitted from score/rank maps and checked later by hash.
