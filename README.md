@@ -1,21 +1,50 @@
-# TanStack Start + shadcn/ui
+# Portlly
 
-This is a template for a new TanStack Start project with React, TypeScript, and shadcn/ui.
+Portlly is a TanStack Start app for small browser games. The MVP is a
+Semantle-style word game powered by static puzzle files generated offline.
 
-## Adding components
+## Stack
 
-To add components to your app, run the following command:
+- TanStack Start, React 19, Vite, TypeScript
+- Tailwind CSS 4 via `@tailwindcss/vite`
+- shadcn/ui components in `src/components/ui`
+- Bun for local scripts
+- Cloudflare Workers and R2 for deployment and puzzle file hosting
+
+## Scripts
 
 ```bash
-npx shadcn@latest add button
+bun run dev
+bun run build
+bun run lint
+bun run format
+bun run check
+bun run typecheck
 ```
 
-This will place the ui components in the `components` directory.
+## Folder Conventions
 
-## Using components
+- `src/routes/` - TanStack Router file-based routes.
+- `src/games/word/` - word-game-specific UI, engine, reducer, and data access.
+- `src/lib/` - shared utilities that are not tied to a single game.
+- `src/components/ui/` - generated shadcn/ui primitives. Treat these as vendor-style
+  generated code and keep app-specific composition outside this folder.
+- `scripts/preprocess/` - Python preprocessing pipeline for GloVe vocabulary and
+  puzzle JSON generation.
+- `data/` - local-only intermediate artifacts such as downloaded embeddings,
+  generated word lists, and scratch preprocessing outputs. This directory is
+  gitignored.
+- `dist/puzzles/` - generated puzzle artifacts before upload to R2. Build output
+  under `dist/` is gitignored.
 
-To use the components in your app, import them as follows:
+## Environment
 
-```tsx
-import { Button } from "@/components/ui/button";
-```
+Copy `.env.example` to `.env.local` for local-only values. Do not commit real
+secrets, downloaded embeddings, or generated large data files.
+
+## Phase 0 Baseline
+
+Tailwind is wired through `vite.config.ts` and `src/styles.css`. ESLint and
+Prettier are configured for project-owned source. Generated shadcn primitives,
+TanStack route output, local skill templates, build output, and local data are
+excluded from baseline formatting/linting so the commands stay stable.

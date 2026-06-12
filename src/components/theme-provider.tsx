@@ -36,7 +36,9 @@ export function ThemeProvider({
     root.classList.remove("light", "dark")
 
     if (theme === "system") {
-      const sys = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+      const sys = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
       root.classList.add(sys)
       return
     }
@@ -64,7 +66,5 @@ export function ThemeProvider({
 }
 
 export function useTheme() {
-  const context = useContext(ThemeProviderContext)
-  if (!context) throw new Error("useTheme must be used within a ThemeProvider")
-  return context
+  return useContext(ThemeProviderContext)
 }

@@ -2,8 +2,10 @@ node_modules
 .DS_Store
 dist
 dist-ssr
+data/
 *.local
 .env*
+!.env.example
 .tanstack
 .playwright-mcp/
 .wrangler
@@ -11,6 +13,8 @@ dist-ssr
 .vinxi
 __unconfig*
 todos.json
+glove.6B*.zip
+glove.6B.*d.txt
 
 # typescript
 *.tsbuildinfo

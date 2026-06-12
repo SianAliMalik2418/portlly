@@ -5,6 +5,15 @@ import { tanstackConfig } from "@tanstack/eslint-config"
 export default [
   ...tanstackConfig,
   {
+    ignores: [
+      ".claude/**",
+      ".tanstack/**",
+      "dist/**",
+      "src/components/ui/**",
+      "src/routeTree.gen.ts",
+    ],
+  },
+  {
     rules: {
       "import/no-cycle": "off",
       "import/order": "off",
