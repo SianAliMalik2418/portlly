@@ -15,18 +15,18 @@ export const HomeNav = ({ scrolled }: HomeNavProps) => (
     )}
     style={{
       background: "color-mix(in srgb, var(--background) 84%, transparent)",
-      backdropFilter: "blur(14px)",
-      WebkitBackdropFilter: "blur(14px)",
+      backdropFilter: "blur(0.875rem)",
+      WebkitBackdropFilter: "blur(0.875rem)",
     }}
   >
-    <div className="mx-auto flex h-[58px] max-w-[1120px] items-center gap-2.5 px-[18px]">
+    <div className="mx-auto flex h-[3.625rem] max-w-[70rem] items-center gap-2.5 px-4.5">
       <BrandLink animated />
       <div className="flex-1" />
       <ModeToggle />
       <Button
         asChild
         size="sm"
-        className="ml-1 rounded-full shadow-[0_3px_0_oklch(0.46_0.12_155)]"
+        className="ml-1 rounded-full shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
       >
         <a href="/games/semantic-guess">Play today →</a>
       </Button>

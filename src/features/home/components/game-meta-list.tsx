@@ -14,7 +14,7 @@ export const GameMetaList = ({
       <span
         key={item}
         className={cn(
-          "rounded-full border px-[9px] py-1 font-mono text-[10px] font-medium tracking-[0.03em]",
+          "rounded-full border px-2.5 py-1 font-mono text-[0.625rem] font-medium tracking-[0.03em]",
           tone === "featured"
             ? "border-white/[16%] bg-white/[12%] text-background"
             : "border-border bg-muted text-muted-foreground"

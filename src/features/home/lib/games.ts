@@ -83,18 +83,12 @@ export const demoGuesses = [
 ] as const
 
 export const floatingWords = [
-  { word: "galaxy", temperature: 0.9, x: 60, y: 16, rotation: 3, delay: 0 },
-  { word: "river", temperature: 0.6, x: 83, y: 9, rotation: -4, delay: 0.5 },
-  { word: "ladder", temperature: 0.4, x: 70, y: 58, rotation: 5, delay: 1 },
-  { word: "whisper", temperature: 0.5, x: 90, y: 38, rotation: -6, delay: 1.5 },
-  { word: "copper", temperature: 0.3, x: 56, y: 76, rotation: 7, delay: 2 },
-  { word: "ember", temperature: 0.7, x: 92, y: 66, rotation: -3, delay: 2.5 },
-] as const
-
-export const stats = [
-  { id: "players", label: "PLAYING TODAY" },
-  { id: "games", value: "1", label: "GAME LIVE / MORE SOON" },
-  { id: "losses", value: "∞", label: "WAYS TO LOSE" },
+  { word: "river", temperature: 0.6, x: 15, y: 25, rotation: -7, delay: 0 },
+  { word: "galaxy", temperature: 0.9, x: 72, y: 22, rotation: 5, delay: 0.5 },
+  { word: "ladder", temperature: 0.4, x: 9, y: 58, rotation: -6, delay: 1 },
+  { word: "copper", temperature: 0.3, x: 83, y: 56, rotation: 7, delay: 1.5 },
+  { word: "whisper", temperature: 0.5, x: 18, y: 78, rotation: -7, delay: 2 },
+  { word: "ember", temperature: 0.7, x: 74, y: 82, rotation: 7, delay: 2.5 },
 ] as const
 
 export const footerLinks = [

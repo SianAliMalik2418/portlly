@@ -16,25 +16,25 @@ export const GameCatalog = () => {
   )
 
   return (
-    <section id="catalog" className="py-[14px] pb-[60px]">
-      <div className="mx-auto max-w-[1120px] px-[18px]">
-        <div className="mb-[18px] flex flex-wrap items-end justify-between gap-3">
-          <h2 className="font-display text-[1.875rem] leading-tight font-bold tracking-[-0.02em]">
-            The arcade
-          </h2>
+    <section id="catalog" className="border-t border-border py-9 pb-[3.75rem]">
+      <div className="mx-auto max-w-[70rem] px-4.5">
+        <div className="mb-8 flex flex-col items-center gap-6 text-center">
           <GameFilterList
             activeFilter={activeFilter}
             onFilterChange={setActiveFilter}
           />
+          <h2 className="font-display text-[1.875rem] leading-tight font-bold tracking-[-0.02em]">
+            The arcade
+          </h2>
         </div>
 
-        <div className="mt-[18px] grid grid-cols-1 gap-[14px] sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-4.5 grid grid-cols-1 gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredGames.map((game) => (
             <GameCard key={game.id} game={game} />
           ))}
         </div>
 
-        <p className="mt-[34px] text-center font-mono text-xs text-muted-foreground">
+        <p className="mt-8.5 text-center font-mono text-xs text-muted-foreground">
           ⚙︎ more games drop every few weeks, built on one shared system, so they
           all feel like home.
         </p>

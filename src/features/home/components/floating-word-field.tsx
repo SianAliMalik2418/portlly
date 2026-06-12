@@ -7,7 +7,7 @@ export const FloatingWordField = () => (
     {floatingWords.map((floatingWord) => (
       <motion.span
         key={floatingWord.word}
-        className="absolute rounded-full px-3 py-[7px] font-mono text-[13px] font-bold text-white opacity-90"
+        className="absolute rounded-full px-3 py-[0.4375rem] font-mono text-[0.8125rem] font-bold text-white opacity-90 shadow-[0_0.75rem_1.5rem_oklch(0_0_0_/_12%)]"
         style={{
           left: `${floatingWord.x}%`,
           top: `${floatingWord.y}%`,
