@@ -15,7 +15,12 @@ export const Route = createRootRoute({
         content: "width=device-width, initial-scale=1",
       },
       {
-        title: "TanStack Start Starter",
+        title: "Portlly - Playful Web Games",
+      },
+      {
+        name: "description",
+        content:
+          "Portlly is a game-first portfolio platform for playful educational web games.",
       },
     ],
     links: [
