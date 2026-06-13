@@ -14,16 +14,27 @@ export const getTemperatureLabel = (score: number) => {
 
 export const getStatusMessage = (
   bestScore: number | null,
-  bestGuess: WordGuess | null,
+  bestGuess: WordGuess | null
 ): GameStatus => {
   if (bestScore === null) {
-    return { lead: "Make your first guess.", sub: "Type any word — closeness is by meaning." }
+    return {
+      lead: "Make your first guess.",
+      sub: "Type any word — closeness is by meaning.",
+    }
   }
-  if (bestScore >= 92) return { lead: "🔥 You are boiling hot.", sub: `Best: ${bestGuess?.word} · rank #${bestGuess?.rank?.toLocaleString()}` }
-  if (bestScore >= 70) return { lead: "Scorching!", sub: "Think synonyms and close cousins." }
-  if (bestScore >= 50) return { lead: "Getting hot.", sub: "You are in the right neighbourhood." }
-  if (bestScore >= 35) return { lead: "Warm.", sub: "On the right track — narrow it down." }
-  if (bestScore >= 20) return { lead: "Cool.", sub: "Same broad theme, wrong corner." }
+  if (bestScore >= 92)
+    return {
+      lead: "🔥 You are boiling hot.",
+      sub: `Best: ${bestGuess?.word} · rank #${bestGuess?.rank?.toLocaleString()}`,
+    }
+  if (bestScore >= 70)
+    return { lead: "Scorching!", sub: "Think synonyms and close cousins." }
+  if (bestScore >= 50)
+    return { lead: "Getting hot.", sub: "You are in the right neighbourhood." }
+  if (bestScore >= 35)
+    return { lead: "Warm.", sub: "On the right track — narrow it down." }
+  if (bestScore >= 20)
+    return { lead: "Cool.", sub: "Same broad theme, wrong corner." }
   return { lead: "Cold.", sub: "Try a totally different direction." }
 }
 
@@ -37,7 +48,10 @@ const emojiForScore = (score: number) => {
 }
 
 export const buildEmojiJourney = (guesses: WordGuess[]) =>
-  guesses.slice(-14).map((g) => emojiForScore(g.score)).join("") + "🟥"
+  guesses
+    .slice(-14)
+    .map((g) => emojiForScore(g.score))
+    .join("") + "🟥"
 
 export const sortGuesses = (guesses: WordGuess[]) =>
   [...guesses].sort((a, b) => b.score - a.score)

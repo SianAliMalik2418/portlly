@@ -20,14 +20,16 @@ export const SemanticGuess = () => {
     return (
       <div className="flex h-dvh flex-col items-center justify-center gap-2 px-6 text-center">
         <span className="text-3xl">😵</span>
-        <p className="text-muted-foreground">Failed to load today's puzzle. Try refreshing.</p>
+        <p className="text-muted-foreground">
+          Failed to load today's puzzle. Try refreshing.
+        </p>
       </div>
     )
   }
 
   return (
     <div className="flex h-dvh flex-col">
-      <div className="mx-auto flex w-full max-w-[36.25rem] min-h-0 flex-1 flex-col">
+      <div className="mx-auto flex min-h-0 w-full max-w-[36.25rem] flex-1 flex-col">
         <GameNav puzzleId={game.puzzle.puzzleId} />
         <StatusCard
           bestScore={game.bestScore}

@@ -19,9 +19,9 @@ export const RootDocument = ({ children }: RootDocumentProps) => (
     </head>
     <body>
       <QueryClientProvider client={queryClient}>
-      <ThemeProvider defaultTheme="system" storageKey="portlly:theme">
-        {children}
-      </ThemeProvider>
+        <ThemeProvider defaultTheme="system" storageKey="portlly:theme">
+          {children}
+        </ThemeProvider>
       </QueryClientProvider>
       <TanStackDevtools
         config={{ position: "bottom-right" }}

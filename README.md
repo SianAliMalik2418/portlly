@@ -121,3 +121,15 @@ bun run r2:upload
 listed by the current `puzzle_index.json`, so stale local puzzle files are not
 pushed accidentally. The script passes `--remote` for `r2:upload`; use
 `r2:upload:local` only for local Wrangler R2 state.
+
+## Phase 5 Persistence
+
+Semantic Guess persists browser progress locally and never sends it to the
+server. On first visit the client mints a local `portlly:anon_id` so future
+account-linking or stats can attach to the same browser without changing the
+current gameplay flow. Guesses and solved state are stored per puzzle at
+`portlly:semantic-guess:<puzzleId>`, so a new daily puzzle starts clean while
+refreshing the current puzzle restores progress.
+
+If `localStorage` is unavailable or blocked, the game falls back to in-memory
+state for the current tab session.
