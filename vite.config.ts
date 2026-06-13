@@ -4,6 +4,7 @@ import { devtools } from "@tanstack/devtools-vite"
 import { tanstackStart } from "@tanstack/react-start/plugin/vite"
 import viteReact from "@vitejs/plugin-react"
 import tailwindcss from "@tailwindcss/vite"
+import { configDefaults } from "vitest/config"
 
 const config = defineConfig(({ mode }) => {
   const isTest = mode === "test" || process.env.VITEST === "true"
@@ -17,6 +18,9 @@ const config = defineConfig(({ mode }) => {
       tanstackStart(),
       viteReact(),
     ],
+    test: {
+      exclude: [...configDefaults.exclude, "tests/e2e/**"],
+    },
   }
 })
 

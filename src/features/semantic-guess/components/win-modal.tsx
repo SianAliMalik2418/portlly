@@ -1,5 +1,10 @@
 import { Button } from "@/components/ui/button"
-import { Dialog, DialogContent } from "@/components/ui/dialog"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { useState } from "react"
 import { buildEmojiJourney } from "../lib/engine"
 import type { WordGuess } from "@/games/word/types"
@@ -45,9 +50,12 @@ export const WinModal = ({
       <DialogContent className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden">
         <div className="px-5.5 py-6.5">
           <span className="text-[3.25rem]">🏆</span>
-          <h2 className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
+          <DialogTitle className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
             You found it!
-          </h2>
+          </DialogTitle>
+          <DialogDescription className="sr-only">
+            Puzzle solved summary and share options.
+          </DialogDescription>
 
           <div className="mt-4.5 flex gap-2.5">
             {[

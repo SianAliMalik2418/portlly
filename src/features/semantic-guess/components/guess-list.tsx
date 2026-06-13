@@ -12,7 +12,7 @@ export const GuessList = ({ guesses, latestId }: GuessListProps) => (
     {guesses.length === 0 ? (
       <EmptyState />
     ) : (
-      <div className="flex flex-col gap-1.5">
+      <div aria-label="Guess history" className="flex flex-col gap-1.5">
         {guesses.map((guess) => (
           <GuessRow
             key={guess.id}

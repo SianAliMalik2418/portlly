@@ -8,6 +8,8 @@ dist-ssr
 !.env.example
 .tanstack
 .playwright-mcp/
+playwright-report/
+test-results/
 .wrangler
 .output
 .vinxi

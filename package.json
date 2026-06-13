@@ -4,17 +4,20 @@
   "type": "module",
   "scripts": {
     "dev": "vite dev --port 3000",
+    "dev:e2e": "vite dev --host 127.0.0.1 --port 3100",
     "build": "vite build",
     "preview": "vite preview",
     "deploy": "bun run build && wrangler deploy",
     "cf-typegen": "wrangler types",
     "test": "vitest run",
+    "test:e2e": "playwright test",
     "lint": "eslint",
     "format": "prettier --write \"**/*.{ts,tsx,js,jsx}\"",
     "check": "prettier --check \"**/*.{ts,tsx,js,jsx}\"",
     "typecheck": "tsc --noEmit",
     "preprocess:smoke": "python3 scripts/preprocess/pipeline.py smoke",
     "preprocess:puzzles": "scripts/preprocess/.venv/bin/python scripts/preprocess/pipeline.py all",
+    "e2e:setup": "bun run preprocess:smoke && PORTLLY_PUZZLE_DIST=dist/puzzles-smoke bun run r2:upload:local",
     "r2:create-bucket": "wrangler r2 bucket create portlly-puzzles",
     "r2:upload": "node scripts/r2/upload-puzzles.mjs",
     "r2:upload:local": "node scripts/r2/upload-puzzles.mjs --local"
@@ -53,7 +56,9 @@
     "vaul": "^1.1.2"
   },
   "devDependencies": {
+    "@aws-sdk/client-s3": "^3.1068.0",
     "@cloudflare/vite-plugin": "^1.40.2",
+    "@playwright/test": "^1.60.0",
     "@tanstack/devtools-vite": "latest",
     "@tanstack/eslint-config": "latest",
     "@testing-library/dom": "^10.4.1",

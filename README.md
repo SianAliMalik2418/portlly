@@ -96,31 +96,64 @@ That function fetches `/api/puzzles/today`; the Worker resolves the current UTC
 date to a single `puzzleId`, redirects to that hashed file, and never exposes the
 future date-to-file map to the browser.
 
-Local verification:
+### Generating puzzles (first time only)
+
+Set up the Python environment and run the full preprocessing pipeline:
 
 ```bash
+python3 -m venv scripts/preprocess/.venv
+scripts/preprocess/.venv/bin/python -m pip install -r scripts/preprocess/requirements.txt
 bun run preprocess:puzzles
+```
+
+This downloads GloVe 6B 300d (~860 MB, cached in `data/`), builds a ~50k-word
+guess vocabulary, generates ~200 puzzle JSON files, and writes everything to
+`dist/puzzles/`. Review `data/preprocess/answer_set.txt` before production
+upload — it is the one manual eyeball step.
+
+For a quick smoke test with a tiny vocabulary (no network required):
+
+```bash
+bun run preprocess:smoke
+```
+
+### Uploading to local R2
+
+```bash
 bun run r2:upload:local
 bun run dev
 curl -L http://127.0.0.1:3000/api/puzzles/today
 ```
 
 If Vite selects another port, use the printed local URL. Local R2 data is stored
-under `.wrangler/state` and is gitignored.
+under `.wrangler/state` and is gitignored. Local uploads use Miniflare to write
+directly to `.wrangler/state/v3`.
 
-Remote Cloudflare setup requires an Account API token with R2 and Workers write
-permissions:
+### Uploading to remote R2 (production)
+
+1. Create an R2 API token at **Cloudflare Dashboard → R2 → Manage R2 API
+   Tokens**. Select S3 Auth and grant read/write on the `portlly-puzzles`
+   bucket.
+
+2. Set the required environment variables (or add them to `.env.local`):
 
 ```bash
-export CLOUDFLARE_API_TOKEN=...
+export CLOUDFLARE_ACCOUNT_ID=<your account id>
+export R2_ACCESS_KEY_ID=<token access key>
+export R2_SECRET_ACCESS_KEY=<token secret key>
+```
+
+3. Create the bucket (first time only) and upload:
+
+```bash
 bun run r2:create-bucket
 bun run r2:upload
 ```
 
-`r2:upload` is idempotent: it overwrites the same keys and uploads only files
-listed by the current `puzzle_index.json`, so stale local puzzle files are not
-pushed accidentally. The script passes `--remote` for `r2:upload`; use
-`r2:upload:local` only for local Wrangler R2 state.
+Remote uploads use `@aws-sdk/client-s3` with 10 parallel connections. Both local
+and remote uploads are idempotent: they overwrite the same keys and only upload
+files listed in `puzzle_index.json`, so stale local puzzle files are never pushed
+accidentally.
 
 ## Phase 5 Persistence
 

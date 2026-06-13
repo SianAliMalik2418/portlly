@@ -31,7 +31,10 @@ export const GuessInput = ({
       }}
     >
       {toast && (
-        <p className="mb-2 text-center text-sm font-semibold text-primary">
+        <p
+          role="status"
+          className="mb-2 text-center text-sm font-semibold text-primary"
+        >
           {toast}
         </p>
       )}
@@ -45,6 +48,7 @@ export const GuessInput = ({
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
+          aria-label="Guess word"
           placeholder={won ? "Solved! 🎉" : "Type a word…"}
           disabled={won}
           autoComplete="off"
