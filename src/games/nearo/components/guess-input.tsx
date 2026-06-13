@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
+import { SendHorizontal } from "lucide-react"
 import type { KeyboardEvent } from "react"
 
 type GuessInputProps = {
@@ -23,7 +24,7 @@ export const GuessInput = ({
 
   return (
     <div
-      className="border-t border-border px-4 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-[10px]"
+      className="border-t border-border px-3 pt-2.5 pb-[calc(0.75rem+env(safe-area-inset-bottom))] backdrop-blur-[10px] sm:px-4"
       style={{
         background: "color-mix(in srgb, var(--background) 90%, transparent)",
       }}
@@ -31,15 +32,18 @@ export const GuessInput = ({
       <div className="flex items-center gap-2">
         <input
           className={cn(
-            "flex-1 rounded-full border border-input bg-card px-4 py-3.5 text-[1.0625rem] text-foreground outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_20%,transparent)]",
+            "h-[3.125rem] min-w-0 flex-1 rounded-full border border-input bg-card px-4 text-base text-foreground outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_20%,transparent)]",
             shake && "animate-[shake_0.32s] border-destructive"
           )}
-          style={{ transition: "border-color 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1)" }}
+          style={{
+            transition:
+              "border-color 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1)",
+          }}
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
           aria-label="Guess word"
-          placeholder={won ? "Solved! 🎉" : "Type a word…"}
+          placeholder={won ? "Solved" : "Type a word…"}
           disabled={won}
           autoComplete="off"
           autoCapitalize="off"
@@ -55,7 +59,7 @@ export const GuessInput = ({
           disabled={won}
           aria-label="Submit guess"
         >
-          ↑
+          <SendHorizontal className="size-5" />
         </motion.button>
       </div>
     </div>

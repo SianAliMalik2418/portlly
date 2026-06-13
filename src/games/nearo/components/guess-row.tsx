@@ -1,3 +1,9 @@
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { getScoreColor } from "@/lib/score-color"
 import { motion } from "framer-motion"
 import type { WordGuess } from "../types"
@@ -6,11 +12,16 @@ type GuessRowProps = {
   guess: WordGuess
   isNew: boolean
   isShaking: boolean
+  isHighlighted: boolean
 }
 
-export const GuessRow = ({ guess, isNew, isShaking }: GuessRowProps) => {
-  const normalized = guess.score / 100
-  const color = getScoreColor(normalized)
+export const GuessRow = ({
+  guess,
+  isNew,
+  isShaking,
+  isHighlighted,
+}: GuessRowProps) => {
+  const color = getScoreColor(guess.score / 100)
 
   return (
     <motion.div
@@ -23,27 +34,43 @@ export const GuessRow = ({ guess, isNew, isShaking }: GuessRowProps) => {
         opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
         transform: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
       }}
-      className={`flex items-center gap-2.5 rounded-xl px-3 py-[0.6875rem]${isShaking ? " animate-[shake_0.32s]" : ""}`}
+      className={`flex min-h-12 items-center gap-3 rounded-lg px-3 py-2.5 ${
+        isShaking ? "animate-[shake_0.32s]" : ""
+      }`}
       style={{
-        background: `color-mix(in srgb, ${color} 22%, var(--card))`,
-        borderLeft: `5px solid ${color}`,
-        border: `1.5px solid color-mix(in srgb, ${color} 50%, transparent)`,
-        borderLeftWidth: 5,
+        background: `color-mix(in srgb, ${color} 12%, var(--card))`,
+        border: `1px solid color-mix(in srgb, ${color} 32%, var(--border))`,
         borderLeftColor: color,
+        borderLeftWidth: 4,
+        boxShadow: isHighlighted
+          ? `0 0 0 2px color-mix(in srgb, ${color} 44%, transparent)`
+          : "0 0 0 0 transparent",
+        transition: "box-shadow 0.24s ease",
       }}
     >
-      <span className="w-[3.25rem] shrink-0 font-mono text-[11px] text-muted-foreground">
-        {guess.rank === 1
-          ? "★"
-          : guess.rank
-            ? `#${guess.rank.toLocaleString()}`
-            : "···"}
+      <span className="w-[3.75rem] shrink-0 font-mono text-[11px] text-muted-foreground">
+        {guess.rank === 1 ? (
+          "★"
+        ) : guess.rank ? (
+          `#${guess.rank.toLocaleString()}`
+        ) : (
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <span className="cursor-help">···</span>
+              </TooltipTrigger>
+              <TooltipContent>
+                Not close enough — try a more related word
+              </TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
+        )}
       </span>
-      <span className="flex-1 text-[1.0625rem] font-semibold lowercase">
+      <span className="min-w-0 flex-1 truncate text-base font-semibold lowercase">
         {guess.word}
       </span>
       <span
-        className="min-w-[2.125rem] rounded-[7px] px-1.5 py-0.5 text-center font-mono text-sm font-bold text-[#1a1813]"
+        className="min-w-12 rounded-md px-2 py-1 text-center font-mono text-sm font-bold text-[#1a1813]"
         style={{ background: color }}
       >
         {Math.round(guess.score)}%

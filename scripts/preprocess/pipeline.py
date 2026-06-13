@@ -47,7 +47,7 @@ DEFAULT_CANDIDATE_COUNT = 400
 DEFAULT_ANSWER_COUNT = 200
 DEFAULT_RANK_BAND_SIZE = 5_000
 DEFAULT_SCHEDULE_SEED = 20_260_612
-DEFAULT_LAUNCH_DATE = "2026-06-12"
+DEFAULT_LAUNCH_DATE = "2026-06-07"
 
 WORD_RE = re.compile(r"^[a-z]+$")
 
@@ -846,7 +846,7 @@ def run_smoke(args: argparse.Namespace) -> None:
     smoke_args.wordlist = PREPROCESS_DIR / "fixtures" / "sample_words.txt"
     smoke_args.guess_limit = 100
     smoke_args.candidate_count = 10
-    smoke_args.answer_count = 3
+    smoke_args.answer_count = 7
     smoke_args.rank_band_size = 5
     smoke_args.pure_python = True
     smoke_args.force_wordlists = True

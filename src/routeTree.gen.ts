@@ -13,6 +13,9 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
 import { Route as GamesNearoRouteImport } from './routes/games/nearo'
 import { Route as ApiPuzzlesTodayRouteImport } from './routes/api/puzzles/today'
+import { Route as ApiPuzzlesDayRouteImport } from './routes/api/puzzles/day'
+import { Route as ApiPuzzlesArchiveRouteImport } from './routes/api/puzzles/archive'
+import { Route as GamesNearoArchiveDateRouteImport } from './routes/games/nearo/archive/$date'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -34,43 +37,86 @@ const ApiPuzzlesTodayRoute = ApiPuzzlesTodayRouteImport.update({
   path: '/api/puzzles/today',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPuzzlesDayRoute = ApiPuzzlesDayRouteImport.update({
+  id: '/api/puzzles/day',
+  path: '/api/puzzles/day',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiPuzzlesArchiveRoute = ApiPuzzlesArchiveRouteImport.update({
+  id: '/api/puzzles/archive',
+  path: '/api/puzzles/archive',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesNearoArchiveDateRoute = GamesNearoArchiveDateRouteImport.update({
+  id: '/archive/$date',
+  path: '/archive/$date',
+  getParentRoute: () => GamesNearoRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/games/nearo': typeof GamesNearoRoute
+  '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
+  '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/games/nearo': typeof GamesNearoRoute
+  '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
+  '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/games/nearo': typeof GamesNearoRoute
+  '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
+  '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
+  '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/games/nearo' | '/puzzles/$fileName' | '/api/puzzles/today'
+  fullPaths:
+    | '/'
+    | '/games/nearo'
+    | '/puzzles/$fileName'
+    | '/api/puzzles/archive'
+    | '/api/puzzles/day'
+    | '/api/puzzles/today'
+    | '/games/nearo/archive/$date'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/games/nearo' | '/puzzles/$fileName' | '/api/puzzles/today'
+  to:
+    | '/'
+    | '/games/nearo'
+    | '/puzzles/$fileName'
+    | '/api/puzzles/archive'
+    | '/api/puzzles/day'
+    | '/api/puzzles/today'
+    | '/games/nearo/archive/$date'
   id:
     | '__root__'
     | '/'
     | '/games/nearo'
     | '/puzzles/$fileName'
+    | '/api/puzzles/archive'
+    | '/api/puzzles/day'
     | '/api/puzzles/today'
+    | '/games/nearo/archive/$date'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GamesNearoRoute: typeof GamesNearoRoute
+  GamesNearoRoute: typeof GamesNearoRouteWithChildren
   PuzzlesFileNameRoute: typeof PuzzlesFileNameRoute
+  ApiPuzzlesArchiveRoute: typeof ApiPuzzlesArchiveRoute
+  ApiPuzzlesDayRoute: typeof ApiPuzzlesDayRoute
   ApiPuzzlesTodayRoute: typeof ApiPuzzlesTodayRoute
 }
 
@@ -104,13 +150,48 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiPuzzlesTodayRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/puzzles/day': {
+      id: '/api/puzzles/day'
+      path: '/api/puzzles/day'
+      fullPath: '/api/puzzles/day'
+      preLoaderRoute: typeof ApiPuzzlesDayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/puzzles/archive': {
+      id: '/api/puzzles/archive'
+      path: '/api/puzzles/archive'
+      fullPath: '/api/puzzles/archive'
+      preLoaderRoute: typeof ApiPuzzlesArchiveRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/nearo/archive/$date': {
+      id: '/games/nearo/archive/$date'
+      path: '/archive/$date'
+      fullPath: '/games/nearo/archive/$date'
+      preLoaderRoute: typeof GamesNearoArchiveDateRouteImport
+      parentRoute: typeof GamesNearoRoute
+    }
   }
 }
 
+interface GamesNearoRouteChildren {
+  GamesNearoArchiveDateRoute: typeof GamesNearoArchiveDateRoute
+}
+
+const GamesNearoRouteChildren: GamesNearoRouteChildren = {
+  GamesNearoArchiveDateRoute: GamesNearoArchiveDateRoute,
+}
+
+const GamesNearoRouteWithChildren = GamesNearoRoute._addFileChildren(
+  GamesNearoRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GamesNearoRoute: GamesNearoRoute,
+  GamesNearoRoute: GamesNearoRouteWithChildren,
   PuzzlesFileNameRoute: PuzzlesFileNameRoute,
+  ApiPuzzlesArchiveRoute: ApiPuzzlesArchiveRoute,
+  ApiPuzzlesDayRoute: ApiPuzzlesDayRoute,
   ApiPuzzlesTodayRoute: ApiPuzzlesTodayRoute,
 }
 export const routeTree = rootRouteImport

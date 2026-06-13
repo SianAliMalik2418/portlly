@@ -19,10 +19,21 @@ type PuzzleIndex = {
 const MANIFEST_PREFIX = "manifests"
 const PUZZLE_PREFIX = "puzzles"
 const PUZZLE_FILE_RE = /^[a-f0-9]{32}\.json$/
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/
 const PUZZLE_CACHE_CONTROL = "public, max-age=31536000, immutable"
+const ARCHIVE_DAY_COUNT = 7
 
 export const getUtcDateId = (date = new Date()) =>
   date.toISOString().slice(0, 10)
+
+const addUtcDays = (date: Date, days: number) =>
+  new Date(
+    Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate() + days
+    )
+  )
 
 const getSecondsUntilNextUtcDay = (date = new Date()) => {
   const nextUtcDay = Date.UTC(
@@ -58,6 +69,69 @@ const getDailyManifest = () =>
 const getPuzzleIndex = () =>
   readJsonObject<PuzzleIndex>(`${MANIFEST_PREFIX}/puzzle_index.json`)
 
+const getPuzzleRecord = (puzzleIndex: PuzzleIndex, puzzleId: string) => {
+  const puzzleRecord = puzzleIndex.puzzles.find(
+    (puzzle) => puzzle.puzzleId === puzzleId
+  )
+
+  if (!puzzleRecord || !PUZZLE_FILE_RE.test(puzzleRecord.fileName)) {
+    return Response.json(
+      { error: `No puzzle file is indexed for ${puzzleId}` },
+      { status: 500 }
+    )
+  }
+
+  return puzzleRecord
+}
+
+const getDatedPuzzleRecord = async (dateId: string, now = new Date()) => {
+  if (!DATE_RE.test(dateId)) {
+    return {
+      response: Response.json(
+        { error: "Invalid puzzle date" },
+        { status: 400 }
+      ),
+      puzzleRecord: null,
+    }
+  }
+
+  const todayId = getUtcDateId(now)
+
+  if (dateId > todayId) {
+    return {
+      response: Response.json(
+        { error: `Puzzle ${dateId} is not available yet` },
+        { status: 404 }
+      ),
+      puzzleRecord: null,
+    }
+  }
+
+  const [manifest, puzzleIndex] = await Promise.all([
+    getDailyManifest(),
+    getPuzzleIndex(),
+  ])
+  const puzzleId = manifest.dates[dateId]
+
+  if (!puzzleId) {
+    return {
+      response: Response.json(
+        { error: `No puzzle is scheduled for ${dateId}` },
+        { status: 404 }
+      ),
+      puzzleRecord: null,
+    }
+  }
+
+  const puzzleRecord = getPuzzleRecord(puzzleIndex, puzzleId)
+
+  if (puzzleRecord instanceof Response) {
+    return { response: puzzleRecord, puzzleRecord: null }
+  }
+
+  return { response: null, puzzleRecord }
+}
+
 export const streamPuzzleFile = async (fileName: string) => {
   if (!PUZZLE_FILE_RE.test(fileName)) {
     return new Response("Not found", { status: 404 })
@@ -78,43 +152,61 @@ export const streamPuzzleFile = async (fileName: string) => {
   return new Response(object.body, { headers })
 }
 
-export const redirectToTodaysPuzzle = async (
+export const redirectToPuzzleDate = async (
   request: Request,
-  date = new Date()
+  dateId: string,
+  now = new Date()
 ) => {
-  const dateId = getUtcDateId(date)
-  const [manifest, puzzleIndex] = await Promise.all([
-    getDailyManifest(),
-    getPuzzleIndex(),
-  ])
-  const puzzleId = manifest.dates[dateId]
+  const { response, puzzleRecord } = await getDatedPuzzleRecord(dateId, now)
 
-  if (!puzzleId) {
-    return Response.json(
-      { error: `No puzzle is scheduled for ${dateId}` },
-      { status: 404 }
-    )
-  }
-
-  const puzzleRecord = puzzleIndex.puzzles.find(
-    (puzzle) => puzzle.puzzleId === puzzleId
-  )
-
-  if (!puzzleRecord || !PUZZLE_FILE_RE.test(puzzleRecord.fileName)) {
-    return Response.json(
-      { error: `No puzzle file is indexed for ${puzzleId}` },
-      { status: 500 }
-    )
-  }
+  if (response) return response
 
   const url = new URL(`/puzzles/${puzzleRecord.fileName}`, request.url)
+  const isToday = dateId === getUtcDateId(now)
 
   return new Response(null, {
     status: 302,
     headers: {
       Location: url.toString(),
-      "Cache-Control": getTodayCacheControl(date),
-      "X-Puzzle-Id": puzzleId,
+      "Cache-Control": isToday
+        ? getTodayCacheControl(now)
+        : "public, max-age=300",
+      "X-Puzzle-Id": puzzleRecord.puzzleId,
+      "X-Puzzle-Date": dateId,
     },
   })
+}
+
+export const redirectToTodaysPuzzle = async (
+  request: Request,
+  date = new Date()
+) => redirectToPuzzleDate(request, getUtcDateId(date), date)
+
+export const getArchiveDays = async (now = new Date()) => {
+  const todayId = getUtcDateId(now)
+  const manifest = await getDailyManifest()
+  const days = Array.from({ length: ARCHIVE_DAY_COUNT }, (_, offset) => {
+    const dateId = getUtcDateId(addUtcDays(now, -offset))
+    const puzzleId = manifest.dates[dateId]
+
+    if (!puzzleId) return null
+
+    return {
+      date: dateId,
+      puzzleId,
+      isToday: dateId === todayId,
+    }
+  }).filter(
+    (day): day is { date: string; puzzleId: string; isToday: boolean } =>
+      Boolean(day)
+  )
+
+  return Response.json(
+    { days },
+    {
+      headers: {
+        "Cache-Control": getTodayCacheControl(now),
+      },
+    }
+  )
 }

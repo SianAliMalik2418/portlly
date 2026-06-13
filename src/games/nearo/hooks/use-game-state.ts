@@ -1,13 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useState,
-} from "react"
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { toast } from "sonner"
-import { todaysPuzzleQueryOptions } from "../data/puzzle"
+import { getPuzzleByDate, getTodaysPuzzle } from "../data/puzzle"
 import { scoreGuess } from "../engine"
 import { wordGameReducer, createWordGameState } from "../state"
 import type { WordGuess } from "../types"
@@ -19,12 +13,31 @@ import {
   saveGameState,
 } from "../lib/storage"
 
-export const useGameState = () => {
+type GameMode = "daily" | "archive"
+
+type UseGameStateOptions = {
+  mode: GameMode
+  date?: string
+}
+
+export const useGameState = ({ mode, date }: UseGameStateOptions) => {
   const {
     data: puzzle,
     isPending,
+    isFetching,
     error,
-  } = useQuery(todaysPuzzleQueryOptions())
+  } = useQuery({
+    queryKey:
+      mode === "archive" && date
+        ? (["word", "puzzle", "date", date] as const)
+        : (["word", "puzzle", "daily"] as const),
+    queryFn:
+      mode === "archive" && date
+        ? () => getPuzzleByDate(date)
+        : () => getTodaysPuzzle(),
+    enabled: mode === "daily" || Boolean(date),
+    staleTime: 5 * 60 * 1000,
+  })
 
   const [state, dispatch] = useReducer(
     wordGameReducer,
@@ -85,10 +98,7 @@ export const useGameState = () => {
     [state.guesses]
   )
 
-  const status = useMemo(
-    () => getStatusMessage(bestScore, bestGuess),
-    [bestScore, bestGuess]
-  )
+  const status = useMemo(() => getStatusMessage(bestScore), [bestScore])
 
   useEffect(() => {
     if (state.highlightedGuessId === null || state.solved) return
@@ -96,7 +106,7 @@ export const useGameState = () => {
     if (!guess) return
 
     setPinnedGuessId(guess.id)
-    const timer = setTimeout(() => setPinnedGuessId(null), 1500)
+    const timer = setTimeout(() => setPinnedGuessId(null), 1200)
     return () => clearTimeout(timer)
   }, [state.highlightedGuessId, state.solved, state.guesses])
 
@@ -145,7 +155,14 @@ export const useGameState = () => {
     if (result.status === "win") {
       setTimeout(() => setShowWin(true), 380)
     }
-  }, [input, puzzle, state.solved, state.guesses, triggerShake, triggerGuessShake])
+  }, [
+    input,
+    puzzle,
+    state.solved,
+    state.guesses,
+    triggerShake,
+    triggerGuessShake,
+  ])
 
   const reset = useCallback(() => {
     if (!puzzle) return
@@ -158,10 +175,13 @@ export const useGameState = () => {
   return {
     puzzle,
     isPending,
+    isFetching,
     error,
+    mode,
     guesses: state.guesses,
     sortedGuesses,
     latestId: state.highlightedGuessId,
+    pinnedGuessId,
     input,
     setInput,
     shake,

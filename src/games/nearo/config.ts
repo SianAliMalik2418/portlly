@@ -2,6 +2,7 @@ export const nearoConfig = {
   id: "nearo",
   name: "Nearo",
   route: "/games/nearo",
+  archiveRoute: "/games/nearo/archive",
   category: "word",
   glyph: "🎯",
   status: "live",

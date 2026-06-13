@@ -48,7 +48,10 @@ export const WinModal = ({
         if (!isOpen) onClose()
       }}
     >
-      <DialogContent className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden" style={{ animation: "dialogIn 300ms cubic-bezier(0.23,1,0.32,1)" }}>
+      <DialogContent
+        className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden"
+        style={{ animation: "dialogIn 300ms cubic-bezier(0.23,1,0.32,1)" }}
+      >
         <div className="px-5.5 py-6.5">
           <span className="text-[3.25rem]">🏆</span>
           <DialogTitle className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">

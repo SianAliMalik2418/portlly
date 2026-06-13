@@ -50,14 +50,14 @@ test("valid, unknown, and duplicate guesses are handled", async ({ page }) => {
 
   await submitGuess(page, "notaword")
 
-  await expect(page.getByRole("status")).toContainText(
-    '"notaword" is not in our word list'
-  )
+  await expect(
+    page.getByText('"notaword" is not in our word list')
+  ).toBeVisible()
   await expect(guessHistory(page).getByText("notaword")).toHaveCount(0)
 
   await submitGuess(page, "BOAT")
 
-  await expect(page.getByRole("status")).toContainText('already tried "boat"')
+  await expect(page.getByText('Already tried "boat"')).toBeVisible()
   await expect(guessHistory(page).getByText("boat")).toHaveCount(1)
 })
 
@@ -77,7 +77,7 @@ test("guesses persist after refresh", async ({ page }) => {
 test("answer guess opens solved state and persists it", async ({ page }) => {
   await goToGame(page)
 
-  await submitGuess(page, "river")
+  await submitGuess(page, "water")
 
   await expect(
     page.getByRole("heading", { name: "You found it!" })
@@ -90,4 +90,35 @@ test("answer guess opens solved state and persists it", async ({ page }) => {
     page.getByRole("heading", { name: "You found it!" })
   ).toBeVisible()
   await expect(page.getByRole("button", { name: "Share result" })).toBeVisible()
+})
+
+test("catch-up dates keep separate local progress", async ({ page }) => {
+  await goToGame(page)
+
+  await expect(
+    page.getByLabel("Recent puzzles").getByText("Today")
+  ).toBeVisible()
+
+  await submitGuess(page, "boat")
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+
+  await page.goto("/games/nearo/archive/2026-06-08")
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
+    timeout: 15_000,
+  })
+  await expect(page.getByText("Make your first guess.")).toBeVisible()
+  await expect(page.getByText("boat")).toHaveCount(0)
+
+  await submitGuess(page, "water")
+  await expect(guessHistory(page).getByText("water")).toBeVisible()
+
+  await page.reload()
+
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
+  await expect(guessHistory(page).getByText("water")).toBeVisible()
+
+  await page.goto("/games/nearo")
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+  await expect(guessHistory(page).getByText("water")).toHaveCount(0)
 })

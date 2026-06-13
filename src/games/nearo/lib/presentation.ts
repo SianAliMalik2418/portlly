@@ -1,29 +1,41 @@
 import type { GameStatus, WordGuess } from "../types"
 
-export const getStatusMessage = (
-  bestScore: number | null,
-  bestGuess: WordGuess | null
-): GameStatus => {
+export const getStatusMessage = (bestScore: number | null): GameStatus => {
   if (bestScore === null) {
     return {
       lead: "Make your first guess.",
-      sub: "Type any word — closeness is by meaning.",
+      sub: "Start broad: try a common object, place, or action.",
     }
   }
   if (bestScore >= 92)
     return {
-      lead: "🔥 Almost there!",
-      sub: `Best: ${bestGuess?.word} · rank #${bestGuess?.rank?.toLocaleString()}`,
+      lead: "Almost there.",
+      sub: "Use your best guess as a clue and try close synonyms.",
     }
   if (bestScore >= 70)
-    return { lead: "Very close!", sub: "Think synonyms and close cousins." }
+    return {
+      lead: "Very close.",
+      sub: "Stay in this meaning family and get more specific.",
+    }
   if (bestScore >= 50)
-    return { lead: "Getting nearer.", sub: "You are in the right neighbourhood." }
+    return {
+      lead: "Getting nearer.",
+      sub: "You found the right neighborhood. Try related nouns and verbs.",
+    }
   if (bestScore >= 35)
-    return { lead: "On the right track.", sub: "Keep narrowing it down." }
+    return {
+      lead: "On the right track.",
+      sub: "Keep the theme, but shift to a closer everyday word.",
+    }
   if (bestScore >= 20)
-    return { lead: "In the area.", sub: "Same broad theme, wrong corner." }
-  return { lead: "Far away.", sub: "Try a totally different direction." }
+    return {
+      lead: "A faint connection.",
+      sub: "There is a loose theme here, but the target is elsewhere.",
+    }
+  return {
+    lead: "Far from the target.",
+    sub: "Reset your approach: try a different category or setting.",
+  }
 }
 
 const emojiForScore = (score: number) => {

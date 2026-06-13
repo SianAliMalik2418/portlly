@@ -7,21 +7,28 @@ type GuessListProps = {
   guesses: WordGuess[]
   latestId: number | null
   shakingGuessId: number | null
+  pinnedGuessId: number | null
 }
 
-export const GuessList = ({ guesses, latestId, shakingGuessId }: GuessListProps) => (
-  <div className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-4 py-1">
+export const GuessList = ({
+  guesses,
+  latestId,
+  shakingGuessId,
+  pinnedGuessId,
+}: GuessListProps) => (
+  <div className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4">
     {guesses.length === 0 ? (
       <EmptyState />
     ) : (
       <LayoutGroup>
-        <div aria-label="Guess history" className="flex flex-col gap-1.5">
+        <div aria-label="Guess history" className="flex flex-col gap-1">
           {guesses.map((guess) => (
             <GuessRow
               key={guess.id}
               guess={guess}
               isNew={guess.id === latestId}
               isShaking={guess.id === shakingGuessId}
+              isHighlighted={guess.id === pinnedGuessId}
             />
           ))}
         </div>

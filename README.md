@@ -168,6 +168,11 @@ current gameplay flow. Guesses and solved state are stored per puzzle at
 `portlly:nearo:<puzzleId>`, so a new daily puzzle starts clean while
 refreshing the current puzzle restores progress.
 
+Nearo also exposes the last seven official daily puzzles as catch-up days. The
+server resolves each requested date through the same daily manifest and refuses
+future dates, while local progress still stays keyed by the resolved
+`puzzleId`.
+
 If `localStorage` is unavailable or blocked, the game falls back to in-memory
 state for the current tab session.
 

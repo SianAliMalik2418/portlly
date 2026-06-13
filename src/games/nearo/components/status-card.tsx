@@ -22,7 +22,7 @@ export const StatusCard = ({
     bestScore === null ? "var(--border)" : getScoreColor(progress)
 
   return (
-    <div className="mx-4 mt-1 mb-2 flex items-center gap-3.5 rounded-[1.125rem] border border-border bg-card px-4 py-3.5 shadow-sm">
+    <div className="mx-3 mb-2 flex items-center gap-3 border-y border-border bg-background px-1 py-3 sm:mx-4 sm:gap-4">
       <div className="relative h-[3.75rem] w-[3.75rem] shrink-0">
         <svg width="60" height="60" className="-rotate-90">
           <circle
@@ -55,10 +55,10 @@ export const StatusCard = ({
       </div>
 
       <div className="min-w-0 flex-1">
-        <p className="font-display text-[1.0625rem] leading-[1.15] tracking-[-0.01em]">
+        <p className="font-display text-base leading-snug font-semibold sm:text-[1.0625rem]">
           {status.lead}
         </p>
-        <p className="mt-0.5 text-sm text-muted-foreground">
+        <p className="mt-0.5 truncate text-sm text-muted-foreground">
           {bestGuess ? (
             <>
               best:{" "}
@@ -75,7 +75,7 @@ export const StatusCard = ({
 
       <div className="shrink-0 border-l border-border pl-3 text-center">
         <b className="block font-display text-xl leading-none">{guessCount}</b>
-        <span className="font-mono text-[9px] tracking-[0.04em] text-muted-foreground">
+        <span className="font-mono text-[9px] text-muted-foreground">
           GUESSES
         </span>
       </div>

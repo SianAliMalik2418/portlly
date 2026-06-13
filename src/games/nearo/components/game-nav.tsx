@@ -1,41 +1,42 @@
 import { ModeToggle } from "@/components/mode-toggle"
 import { PlatformHeader } from "@/components/platform-header"
+import { Link } from "@tanstack/react-router"
 import { motion } from "framer-motion"
+import { ArrowLeft } from "lucide-react"
 import { nearoConfig } from "../config"
 
 type GameNavProps = {
-  puzzleId: string | undefined
+  mode: "daily" | "archive"
+  selectedDate: string | null
 }
 
-export const GameNav = ({ puzzleId }: GameNavProps) => (
+export const GameNav = ({ mode, selectedDate }: GameNavProps) => (
   <PlatformHeader
     className="border-transparent"
-    contentClassName="h-[3.25rem] max-w-[36.25rem] px-4"
+    contentClassName="h-16 max-w-[44rem] px-3 sm:px-4"
     leading={
-      <a
-        href="/"
-        className="flex items-center gap-2 font-display text-[0.9375rem] font-bold tracking-[-0.02em] text-foreground no-underline"
+      <Link
+        to="/"
+        aria-label="Back to games"
+        className="flex items-center gap-2 font-display text-sm font-bold text-foreground no-underline"
       >
         <motion.span
           whileTap={{ transform: "translateX(-2px) rotate(-8deg) scale(0.88)" }}
           transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
-          className="btn-press grid h-6 w-6 shrink-0 place-items-center rounded-[7px] bg-primary text-[13px] text-primary-foreground shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
+          className="btn-press grid size-9 shrink-0 place-items-center rounded-full border border-border bg-card text-foreground shadow-sm"
         >
-          ‹
+          <ArrowLeft className="size-4" />
         </motion.span>
-        portlly
-      </a>
+      </Link>
     }
     center={
       <div className="text-center leading-tight">
-        <b className="block font-display text-[0.9375rem] font-bold">
+        <b className="block font-display text-xl leading-none font-bold">
           {nearoConfig.name}
         </b>
-        {puzzleId && (
-          <span className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground">
-            {puzzleId}
-          </span>
-        )}
+        <span className="font-mono text-[10px] text-muted-foreground">
+          {mode === "archive" ? selectedDate : "TODAY"}
+        </span>
       </div>
     }
     trailing={<ModeToggle />}
