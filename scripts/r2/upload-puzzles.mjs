@@ -97,7 +97,7 @@ const createLocalUploader = async (options) => {
     modules: true,
     script: `export default { fetch() { return new Response("ok") } }`,
     r2Buckets: { BUCKET: options.bucket },
-    r2Persist: resolve(".wrangler/state/v3"),
+    r2Persist: resolve(".wrangler/state/v3/r2"),
   })
 
   const bucket = await mf.getR2Bucket("BUCKET")

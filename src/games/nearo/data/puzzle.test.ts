@@ -10,8 +10,9 @@ const makeFetchResponse = (body: unknown, init?: ResponseInit) =>
 
 describe("getTodaysPuzzle", () => {
   it("fetches and validates today's puzzle", async () => {
-    const fetcher: typeof fetch = async (input) => {
+    const fetcher: typeof fetch = async (input, init) => {
       expect(input).toBe("/api/puzzles/today")
+      expect(init).toMatchObject({ cache: "no-store" })
 
       return makeFetchResponse({
         version: 1,

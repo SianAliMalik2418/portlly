@@ -32,6 +32,7 @@ export const getTodaysPuzzle = async (
   fetcher: typeof fetch = fetch
 ): Promise<WordPuzzle> => {
   const response = await fetcher("/api/puzzles/today", {
+    cache: "no-store",
     headers: { Accept: "application/json" },
   })
 
