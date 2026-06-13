@@ -34,6 +34,7 @@ export const useGameState = () => {
   const [input, setInput] = useState("")
   const [shake, setShake] = useState(false)
   const [shakingGuessId, setShakingGuessId] = useState<number | null>(null)
+  const [pinnedGuessId, setPinnedGuessId] = useState<number | null>(null)
   const [showWin, setShowWin] = useState(false)
   const [hydratedPuzzleId, setHydratedPuzzleId] = useState<string | null>(null)
 
@@ -55,7 +56,6 @@ export const useGameState = () => {
     }
 
     setInput("")
-    setToast("")
     setHydratedPuzzleId(puzzle.puzzleId)
   }, [puzzle, hydratedPuzzleId])
 
@@ -90,10 +90,23 @@ export const useGameState = () => {
     [bestScore, bestGuess]
   )
 
-  const sortedGuesses = useMemo(
-    () => sortGuesses(state.guesses),
-    [state.guesses]
-  )
+  useEffect(() => {
+    if (state.highlightedGuessId === null || state.solved) return
+    const guess = state.guesses.find((g) => g.id === state.highlightedGuessId)
+    if (!guess) return
+
+    setPinnedGuessId(guess.id)
+    const timer = setTimeout(() => setPinnedGuessId(null), 1500)
+    return () => clearTimeout(timer)
+  }, [state.highlightedGuessId, state.solved, state.guesses])
+
+  const sortedGuesses = useMemo(() => {
+    const sorted = sortGuesses(state.guesses)
+    if (pinnedGuessId === null) return sorted
+    const pinned = sorted.find((g) => g.id === pinnedGuessId)
+    if (!pinned) return sorted
+    return [pinned, ...sorted.filter((g) => g.id !== pinnedGuessId)]
+  }, [state.guesses, pinnedGuessId])
 
   const triggerShake = useCallback(() => {
     setShake(true)

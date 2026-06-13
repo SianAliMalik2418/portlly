@@ -16,7 +16,7 @@ const assertPuzzle = (value: unknown): WordPuzzle => {
     typeof puzzle.puzzleId !== "string" ||
     typeof puzzle.answerHash !== "string" ||
     typeof puzzle.scoreScale !== "string" ||
-    typeof puzzle.warmBandSize !== "number" ||
+    typeof puzzle.rankBandSize !== "number" ||
     !puzzle.scores ||
     typeof puzzle.scores !== "object" ||
     !puzzle.ranks ||

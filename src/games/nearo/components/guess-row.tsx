@@ -1,22 +1,25 @@
-import { getTemperatureColor } from "@/lib/temperature"
+import { getScoreColor } from "@/lib/score-color"
 import { motion } from "framer-motion"
 import type { WordGuess } from "../types"
 
 type GuessRowProps = {
   guess: WordGuess
   isNew: boolean
+  isShaking: boolean
 }
 
-export const GuessRow = ({ guess, isNew }: GuessRowProps) => {
+export const GuessRow = ({ guess, isNew, isShaking }: GuessRowProps) => {
   const normalized = guess.score / 100
-  const color = getTemperatureColor(normalized)
+  const color = getScoreColor(normalized)
 
   return (
     <motion.div
-      initial={isNew ? { opacity: 0, transform: "scale(0.9)" } : false}
-      animate={{ opacity: 1, transform: "scale(1)" }}
+      layout
+      layoutId={`guess-${guess.id}`}
+      initial={isNew ? { opacity: 0, scale: 0.9 } : false}
+      animate={{ opacity: 1, scale: 1 }}
       transition={{ type: "spring", stiffness: 400, damping: 22 }}
-      className="flex items-center gap-2.5 rounded-xl px-3 py-[0.6875rem]"
+      className={`flex items-center gap-2.5 rounded-xl px-3 py-[0.6875rem]${isShaking ? " animate-[shake_0.32s]" : ""}`}
       style={{
         background: `color-mix(in srgb, ${color} 22%, var(--card))`,
         borderLeft: `5px solid ${color}`,

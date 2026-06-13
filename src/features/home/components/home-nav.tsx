@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button"
 import { ModeToggle } from "@/components/mode-toggle"
 import { PlatformHeader } from "@/components/platform-header"
+import { nearoConfig } from "@/games/nearo/config"
 import { BrandLink } from "./brand-link"
 
 type HomeNavProps = {
@@ -20,7 +21,7 @@ export const HomeNav = ({ scrolled }: HomeNavProps) => (
           size="sm"
           className="ml-1 rounded-full shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
         >
-          <a href="/games/semantic-guess">Play today →</a>
+          <a href={nearoConfig.route}>Play today →</a>
         </Button>
       </>
     }

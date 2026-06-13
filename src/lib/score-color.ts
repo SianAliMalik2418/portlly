@@ -1,4 +1,4 @@
-const colors = [
+const scoreColors = [
   "oklch(0.70 0.12 250)",
   "oklch(0.72 0.12 220)",
   "oklch(0.78 0.12 190)",
@@ -8,10 +8,10 @@ const colors = [
   "oklch(0.66 0.20 35)",
 ]
 
-export const getTemperatureColor = (temperature: number) =>
-  colors[
+export const getScoreColor = (score: number) =>
+  scoreColors[
     Math.min(
-      colors.length - 1,
-      Math.floor(Math.max(0, Math.min(1, temperature)) * colors.length)
+      scoreColors.length - 1,
+      Math.floor(Math.max(0, Math.min(1, score)) * scoreColors.length)
     )
   ]

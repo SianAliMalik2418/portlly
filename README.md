@@ -32,7 +32,7 @@ bun run deploy
 ## Folder Conventions
 
 - `src/routes/` - TanStack Router file-based routes.
-- `src/games/semantic-guess/` - Semantic Guess route entry, React UI, browser
+- `src/games/nearo/` - Nearo route entry, React UI, browser
   hooks, pure engine, reducer, data access, and game-only utilities.
 - `src/features/home/` - platform landing page, game catalog, and the games
   registry used by `/`.
@@ -95,7 +95,7 @@ Puzzle artifacts are uploaded to R2 with:
   lookup files used only server-side by `GET /api/puzzles/today`.
 
 The client should use `getTodaysPuzzle()` from
-`src/games/semantic-guess/data/puzzle.ts`.
+`src/games/nearo/data/puzzle.ts`.
 That function fetches `/api/puzzles/today`; the Worker resolves the current UTC
 date to a single `puzzleId`, redirects to that hashed file, and never exposes the
 future date-to-file map to the browser.
@@ -161,11 +161,11 @@ accidentally.
 
 ## Phase 5 Persistence
 
-Semantic Guess persists browser progress locally and never sends it to the
+Nearo persists browser progress locally and never sends it to the
 server. On first visit the client mints a local `portlly:anon_id` so future
 account-linking or stats can attach to the same browser without changing the
 current gameplay flow. Guesses and solved state are stored per puzzle at
-`portlly:semantic-guess:<puzzleId>`, so a new daily puzzle starts clean while
+`portlly:nearo:<puzzleId>`, so a new daily puzzle starts clean while
 refreshing the current puzzle restores progress.
 
 If `localStorage` is unavailable or blocked, the game falls back to in-memory

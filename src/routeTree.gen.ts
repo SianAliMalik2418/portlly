@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
-import { Route as GamesSemanticGuessRouteImport } from './routes/games/semantic-guess'
+import { Route as GamesNearoRouteImport } from './routes/games/nearo'
 import { Route as ApiPuzzlesTodayRouteImport } from './routes/api/puzzles/today'
 
 const IndexRoute = IndexRouteImport.update({
@@ -24,9 +24,9 @@ const PuzzlesFileNameRoute = PuzzlesFileNameRouteImport.update({
   path: '/puzzles/$fileName',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GamesSemanticGuessRoute = GamesSemanticGuessRouteImport.update({
-  id: '/games/semantic-guess',
-  path: '/games/semantic-guess',
+const GamesNearoRoute = GamesNearoRouteImport.update({
+  id: '/games/nearo',
+  path: '/games/nearo',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPuzzlesTodayRoute = ApiPuzzlesTodayRouteImport.update({
@@ -37,47 +37,39 @@ const ApiPuzzlesTodayRoute = ApiPuzzlesTodayRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/games/semantic-guess': typeof GamesSemanticGuessRoute
+  '/games/nearo': typeof GamesNearoRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/games/semantic-guess': typeof GamesSemanticGuessRoute
+  '/games/nearo': typeof GamesNearoRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/games/semantic-guess': typeof GamesSemanticGuessRoute
+  '/games/nearo': typeof GamesNearoRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths:
-    | '/'
-    | '/games/semantic-guess'
-    | '/puzzles/$fileName'
-    | '/api/puzzles/today'
+  fullPaths: '/' | '/games/nearo' | '/puzzles/$fileName' | '/api/puzzles/today'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/games/semantic-guess'
-    | '/puzzles/$fileName'
-    | '/api/puzzles/today'
+  to: '/' | '/games/nearo' | '/puzzles/$fileName' | '/api/puzzles/today'
   id:
     | '__root__'
     | '/'
-    | '/games/semantic-guess'
+    | '/games/nearo'
     | '/puzzles/$fileName'
     | '/api/puzzles/today'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  GamesSemanticGuessRoute: typeof GamesSemanticGuessRoute
+  GamesNearoRoute: typeof GamesNearoRoute
   PuzzlesFileNameRoute: typeof PuzzlesFileNameRoute
   ApiPuzzlesTodayRoute: typeof ApiPuzzlesTodayRoute
 }
@@ -98,11 +90,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PuzzlesFileNameRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/games/semantic-guess': {
-      id: '/games/semantic-guess'
-      path: '/games/semantic-guess'
-      fullPath: '/games/semantic-guess'
-      preLoaderRoute: typeof GamesSemanticGuessRouteImport
+    '/games/nearo': {
+      id: '/games/nearo'
+      path: '/games/nearo'
+      fullPath: '/games/nearo'
+      preLoaderRoute: typeof GamesNearoRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/puzzles/today': {
@@ -117,7 +109,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  GamesSemanticGuessRoute: GamesSemanticGuessRoute,
+  GamesNearoRoute: GamesNearoRoute,
   PuzzlesFileNameRoute: PuzzlesFileNameRoute,
   ApiPuzzlesTodayRoute: ApiPuzzlesTodayRoute,
 }

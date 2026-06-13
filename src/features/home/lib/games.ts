@@ -1,3 +1,5 @@
+import { nearoConfig } from "@/games/nearo/config"
+
 export type GameCategory = "word" | "trivia" | "draw" | "party"
 
 export type Game = {
@@ -13,15 +15,14 @@ export type Game = {
 
 export const games: Array<Game> = [
   {
-    id: "closer",
-    category: "word",
-    name: "Closer",
-    glyph: "🎯",
-    status: "live",
-    href: "/games/semantic-guess",
-    description:
-      "Guess the secret word, but by meaning, not spelling. Every guess tells you how hot or cold you are. Today's word has stumped thousands.",
-    meta: ["DAILY", "1-2 PLAYERS", "~4 MIN"],
+    id: nearoConfig.id,
+    category: nearoConfig.category,
+    name: nearoConfig.name,
+    glyph: nearoConfig.glyph,
+    status: nearoConfig.status,
+    href: nearoConfig.route,
+    description: nearoConfig.description,
+    meta: [...nearoConfig.meta],
   },
   {
     id: "snap-trivia",
@@ -77,21 +78,21 @@ export const gameFilters = ["all", "word", "trivia", "draw", "party"] as const
 export type GameFilter = (typeof gameFilters)[number]
 
 export const demoGuesses = [
-  { word: "planet", temperature: 0.94 },
-  { word: "orbit", temperature: 0.68 },
-  { word: "cloud", temperature: 0.41 },
+  { word: "planet", score: 94 },
+  { word: "orbit", score: 68 },
+  { word: "cloud", score: 41 },
 ] as const
 
 export const floatingWords = [
-  { word: "river", temperature: 0.6, x: 15, y: 25, rotation: -7, delay: 0 },
-  { word: "galaxy", temperature: 0.9, x: 72, y: 22, rotation: 5, delay: 0.5 },
-  { word: "ladder", temperature: 0.4, x: 9, y: 58, rotation: -6, delay: 1 },
-  { word: "copper", temperature: 0.3, x: 83, y: 56, rotation: 7, delay: 1.5 },
-  { word: "whisper", temperature: 0.5, x: 18, y: 78, rotation: -7, delay: 2 },
-  { word: "ember", temperature: 0.7, x: 74, y: 82, rotation: 7, delay: 2.5 },
+  { word: "river", x: 15, y: 25, rotation: -7, delay: 0 },
+  { word: "galaxy", x: 72, y: 22, rotation: 5, delay: 0.5 },
+  { word: "ladder", x: 9, y: 58, rotation: -6, delay: 1 },
+  { word: "copper", x: 83, y: 56, rotation: 7, delay: 1.5 },
+  { word: "whisper", x: 18, y: 78, rotation: -7, delay: 2 },
+  { word: "ember", x: 74, y: 82, rotation: 7, delay: 2.5 },
 ] as const
 
 export const footerLinks = [
-  { label: "Closer", href: "/games/semantic-guess" },
+  { label: nearoConfig.name, href: nearoConfig.route },
   { label: "All games", href: "#catalog" },
 ] as const

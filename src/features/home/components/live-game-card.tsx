@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button"
 import { motion } from "framer-motion"
 import type { Game } from "../lib/games"
 import { demoGuesses } from "../lib/games"
-import { getTemperatureColor } from "@/lib/temperature"
+import { getScoreColor } from "@/lib/score-color"
 import { GameMetaList } from "./game-meta-list"
 
 type LiveGameCardProps = {
@@ -53,9 +53,9 @@ export const LiveGameCard = ({ game }: LiveGameCardProps) => (
         <span
           key={guess.word}
           className="inline-flex items-center gap-1.75 rounded-full px-2.75 py-1.5 font-mono text-xs font-semibold text-[#1a1813]"
-          style={{ background: getTemperatureColor(guess.temperature) }}
+          style={{ background: getScoreColor(guess.score / 100) }}
         >
-          {guess.word} <b>{Math.round(guess.temperature * 100)}</b>
+          {guess.word} <b>{guess.score}</b>
         </span>
       ))}
     </div>

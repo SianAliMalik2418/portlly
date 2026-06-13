@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/mode-toggle"
 import { PlatformHeader } from "@/components/platform-header"
 import { motion } from "framer-motion"
+import { nearoConfig } from "../config"
 
 type GameNavProps = {
   puzzleId: string | undefined
@@ -27,7 +28,9 @@ export const GameNav = ({ puzzleId }: GameNavProps) => (
     }
     center={
       <div className="text-center leading-tight">
-        <b className="block font-display text-[0.9375rem] font-bold">Closer</b>
+        <b className="block font-display text-[0.9375rem] font-bold">
+          {nearoConfig.name}
+        </b>
         {puzzleId && (
           <span className="font-mono text-[10px] tracking-[0.04em] text-muted-foreground">
             {puzzleId}

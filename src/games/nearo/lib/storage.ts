@@ -1,11 +1,12 @@
 import type { WordGuess } from "../types"
+import { nearoConfig } from "../config"
 
 type PersistedState = {
   guesses: WordGuess[]
   won: boolean
 }
 
-const STORAGE_PREFIX = "portlly:semantic-guess"
+const STORAGE_PREFIX = nearoConfig.storagePrefix
 const ANON_ID_KEY = "portlly:anon_id"
 const memoryStore = new Map<string, string>()
 

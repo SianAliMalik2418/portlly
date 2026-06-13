@@ -5,7 +5,7 @@ import { GuessList } from "./components/guess-list"
 import { GuessInput } from "./components/guess-input"
 import { WinModal } from "./components/win-modal"
 
-export const SemanticGuess = () => {
+export const Nearo = () => {
   const game = useGameState()
 
   if (game.isPending) {
@@ -37,10 +37,9 @@ export const SemanticGuess = () => {
           guessCount={game.guesses.length}
           status={game.status}
         />
-        <GuessList guesses={game.sortedGuesses} latestId={game.latestId} />
+        <GuessList guesses={game.sortedGuesses} latestId={game.latestId} shakingGuessId={game.shakingGuessId} />
         <GuessInput
           input={game.input}
-          toast={game.toast}
           shake={game.shake}
           won={game.won}
           onInputChange={game.setInput}

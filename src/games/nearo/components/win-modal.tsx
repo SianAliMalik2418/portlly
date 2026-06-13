@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { nearoConfig } from "../config"
 import {
   Dialog,
   DialogContent,
@@ -30,7 +31,7 @@ export const WinModal = ({
     (b, g) => (!b || g.score > b.score ? g : b),
     null
   )
-  const shareText = `Closer ${puzzleId} — solved in ${guesses.length} guesses\n${journey}\nplay at portlly`
+  const shareText = `${nearoConfig.name} ${puzzleId} — solved in ${guesses.length} guesses\n${journey}\nplay at portlly`
 
   const handleShare = async () => {
     try {
@@ -47,7 +48,7 @@ export const WinModal = ({
         if (!isOpen) onClose()
       }}
     >
-      <DialogContent className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden">
+      <DialogContent className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden" style={{ animation: "dialogIn 300ms cubic-bezier(0.23,1,0.32,1)" }}>
         <div className="px-5.5 py-6.5">
           <span className="text-[3.25rem]">🏆</span>
           <DialogTitle className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
@@ -61,7 +62,7 @@ export const WinModal = ({
             {[
               { value: guesses.length, label: "GUESSES" },
               { value: puzzleId, label: "PUZZLE" },
-              { value: best ? Math.round(best.score) : 0, label: "HOTTEST" },
+              { value: best ? Math.round(best.score) : 0, label: "BEST" },
             ].map((stat) => (
               <div
                 key={stat.label}

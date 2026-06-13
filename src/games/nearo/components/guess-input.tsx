@@ -31,9 +31,10 @@ export const GuessInput = ({
       <div className="flex items-center gap-2">
         <input
           className={cn(
-            "flex-1 rounded-full border border-input bg-card px-4 py-3.5 text-[1.0625rem] text-foreground transition-[border-color,box-shadow] duration-200 outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_20%,transparent)]",
+            "flex-1 rounded-full border border-input bg-card px-4 py-3.5 text-[1.0625rem] text-foreground outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[0_0_0_4px_color-mix(in_srgb,var(--primary)_20%,transparent)]",
             shake && "animate-[shake_0.32s] border-destructive"
           )}
+          style={{ transition: "border-color 200ms cubic-bezier(0.23,1,0.32,1), box-shadow 200ms cubic-bezier(0.23,1,0.32,1)" }}
           value={input}
           onChange={(e) => onInputChange(e.target.value)}
           onKeyDown={handleKeyDown}
@@ -49,7 +50,7 @@ export const GuessInput = ({
         <motion.button
           whileTap={{ transform: "translateY(2px) scale(0.95)" }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
-          className="grid h-[3.125rem] w-[3.125rem] shrink-0 place-items-center rounded-full bg-primary text-[1.1875rem] text-primary-foreground shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
+          className="btn-press grid h-[3.125rem] w-[3.125rem] shrink-0 place-items-center rounded-full bg-primary text-[1.1875rem] text-primary-foreground shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
           onClick={onSubmit}
           disabled={won}
           aria-label="Submit guess"

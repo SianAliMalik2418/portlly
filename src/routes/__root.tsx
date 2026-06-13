@@ -24,7 +24,7 @@ export const RootDocument = ({ children }: RootDocumentProps) => (
           {children}
         </ThemeProvider>
       </QueryClientProvider>
-      <Toaster position="top-center" />
+      <Toaster position="top-center" closeButton />
       <TanStackDevtools
         config={{ position: "bottom-right" }}
         plugins={[

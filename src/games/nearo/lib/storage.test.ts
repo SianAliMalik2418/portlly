@@ -30,7 +30,7 @@ afterEach(() => {
   vi.unstubAllGlobals()
 })
 
-describe("semantic guess storage", () => {
+describe("nearo storage", () => {
   it("persists game state by puzzle id", () => {
     setLocalStorage(createLocalStorage())
 
@@ -49,7 +49,7 @@ describe("semantic guess storage", () => {
   it("ignores malformed persisted state", () => {
     const storage = createLocalStorage()
     setLocalStorage(storage)
-    storage.setItem("portlly:semantic-guess:word-0001", '{"won":"yes"}')
+    storage.setItem("portlly:nearo:word-0001", '{"won":"yes"}')
 
     expect(loadGameState("word-0001")).toBeNull()
   })

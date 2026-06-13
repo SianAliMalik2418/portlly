@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button"
+import { nearoConfig } from "@/games/nearo/config"
 import { FloatingWordField } from "./floating-word-field"
 
 export const HomeHero = () => (
@@ -28,7 +29,7 @@ export const HomeHero = () => (
           size="lg"
           className="rounded-full px-7 shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
         >
-          <a href="/games/semantic-guess">Play today's game</a>
+          <a href={nearoConfig.route}>Play today's game</a>
         </Button>
         <Button
           asChild

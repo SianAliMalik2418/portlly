@@ -3,7 +3,7 @@ export type WordPuzzle = {
   puzzleId: string
   answerHash: string
   scoreScale: string
-  warmBandSize: number
+  rankBandSize: number
   scores: Record<string, number>
   ranks: Record<string, number>
 }

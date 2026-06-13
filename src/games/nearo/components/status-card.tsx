@@ -1,4 +1,4 @@
-import { getTemperatureColor } from "@/lib/temperature"
+import { getScoreColor } from "@/lib/score-color"
 import type { GameStatus, WordGuess } from "../types"
 
 type StatusCardProps = {
@@ -19,7 +19,7 @@ export const StatusCard = ({
 }: StatusCardProps) => {
   const progress = bestScore === null ? 0 : bestScore / 100
   const gaugeColor =
-    bestScore === null ? "var(--border)" : getTemperatureColor(progress)
+    bestScore === null ? "var(--border)" : getScoreColor(progress)
 
   return (
     <div className="mx-4 mt-1 mb-2 flex items-center gap-3.5 rounded-[1.125rem] border border-border bg-card px-4 py-3.5 shadow-sm">

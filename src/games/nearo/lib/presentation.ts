@@ -18,7 +18,7 @@ export const getStatusMessage = (
   if (bestScore >= 70)
     return { lead: "Very close!", sub: "Think synonyms and close cousins." }
   if (bestScore >= 50)
-    return { lead: "Getting closer.", sub: "You are in the right neighbourhood." }
+    return { lead: "Getting nearer.", sub: "You are in the right neighbourhood." }
   if (bestScore >= 35)
     return { lead: "On the right track.", sub: "Keep narrowing it down." }
   if (bestScore >= 20)

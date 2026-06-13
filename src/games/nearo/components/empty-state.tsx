@@ -4,7 +4,7 @@ export const EmptyState = () => (
     <p className="max-w-[30ch] text-sm">
       Guess the secret word. Every guess is scored 0–100 by how close it is in{" "}
       <b className="font-semibold text-foreground">meaning</b> — not letters.
-      Warmer = closer.
+      Higher scores mean nearer meanings.
     </p>
   </div>
 )

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test"
 import type { Page } from "@playwright/test"
 
 const goToGame = async (page: Page) => {
-  await page.goto("/games/semantic-guess")
+  await page.goto("/games/nearo")
   await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
     timeout: 15_000,
   })
@@ -25,15 +25,15 @@ test.beforeEach(async ({ page }) => {
   await page.goto("about:blank")
 })
 
-test("hub renders and navigates to Semantic Guess", async ({ page }) => {
+test("hub renders and navigates to Nearo", async ({ page }) => {
   await page.goto("/")
 
   await expect(page.getByRole("heading", { name: /tiny games/i })).toBeVisible()
-  await expect(page.getByRole("link", { name: /play closer/i })).toBeVisible()
+  await expect(page.getByRole("link", { name: /play nearo/i })).toBeVisible()
 
   await page.getByRole("link", { name: /play today's game/i }).click()
 
-  await expect(page).toHaveURL(/\/games\/semantic-guess$/)
+  await expect(page).toHaveURL(/\/games\/nearo$/)
   await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
     timeout: 15_000,
   })
@@ -46,7 +46,7 @@ test("valid, unknown, and duplicate guesses are handled", async ({ page }) => {
 
   await expect(guessHistory(page).getByText("boat")).toBeVisible()
   await expect(guessHistory(page).getByText("#3")).toBeVisible()
-  await expect(guessHistory(page).getByText("SCORCHING")).toBeVisible()
+  await expect(guessHistory(page).getByText("Very close!")).toBeVisible()
 
   await submitGuess(page, "notaword")
 
