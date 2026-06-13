@@ -32,7 +32,12 @@ bun run deploy
 ## Folder Conventions
 
 - `src/routes/` - TanStack Router file-based routes.
-- `src/games/word/` - word-game-specific UI, engine, reducer, and data access.
+- `src/games/word/` - word-game-specific pure engine, reducer, data access, and
+  game-only utilities.
+- `src/features/semantic-guess/` - React UI and browser state for the live word
+  game route.
+- `src/features/home/` - platform landing page, game catalog, and the games
+  registry used by `/`.
 - `src/lib/` - shared utilities that are not tied to a single game.
 - `src/components/ui/` - generated shadcn/ui primitives. Treat these as vendor-style
   generated code and keep app-specific composition outside this folder.
@@ -166,3 +171,26 @@ refreshing the current puzzle restores progress.
 
 If `localStorage` is unavailable or blocked, the game falls back to in-memory
 state for the current tab session.
+
+## Phase 6 Platform Shell
+
+The platform front door lives at `/` and renders the catalog from
+`src/features/home/lib/games.ts`. Shared page chrome starts with
+`src/components/platform-header.tsx`, while each game keeps its own gameplay UI
+under `src/features/*` and pure logic under `src/games/*`.
+
+To add game #2:
+
+1. Create `src/games/<game-id>/` for pure engine, state, data access, and tests.
+   Keep browser APIs out of this folder so the logic can run server-side later.
+2. Create `src/features/<game-id>/` for React components, hooks, and
+   browser-only behavior.
+3. Add `src/routes/games/<game-id>.tsx` and render the feature entry component
+   from that route.
+4. Add one entry to the `games` registry in `src/features/home/lib/games.ts`
+   with `id`, `category`, `name`, `status`, `href`, `description`, and `meta`.
+5. Reuse shared utilities from `src/lib/` only when they are game-agnostic.
+   Game-specific normalization, scoring, persistence, or hashing belongs under
+   that game's folder.
+6. Add focused unit tests for the pure game logic and an e2e smoke path once the
+   route is playable.

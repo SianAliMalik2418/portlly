@@ -1,6 +1,5 @@
 import { getTemperatureColor } from "@/lib/temperature"
 import { motion } from "framer-motion"
-import { getTemperatureLabel } from "../lib/engine"
 import type { WordGuess } from "@/games/word/types"
 
 type GuessRowProps = {
@@ -11,7 +10,6 @@ type GuessRowProps = {
 export const GuessRow = ({ guess, isNew }: GuessRowProps) => {
   const normalized = guess.score / 100
   const color = getTemperatureColor(normalized)
-  const label = getTemperatureLabel(guess.score)
 
   return (
     <motion.div
@@ -32,22 +30,16 @@ export const GuessRow = ({ guess, isNew }: GuessRowProps) => {
           ? "★"
           : guess.rank
             ? `#${guess.rank.toLocaleString()}`
-            : "—"}
+            : "···"}
       </span>
       <span className="flex-1 text-[1.0625rem] font-semibold lowercase">
         {guess.word}
       </span>
       <span
-        className="font-mono text-[10px] font-bold tracking-[0.05em] brightness-[0.66] saturate-150"
-        style={{ color }}
-      >
-        {label}
-      </span>
-      <span
         className="min-w-[2.125rem] rounded-[7px] px-1.5 py-0.5 text-center font-mono text-sm font-bold text-[#1a1813]"
         style={{ background: color }}
       >
-        {Math.round(guess.score)}
+        {Math.round(guess.score)}%
       </span>
     </motion.div>
   )

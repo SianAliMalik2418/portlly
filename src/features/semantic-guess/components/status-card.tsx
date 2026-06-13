@@ -51,7 +51,7 @@ export const StatusCard = ({
           />
         </svg>
         <span className="absolute inset-0 grid place-items-center font-mono text-[1.0625rem] font-bold">
-          {bestScore === null ? "–" : Math.round(bestScore)}
+          {bestScore === null ? "–" : `${Math.round(bestScore)}%`}
         </span>
       </div>
 

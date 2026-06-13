@@ -1,5 +1,5 @@
-import { hashGuess } from "@/lib/hash"
-import { normalizeGuess } from "@/lib/normalize"
+import { hashGuess } from "./lib/hash"
+import { normalizeGuess } from "./lib/normalize"
 import type { WordPuzzle, WordScoreResult } from "./types"
 
 export const scoreGuess = (
