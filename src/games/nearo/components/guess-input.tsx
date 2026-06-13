@@ -1,22 +1,29 @@
 import { cn } from "@/lib/utils"
 import { motion } from "framer-motion"
-import { SendHorizontal } from "lucide-react"
+import { Lightbulb, SendHorizontal } from "lucide-react"
 import type { KeyboardEvent } from "react"
+import { toast } from "sonner"
 
 type GuessInputProps = {
   input: string
   shake: boolean
   won: boolean
+  hintEnabled: boolean
+  guessesUntilHint: number
   onInputChange: (value: string) => void
   onSubmit: () => void
+  onHint: () => void
 }
 
 export const GuessInput = ({
   input,
   shake,
   won,
+  hintEnabled,
+  guessesUntilHint,
   onInputChange,
   onSubmit,
+  onHint,
 }: GuessInputProps) => {
   const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") onSubmit()
@@ -33,7 +40,7 @@ export const GuessInput = ({
         <div className="relative">
           <input
             className={cn(
-              "h-12 w-full rounded-full border border-border bg-card pr-[4.25rem] pl-5 text-sm font-semibold text-foreground shadow-inner outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--primary)_20%,transparent),0_0_0_4px_color-mix(in_srgb,var(--primary)_14%,transparent)]",
+              "h-12 w-full rounded-full border border-border bg-card pr-[7.5rem] pl-5 text-sm font-semibold text-foreground shadow-inner outline-none placeholder:text-muted-foreground focus:border-primary focus:shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--primary)_20%,transparent),0_0_0_4px_color-mix(in_srgb,var(--primary)_14%,transparent)]",
               shake && "animate-[shake_0.32s] border-destructive"
             )}
             style={{
@@ -52,16 +59,46 @@ export const GuessInput = ({
             spellCheck={false}
           />
 
-          <motion.button
-            whileTap={{ transform: "translateY(2px) scale(0.95)" }}
-            transition={{ type: "spring", stiffness: 500, damping: 20 }}
-            className="btn-press absolute top-1/2 right-2 grid size-10 -translate-y-1/2 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0.35rem_1rem_color-mix(in_srgb,var(--primary)_30%,transparent)]"
-            onClick={onSubmit}
-            disabled={won}
-            aria-label="Submit guess"
-          >
-            <SendHorizontal className="size-5" />
-          </motion.button>
+          <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1.5">
+            <motion.button
+              whileTap={
+                hintEnabled && !won
+                  ? { transform: "translateY(2px) scale(0.95)" }
+                  : undefined
+              }
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              className={cn(
+                "btn-press grid size-10 place-items-center rounded-full transition-colors",
+                hintEnabled && !won
+                  ? "bg-amber-500/15 text-amber-500 hover:bg-amber-500/25"
+                  : "bg-muted text-muted-foreground/40 cursor-not-allowed"
+              )}
+              onClick={() => {
+                if (won) return
+                if (!hintEnabled) {
+                  toast.info(
+                    `Available in ${guessesUntilHint} more ${guessesUntilHint === 1 ? "guess" : "guesses"}`
+                  )
+                  return
+                }
+                onHint()
+              }}
+              aria-label="Get a hint"
+            >
+              <Lightbulb className="size-[1.125rem]" />
+            </motion.button>
+
+            <motion.button
+              whileTap={{ transform: "translateY(2px) scale(0.95)" }}
+              transition={{ type: "spring", stiffness: 500, damping: 20 }}
+              className="btn-press grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0.35rem_1rem_color-mix(in_srgb,var(--primary)_30%,transparent)]"
+              onClick={onSubmit}
+              disabled={won}
+              aria-label="Submit guess"
+            >
+              <SendHorizontal className="size-5" />
+            </motion.button>
+          </div>
         </div>
       </div>
     </div>

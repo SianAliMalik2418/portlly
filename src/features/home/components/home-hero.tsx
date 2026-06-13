@@ -39,14 +39,6 @@ export const HomeHero = () => (
         >
           <a href="#catalog">Browse all →</a>
         </Button>
-        <Button
-          asChild
-          variant="outline"
-          size="lg"
-          className="rounded-full px-7"
-        >
-          <a href={nearoConfig.route}>Catch up</a>
-        </Button>
       </div>
     </div>
   </header>

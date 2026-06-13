@@ -72,8 +72,11 @@ export const Nearo = ({ mode, date }: NearoProps) => {
           input={game.input}
           shake={game.shake}
           won={game.won}
+          hintEnabled={game.hintEnabled}
+          guessesUntilHint={game.guessesUntilHint}
           onInputChange={game.setInput}
           onSubmit={game.submit}
+          onHint={game.hint}
         />
       </div>
 

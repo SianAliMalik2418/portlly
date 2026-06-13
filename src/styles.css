@@ -151,6 +151,11 @@
     }
 }
 
+[data-sonner-toast] [data-close-button]:hover {
+    background: var(--foreground) !important;
+    color: var(--background) !important;
+}
+
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {
         animation-duration: 0.01ms !important;

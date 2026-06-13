@@ -5,6 +5,7 @@ import { format, parseISO } from "date-fns"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
 import { nearoConfig } from "../config"
+import { HowToPlayDialog } from "./how-to-play"
 
 type GameNavProps = {
   mode: "daily" | "archive"
@@ -44,7 +45,10 @@ export const GameNav = ({ selectedDate }: GameNavProps) => (
       </div>
     }
     trailing={
-      <ModeToggle className="size-10 bg-card shadow-[0_0.25rem_0.75rem_color-mix(in_srgb,var(--foreground)_5%,transparent)] [&_svg]:!size-5" />
+      <div className="flex items-center gap-2">
+        <HowToPlayDialog />
+        <ModeToggle className="size-10 bg-card shadow-[0_0.25rem_0.75rem_color-mix(in_srgb,var(--foreground)_5%,transparent)] [&_svg]:!size-5" />
+      </div>
     }
   />
 )

@@ -41,7 +41,7 @@ export const StatusCard = ({
               cy="48"
               r="42"
               fill="none"
-              stroke="color-mix(in srgb, var(--destructive) 12%, var(--muted))"
+              stroke={`color-mix(in srgb, ${scoreColor} 12%, var(--muted))`}
               strokeWidth="8"
             />
             <circle

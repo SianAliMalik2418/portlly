@@ -5,6 +5,7 @@ import { getPuzzleByDate, getTodaysPuzzle } from "../data/puzzle"
 import { scoreGuess } from "../engine"
 import { wordGameReducer, createWordGameState } from "../state"
 import type { WordGuess } from "../types"
+import { nearoConfig } from "../config"
 import { getStatusMessage, sortGuesses } from "../lib/presentation"
 import {
   clearGameState,
@@ -49,6 +50,7 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
   const [shakingGuessId, setShakingGuessId] = useState<number | null>(null)
   const [pinnedGuessId, setPinnedGuessId] = useState<number | null>(null)
   const [showWin, setShowWin] = useState(false)
+  const [hintsUsed, setHintsUsed] = useState(0)
   const [hydratedPuzzleId, setHydratedPuzzleId] = useState<string | null>(null)
 
   useEffect(() => {
@@ -69,6 +71,7 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     }
 
     setInput("")
+    setHintsUsed(0)
     setHydratedPuzzleId(puzzle.puzzleId)
   }, [puzzle, hydratedPuzzleId])
 
@@ -128,6 +131,32 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     setTimeout(() => setShakingGuessId(null), 340)
   }, [])
 
+  const maxHints = Math.floor(
+    state.guesses.length / nearoConfig.hintThreshold
+  )
+  const canHint = !state.solved && hintsUsed < maxHints
+
+  const hint = useCallback(() => {
+    if (!puzzle || !canHint) return
+    const currentBest = bestScore ?? 0
+    const floor = currentBest + 5
+    const ceiling = 85
+    if (floor >= ceiling) return
+
+    const guessedWords = new Set(state.guesses.map((g) => g.word))
+    const candidates = Object.entries(puzzle.scores)
+      .filter(
+        ([word, score]) =>
+          !guessedWords.has(word) && score > floor && score <= ceiling
+      )
+      .sort((a, b) => a[1] - b[1])
+
+    if (candidates.length === 0) return
+    const pick = candidates[Math.floor(candidates.length * 0.3)]
+    dispatch({ type: "submitGuess", guess: pick[0], puzzle })
+    setHintsUsed((prev) => prev + 1)
+  }, [puzzle, canHint, bestScore, state.guesses])
+
   const submit = useCallback(() => {
     const word = input.trim()
     if (!word || !puzzle || state.solved) return
@@ -144,7 +173,7 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     const duplicate = state.guesses.find((g) => g.word === result.word)
     if (duplicate) {
       triggerGuessShake(duplicate.id)
-      toast(`Already tried "${result.word}"`)
+      toast.warning(`Already tried "${result.word}"`)
       setInput("")
       return
     }
@@ -168,6 +197,7 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     if (!puzzle) return
     dispatch({ type: "reset" })
     setShowWin(false)
+    setHintsUsed(0)
     setInput("")
     clearGameState(puzzle.puzzleId)
   }, [puzzle])
@@ -193,6 +223,12 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     bestGuess,
     status,
     submit,
+    hint,
+    hintEnabled: canHint,
+    guessesUntilHint: canHint
+      ? 0
+      : nearoConfig.hintThreshold -
+        (state.guesses.length % nearoConfig.hintThreshold),
     reset,
   }
 }

@@ -39,22 +39,18 @@ export const GuessRow = ({
       }}
     >
       <span
-        className="grid size-10 shrink-0 place-items-center rounded-full font-display text-sm font-bold"
-        style={{
-          background: `color-mix(in srgb, ${color} 13%, var(--card))`,
-          color,
-        }}
+        className="grid h-8 w-16 shrink-0 place-items-center rounded-full bg-muted/50 font-mono text-xs font-bold text-muted-foreground"
       >
-        {guess.id}
+        {guess.rank
+          ? guess.rank === 1
+            ? "★"
+            : `#${guess.rank.toLocaleString()}`
+          : "–"}
       </span>
+      <span className="h-6 w-px shrink-0 bg-border" />
       <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground lowercase">
         {guess.word}
       </span>
-      {guess.rank ? (
-        <span className="shrink-0 font-mono text-[11px] text-muted-foreground">
-          {guess.rank === 1 ? "★" : `#${guess.rank.toLocaleString()}`}
-        </span>
-      ) : null}
       <span
         className="min-w-12 rounded-[0.75rem] border px-2.5 py-1.5 text-center font-mono text-xs font-bold"
         style={{
