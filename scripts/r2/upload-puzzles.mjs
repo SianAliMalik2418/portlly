@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 
 import { readFile, stat } from "node:fs/promises"
-import { join } from "node:path"
-import { spawn } from "node:child_process"
+import { join, resolve } from "node:path"
 
 const DEFAULT_BUCKET = "portlly-puzzles"
 const DEFAULT_SOURCE_DIR = "dist/puzzles"
@@ -10,6 +9,7 @@ const DEFAULT_PUZZLE_PREFIX = "puzzles"
 const DEFAULT_MANIFEST_PREFIX = "manifests"
 const IMMUTABLE_CACHE_CONTROL = "public, max-age=31536000, immutable"
 const MANIFEST_CACHE_CONTROL = "private, no-store"
+const CONCURRENCY = 10
 
 const parseArgs = (argv) => {
   const options = {
@@ -52,7 +52,7 @@ const parseArgs = (argv) => {
 
 const trimSlashes = (value) => value.replace(/^\/+|\/+$/g, "")
 
-const getObjectKey = (fileName, options) => {
+const getObjectMeta = (fileName, options) => {
   const isManifest =
     fileName === "daily_manifest.json" || fileName === "puzzle_index.json"
   const prefix = isManifest
@@ -65,24 +65,111 @@ const getObjectKey = (fileName, options) => {
   }
 }
 
-const run = (command, args, options) =>
-  new Promise((resolve, reject) => {
+const parallelUpload = async (fileNames, uploadFn) => {
+  const queue = [...fileNames]
+  let completed = 0
+
+  const worker = async () => {
+    while (queue.length > 0) {
+      const fileName = queue.shift()
+      if (!fileName) break
+
+      await uploadFn(fileName)
+
+      completed += 1
+      if (completed % 20 === 0 || completed === fileNames.length) {
+        console.log(`  ${completed}/${fileNames.length}`)
+      }
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(CONCURRENCY, fileNames.length) },
+    () => worker()
+  )
+  await Promise.all(workers)
+}
+
+const createLocalUploader = async (options) => {
+  const { Miniflare } = await import("miniflare")
+
+  const mf = new Miniflare({
+    modules: true,
+    script: `export default { fetch() { return new Response("ok") } }`,
+    r2Buckets: { BUCKET: options.bucket },
+    r2Persist: resolve(".wrangler/state/v3"),
+  })
+
+  const bucket = await mf.getR2Bucket("BUCKET")
+
+  const upload = async (fileName) => {
+    const { key, cacheControl } = getObjectMeta(fileName, options)
+    const filePath = join(options.sourceDir, fileName)
+    const body = await readFile(filePath)
+
     if (options.dryRun) {
-      console.log([command, ...args].join(" "))
-      resolve()
+      console.log(`[dry-run] ${key}`)
       return
     }
 
-    const child = spawn(command, args, { stdio: "inherit" })
-    child.on("error", reject)
-    child.on("close", (code) => {
-      if (code === 0) {
-        resolve()
-      } else {
-        reject(new Error(`${command} exited with code ${code}`))
-      }
+    await bucket.put(key, body, {
+      httpMetadata: {
+        contentType: "application/json; charset=utf-8",
+        cacheControl,
+      },
     })
+  }
+
+  const cleanup = () => mf.dispose()
+
+  return { upload, cleanup }
+}
+
+const createRemoteUploader = async (options) => {
+  const { S3Client, PutObjectCommand } = await import("@aws-sdk/client-s3")
+
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID
+  const accessKeyId = process.env.R2_ACCESS_KEY_ID
+  const secretAccessKey = process.env.R2_SECRET_ACCESS_KEY
+
+  if (!accountId || !accessKeyId || !secretAccessKey) {
+    throw new Error(
+      "Remote upload requires CLOUDFLARE_ACCOUNT_ID, R2_ACCESS_KEY_ID, and R2_SECRET_ACCESS_KEY environment variables.\n" +
+        "Generate an R2 API token at: Cloudflare Dashboard → R2 → Manage R2 API Tokens"
+    )
+  }
+
+  const client = new S3Client({
+    region: "auto",
+    endpoint: `https://${accountId}.r2.cloudflarestorage.com`,
+    credentials: { accessKeyId, secretAccessKey },
   })
+
+  const upload = async (fileName) => {
+    const { key, cacheControl } = getObjectMeta(fileName, options)
+    const filePath = join(options.sourceDir, fileName)
+    const body = await readFile(filePath)
+
+    if (options.dryRun) {
+      console.log(`[dry-run] ${key}`)
+      return
+    }
+
+    await client.send(
+      new PutObjectCommand({
+        Bucket: options.bucket,
+        Key: key,
+        Body: body,
+        ContentType: "application/json; charset=utf-8",
+        CacheControl: cacheControl,
+      })
+    )
+  }
+
+  const cleanup = () => client.destroy()
+
+  return { upload, cleanup }
+}
 
 const main = async () => {
   const options = parseArgs(process.argv.slice(2))
@@ -109,36 +196,19 @@ const main = async () => {
     ...indexedPuzzleFiles,
   ].sort()
 
-  for (const fileName of fileNames) {
-    const { key, cacheControl } = getObjectKey(fileName, options)
-    const objectPath = `${options.bucket}/${key}`
-    const filePath = join(options.sourceDir, fileName)
-    const args = [
-      "wrangler",
-      "r2",
-      "object",
-      "put",
-      objectPath,
-      "--file",
-      filePath,
-      "--content-type",
-      "application/json; charset=utf-8",
-      "--cache-control",
-      cacheControl,
-    ]
+  const mode = options.local ? "local" : "remote"
+  console.log(`Uploading ${fileNames.length} files to ${options.bucket} (${mode})…`)
 
-    if (options.local) {
-      args.push("--local")
-    } else {
-      args.push("--remote")
-    }
+  const { upload, cleanup } = options.local
+    ? await createLocalUploader(options)
+    : await createRemoteUploader(options)
 
-    await run("bunx", args, options)
+  try {
+    await parallelUpload(fileNames, upload)
+    console.log(`Done — uploaded ${fileNames.length} artifact(s) to ${options.bucket}`)
+  } finally {
+    await cleanup()
   }
-
-  console.log(
-    `Uploaded ${fileNames.length} JSON artifact(s) to ${options.bucket}`
-  )
 }
 
 main().catch((error) => {
