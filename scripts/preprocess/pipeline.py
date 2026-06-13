@@ -45,7 +45,7 @@ DEFAULT_ANSWER_SEED = PREPROCESS_DIR / "answer_seed.txt"
 DEFAULT_GUESS_LIMIT = 50_000
 DEFAULT_CANDIDATE_COUNT = 400
 DEFAULT_ANSWER_COUNT = 200
-DEFAULT_WARM_BAND_SIZE = 5_000
+DEFAULT_RANK_BAND_SIZE = 5_000
 DEFAULT_SCHEDULE_SEED = 20_260_612
 DEFAULT_LAUNCH_DATE = "2026-06-12"
 
@@ -351,18 +351,18 @@ def download_file(url: str, destination: Path, *, force: bool = False) -> None:
         return
 
     destination.parent.mkdir(parents=True, exist_ok=True)
-    temporary_path = destination.with_suffix(f"{destination.suffix}.tmp")
+    staging_path = destination.with_suffix(f"{destination.suffix}.download")
 
     print(f"Downloading {url}")
     with urllib.request.urlopen(url) as response:
-        with temporary_path.open("wb") as output_file:
+        with staging_path.open("wb") as output_file:
             while True:
                 chunk = response.read(1024 * 1024)
                 if not chunk:
                     break
                 output_file.write(chunk)
 
-    temporary_path.replace(destination)
+    staging_path.replace(destination)
 
 
 def ensure_glove_vectors(args: argparse.Namespace) -> Path:
@@ -675,7 +675,7 @@ def generate_puzzle(
     puzzle_id: str,
     answer_word: str,
     guess_words: Sequence[str],
-    warm_band_size: int,
+    rank_band_size: int,
     use_numpy: bool,
     numpy_matrix: object | None = None,
     word_indexes: Mapping[str, int] | None = None,
@@ -701,7 +701,7 @@ def generate_puzzle(
     }
     rank_by_word = {
         word: rank
-        for word, _score, rank in ranked_scores[:warm_band_size]
+        for word, _score, rank in ranked_scores[:rank_band_size]
         if word != answer_word
     }
 
@@ -710,7 +710,7 @@ def generate_puzzle(
         "puzzleId": puzzle_id,
         "answerHash": hash_text(answer_word),
         "scoreScale": "max(0, cosine) * 100",
-        "warmBandSize": warm_band_size,
+        "rankBandSize": rank_band_size,
         "scores": score_by_word,
         "ranks": rank_by_word,
     }
@@ -802,7 +802,7 @@ def generate_puzzles(args: argparse.Namespace) -> None:
             puzzle_id=puzzle_id,
             answer_word=answer_word,
             guess_words=guess_words,
-            warm_band_size=args.warm_band_size,
+            rank_band_size=args.rank_band_size,
             use_numpy=use_numpy,
             numpy_matrix=numpy_matrix,
             word_indexes=word_indexes,
@@ -847,7 +847,7 @@ def run_smoke(args: argparse.Namespace) -> None:
     smoke_args.guess_limit = 100
     smoke_args.candidate_count = 10
     smoke_args.answer_count = 3
-    smoke_args.warm_band_size = 5
+    smoke_args.rank_band_size = 5
     smoke_args.pure_python = True
     smoke_args.force_wordlists = True
 
@@ -892,9 +892,7 @@ def build_parser() -> argparse.ArgumentParser:
         "--candidate-count", type=int, default=DEFAULT_CANDIDATE_COUNT
     )
     parser.add_argument("--answer-count", type=int, default=DEFAULT_ANSWER_COUNT)
-    parser.add_argument(
-        "--warm-band-size", type=int, default=DEFAULT_WARM_BAND_SIZE
-    )
+    parser.add_argument("--rank-band-size", type=int, default=DEFAULT_RANK_BAND_SIZE)
     parser.add_argument("--schedule-seed", type=int, default=DEFAULT_SCHEDULE_SEED)
     parser.add_argument("--launch-date", default=DEFAULT_LAUNCH_DATE)
     parser.add_argument("--force-download", action="store_true")

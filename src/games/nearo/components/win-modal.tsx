@@ -82,19 +82,19 @@ export const WinModal = ({
 
           <div className="flex flex-col gap-2.5">
             <Button
-              className="rounded-full shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
+              className="btn-press rounded-full shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
               onClick={handleShare}
             >
               {copied ? "Copied! ✓" : "Share result"}
             </Button>
             <Button
               variant="outline"
-              className="rounded-full"
+              className="btn-press rounded-full"
               onClick={onReset}
             >
               Play again
             </Button>
-            <Button variant="ghost" className="rounded-full" asChild>
+            <Button variant="ghost" className="btn-press rounded-full" asChild>
               <a href="/">More games →</a>
             </Button>
           </div>

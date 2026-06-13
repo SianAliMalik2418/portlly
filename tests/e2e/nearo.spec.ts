@@ -46,7 +46,7 @@ test("valid, unknown, and duplicate guesses are handled", async ({ page }) => {
 
   await expect(guessHistory(page).getByText("boat")).toBeVisible()
   await expect(guessHistory(page).getByText("#3")).toBeVisible()
-  await expect(guessHistory(page).getByText("Very close!")).toBeVisible()
+  await expect(guessHistory(page).getByText("92%")).toBeVisible()
 
   await submitGuess(page, "notaword")
 

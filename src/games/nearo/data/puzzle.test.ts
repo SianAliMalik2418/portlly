@@ -18,7 +18,7 @@ describe("getTodaysPuzzle", () => {
         puzzleId: "word-0001",
         answerHash: "abc123",
         scoreScale: "max(0, cosine) * 100",
-        warmBandSize: 5000,
+        rankBandSize: 5000,
         scores: { bread: 62.1 },
         ranks: { bread: 42 },
       })

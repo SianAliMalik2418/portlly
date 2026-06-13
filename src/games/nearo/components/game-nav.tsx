@@ -18,8 +18,8 @@ export const GameNav = ({ puzzleId }: GameNavProps) => (
       >
         <motion.span
           whileTap={{ transform: "translateX(-2px) rotate(-8deg) scale(0.88)" }}
-          transition={{ type: "spring", stiffness: 500, damping: 20 }}
-          className="grid h-6 w-6 shrink-0 place-items-center rounded-[7px] bg-primary text-[13px] text-primary-foreground shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
+          transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
+          className="btn-press grid h-6 w-6 shrink-0 place-items-center rounded-[7px] bg-primary text-[13px] text-primary-foreground shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
         >
           ‹
         </motion.span>

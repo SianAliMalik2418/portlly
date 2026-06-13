@@ -16,9 +16,13 @@ export const GuessRow = ({ guess, isNew, isShaking }: GuessRowProps) => {
     <motion.div
       layout
       layoutId={`guess-${guess.id}`}
-      initial={isNew ? { opacity: 0, scale: 0.9 } : false}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ type: "spring", stiffness: 400, damping: 22 }}
+      initial={isNew ? { opacity: 0, transform: "scale(0.95)" } : false}
+      animate={{ opacity: 1, transform: "scale(1)" }}
+      transition={{
+        layout: { type: "spring", stiffness: 300, damping: 28 },
+        opacity: { duration: 0.2, ease: [0.23, 1, 0.32, 1] },
+        transform: { duration: 0.25, ease: [0.23, 1, 0.32, 1] },
+      }}
       className={`flex items-center gap-2.5 rounded-xl px-3 py-[0.6875rem]${isShaking ? " animate-[shake_0.32s]" : ""}`}
       style={{
         background: `color-mix(in srgb, ${color} 22%, var(--card))`,

@@ -62,20 +62,20 @@ export const sha256Hex = (value: string) => {
     for (let index = 0; index < 64; index += 1) {
       const s1 = rotateRight(e, 6) ^ rotateRight(e, 11) ^ rotateRight(e, 25)
       const choice = (e & f) ^ (~e & g)
-      const temp1 =
+      const roundA =
         (h + s1 + choice + ROUND_CONSTANTS[index] + words[index]) >>> 0
       const s0 = rotateRight(a, 2) ^ rotateRight(a, 13) ^ rotateRight(a, 22)
       const majority = (a & b) ^ (a & c) ^ (b & c)
-      const temp2 = (s0 + majority) >>> 0
+      const roundB = (s0 + majority) >>> 0
 
       h = g
       g = f
       f = e
-      e = (d + temp1) >>> 0
+      e = (d + roundA) >>> 0
       d = c
       c = b
       b = a
-      a = (temp1 + temp2) >>> 0
+      a = (roundA + roundB) >>> 0
     }
 
     hash[0] = (hash[0] + a) >>> 0

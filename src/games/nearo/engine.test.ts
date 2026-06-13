@@ -8,7 +8,7 @@ const puzzle: WordPuzzle = {
   answerHash:
     "0f4168490e38b8447e11ba4bd656aa11b925bd22af30bac464bc153fdb608501",
   scoreScale: "max(0, cosine) * 100",
-  warmBandSize: 5,
+  rankBandSize: 5,
   scores: {
     boat: 91.9,
     cafe: 42,
@@ -38,7 +38,7 @@ describe("scoreGuess", () => {
     })
   })
 
-  it("scores known guesses and includes warm-band ranks only when present", () => {
+  it("scores known guesses and includes ranks only when present", () => {
     expect(scoreGuess("river", puzzle)).toEqual({
       status: "scored",
       word: "river",

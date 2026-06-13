@@ -224,8 +224,6 @@ smooth
 rough
 soft
 hard
-warm
-cold
 sweet
 sour
 bitter
