@@ -4,7 +4,6 @@ import type { KeyboardEvent } from "react"
 
 type GuessInputProps = {
   input: string
-  toast: string
   shake: boolean
   won: boolean
   onInputChange: (value: string) => void
@@ -13,7 +12,6 @@ type GuessInputProps = {
 
 export const GuessInput = ({
   input,
-  toast,
   shake,
   won,
   onInputChange,
@@ -30,15 +28,6 @@ export const GuessInput = ({
         background: "color-mix(in srgb, var(--background) 90%, transparent)",
       }}
     >
-      {toast && (
-        <p
-          role="status"
-          className="mb-2 text-center text-sm font-semibold text-primary"
-        >
-          {toast}
-        </p>
-      )}
-
       <div className="flex items-center gap-2">
         <input
           className={cn(

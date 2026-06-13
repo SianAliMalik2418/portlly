@@ -1,6 +1,6 @@
 import { getTemperatureColor } from "@/lib/temperature"
 import { motion } from "framer-motion"
-import type { WordGuess } from "@/games/word/types"
+import type { WordGuess } from "../types"
 
 type GuessRowProps = {
   guess: WordGuess

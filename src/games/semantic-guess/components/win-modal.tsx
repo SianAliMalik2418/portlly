@@ -6,8 +6,8 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog"
 import { useState } from "react"
-import { buildEmojiJourney } from "../lib/engine"
-import type { WordGuess } from "@/games/word/types"
+import { buildEmojiJourney } from "../lib/presentation"
+import type { WordGuess } from "../types"
 
 type WinModalProps = {
   open: boolean

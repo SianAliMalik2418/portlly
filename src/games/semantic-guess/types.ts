@@ -19,3 +19,8 @@ export type WordGuess = {
   score: number
   rank?: number
 }
+
+export type GameStatus = {
+  lead: string
+  sub: string
+}

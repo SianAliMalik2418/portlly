@@ -1,6 +1,5 @@
 import { getTemperatureColor } from "@/lib/temperature"
-import type { WordGuess } from "@/games/word/types"
-import type { GameStatus } from "../types"
+import type { GameStatus, WordGuess } from "../types"
 
 type StatusCardProps = {
   bestScore: number | null

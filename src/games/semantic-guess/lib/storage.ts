@@ -1,4 +1,4 @@
-import type { WordGuess } from "@/games/word/types"
+import type { WordGuess } from "../types"
 
 type PersistedState = {
   guesses: WordGuess[]

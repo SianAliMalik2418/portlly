@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { streamPuzzleFile } from "@/games/word/server/puzzle-r2"
+import { streamPuzzleFile } from "@/games/semantic-guess/server/puzzle-r2"
 
 export const Route = createFileRoute("/puzzles/$fileName")({
   server: {

@@ -1,4 +1,4 @@
-import type { WordGuess } from "@/games/word/types"
+import type { WordGuess } from "../types"
 import { EmptyState } from "./empty-state"
 import { GuessRow } from "./guess-row"
 

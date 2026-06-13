@@ -3,23 +3,21 @@ import {
   useEffect,
   useMemo,
   useReducer,
-  useRef,
   useState,
 } from "react"
 import { useQuery } from "@tanstack/react-query"
-import { todaysPuzzleQueryOptions } from "@/games/word/data/puzzle"
-import { scoreGuess } from "@/games/word/engine"
-import { wordGameReducer, createWordGameState } from "@/games/word/state"
-import type { WordGuess } from "@/games/word/types"
-import { getStatusMessage, sortGuesses } from "../lib/engine"
+import { toast } from "sonner"
+import { todaysPuzzleQueryOptions } from "../data/puzzle"
+import { scoreGuess } from "../engine"
+import { wordGameReducer, createWordGameState } from "../state"
+import type { WordGuess } from "../types"
+import { getStatusMessage, sortGuesses } from "../lib/presentation"
 import {
   clearGameState,
   getOrCreateAnonId,
   loadGameState,
   saveGameState,
 } from "../lib/storage"
-
-const TOAST_DURATION = 1800
 
 export const useGameState = () => {
   const {
@@ -34,14 +32,10 @@ export const useGameState = () => {
     createWordGameState
   )
   const [input, setInput] = useState("")
-  const [toast, setToast] = useState("")
   const [shake, setShake] = useState(false)
+  const [shakingGuessId, setShakingGuessId] = useState<number | null>(null)
   const [showWin, setShowWin] = useState(false)
   const [hydratedPuzzleId, setHydratedPuzzleId] = useState<string | null>(null)
-
-  const toastTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(
-    undefined
-  )
 
   useEffect(() => {
     getOrCreateAnonId()
@@ -101,15 +95,14 @@ export const useGameState = () => {
     [state.guesses]
   )
 
-  const flashToast = useCallback((msg: string) => {
-    setToast(msg)
-    clearTimeout(toastTimerRef.current)
-    toastTimerRef.current = setTimeout(() => setToast(""), TOAST_DURATION)
-  }, [])
-
   const triggerShake = useCallback(() => {
     setShake(true)
     setTimeout(() => setShake(false), 340)
+  }, [])
+
+  const triggerGuessShake = useCallback((guessId: number) => {
+    setShakingGuessId(guessId)
+    setTimeout(() => setShakingGuessId(null), 340)
   }, [])
 
   const submit = useCallback(() => {
@@ -120,14 +113,15 @@ export const useGameState = () => {
 
     if (result.status === "unknown") {
       triggerShake()
-      flashToast(`"${result.word}" is not in our word list`)
+      toast.error(`"${result.word}" is not in our word list`)
       setInput("")
       return
     }
 
     const duplicate = state.guesses.find((g) => g.word === result.word)
     if (duplicate) {
-      flashToast(`already tried "${result.word}"`)
+      triggerGuessShake(duplicate.id)
+      toast(`Already tried "${result.word}"`)
       setInput("")
       return
     }
@@ -138,7 +132,7 @@ export const useGameState = () => {
     if (result.status === "win") {
       setTimeout(() => setShowWin(true), 380)
     }
-  }, [input, puzzle, state.solved, state.guesses, flashToast, triggerShake])
+  }, [input, puzzle, state.solved, state.guesses, triggerShake, triggerGuessShake])
 
   const reset = useCallback(() => {
     if (!puzzle) return
@@ -157,8 +151,8 @@ export const useGameState = () => {
     latestId: state.highlightedGuessId,
     input,
     setInput,
-    toast,
     shake,
+    shakingGuessId,
     won: state.solved,
     showWin,
     setShowWin,
