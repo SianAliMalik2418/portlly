@@ -4,7 +4,13 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import { format, parseISO } from "date-fns"
-import { CheckCircle2, ChevronDown, Circle, Clock3 } from "lucide-react"
+import {
+  CalendarDays,
+  CheckCircle2,
+  ChevronRight,
+  Circle,
+  Clock3,
+} from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { nearoConfig } from "../config"
 import type { ArchiveDay } from "../data/puzzle"
@@ -26,7 +32,7 @@ const getDayLabel = (date: string, isToday: boolean) => {
   return format(parseISO(date), "EEE")
 }
 
-const getDateLabel = (date: string) => format(parseISO(date), "MM/dd")
+const getDateLabel = (date: string) => format(parseISO(date), "MMM d")
 
 const getStatus = (puzzleId: string): DayStatus => {
   const saved = loadGameState(puzzleId)
@@ -47,8 +53,7 @@ export const ArchiveStrip = ({
 }: ArchiveStripProps) => {
   const [statuses, setStatuses] = useState<Record<string, DayStatus>>({})
   const activeDate = selectedDate ?? days.find((day) => day.isToday)?.date
-  const activeDay = days.find((day) => day.date === activeDate)
-  const [open, setOpen] = useState(() => activeDay?.isToday === false)
+  const [open, setOpen] = useState(false)
   const orderedDays = useMemo(() => days, [days])
 
   useEffect(() => {
@@ -70,36 +75,29 @@ export const ArchiveStrip = ({
     )
   }, [activeGuessCount, activePuzzleId, activeWon, days])
 
-  useEffect(() => {
-    if (activeDay?.isToday === false) {
-      setOpen(true)
-    }
-  }, [activeDay?.isToday])
-
   if (orderedDays.length === 0) return null
 
   return (
-    <Collapsible
-      open={open}
-      onOpenChange={setOpen}
-      className="border-y border-border bg-card/60 px-3 py-3 sm:px-4"
-    >
+    <Collapsible open={open} onOpenChange={setOpen} className="px-6 pb-4">
       <div className="mx-auto max-w-[44rem]">
         <CollapsibleTrigger
-          className="flex w-full items-center justify-between gap-3 rounded-lg px-1 py-1.5 text-left text-foreground transition-colors outline-none hover:text-primary focus-visible:ring-3 focus-visible:ring-ring/30"
+          className="flex w-full items-center gap-4 rounded-[1.125rem] border border-border bg-card px-4 py-3 text-left text-foreground outline-none hover:border-primary/40 focus-visible:ring-3 focus-visible:ring-ring/30"
           aria-label="Toggle previous words"
         >
-          <span className="min-w-0">
-            <span className="block text-sm font-semibold">
+          <span className="grid size-11 shrink-0 place-items-center rounded-full bg-primary/8 text-primary">
+            <CalendarDays className="size-5" strokeWidth={1.8} />
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block font-display text-base leading-tight font-bold">
               Play previous words
             </span>
             <span className="mt-0.5 block text-xs text-muted-foreground">
               Catch up on the last 7 daily puzzles.
             </span>
           </span>
-          <ChevronDown
-            className={`size-4 shrink-0 transition-transform ${
-              open ? "rotate-180" : ""
+          <ChevronRight
+            className={`size-4 shrink-0 text-primary transition-transform ${
+              open ? "rotate-90" : ""
             }`}
           />
         </CollapsibleTrigger>
@@ -128,7 +126,7 @@ export const ArchiveStrip = ({
                 key={day.date}
                 href={href}
                 aria-current={isActive ? "page" : undefined}
-                className={`flex min-w-[5.25rem] shrink-0 items-center gap-2 rounded-lg border px-2.5 py-3 text-left no-underline transition-colors ${
+                className={`flex min-w-[5.25rem] shrink-0 items-center gap-2 rounded-lg border px-2.5 py-3 text-left no-underline ${
                   isActive
                     ? "border-primary bg-primary text-primary-foreground"
                     : "border-border bg-background text-foreground hover:bg-muted"

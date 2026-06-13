@@ -9,31 +9,31 @@ export const getStatusMessage = (bestScore: number | null): GameStatus => {
   }
   if (bestScore >= 92)
     return {
-      lead: "Almost there.",
+      lead: "Almost there — try close synonyms.",
       sub: "Use your best guess as a clue and try close synonyms.",
     }
   if (bestScore >= 70)
     return {
-      lead: "Very close.",
+      lead: "Very close — get more specific.",
       sub: "Stay in this meaning family and get more specific.",
     }
   if (bestScore >= 50)
     return {
-      lead: "Getting nearer.",
+      lead: "Getting nearer — explore related words.",
       sub: "You found the right neighborhood. Try related nouns and verbs.",
     }
   if (bestScore >= 35)
     return {
-      lead: "On the right track.",
+      lead: "On the right track — shift slightly.",
       sub: "Keep the theme, but shift to a closer everyday word.",
     }
   if (bestScore >= 20)
     return {
-      lead: "A faint connection.",
+      lead: "A faint connection — try another angle.",
       sub: "There is a loose theme here, but the target is elsewhere.",
     }
   return {
-    lead: "Far from the target.",
+    lead: "Far from the target — try another category.",
     sub: "Reset your approach: try a different category or setting.",
   }
 }

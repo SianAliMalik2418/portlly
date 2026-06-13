@@ -6,9 +6,8 @@ export const EmptyState = () => (
       <Target className="size-5" />
     </div>
     <p className="max-w-[32ch] text-sm leading-6">
-      Guess the secret word. Every guess is scored 0–100 by how close it is in{" "}
-      <b className="font-semibold text-foreground">meaning</b> — not letters.
-      Higher scores mean nearer meanings.
+      Try nouns, places, actions, or related ideas. Scores measure{" "}
+      <b className="font-semibold text-foreground">meaning</b>, not spelling.
     </p>
   </div>
 )

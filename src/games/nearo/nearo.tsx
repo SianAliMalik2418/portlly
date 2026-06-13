@@ -40,8 +40,14 @@ export const Nearo = ({ mode, date }: NearoProps) => {
   }
 
   return (
-    <div className="flex h-dvh flex-col bg-background">
-      <div className="mx-auto flex min-h-0 w-full max-w-[44rem] flex-1 flex-col">
+    <div
+      className="flex h-dvh flex-col bg-background"
+      style={{
+        background:
+          "radial-gradient(circle at 50% 0%, color-mix(in srgb, var(--card) 95%, transparent), transparent 34rem), linear-gradient(180deg, color-mix(in srgb, var(--background) 96%, white), var(--background))",
+      }}
+    >
+      <div className="mx-auto flex min-h-0 w-full max-w-[43rem] flex-1 flex-col">
         <GameNav mode={mode} selectedDate={selectedDate} />
         <ArchiveStrip
           days={archiveDays}

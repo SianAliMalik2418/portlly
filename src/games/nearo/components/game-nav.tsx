@@ -1,6 +1,7 @@
 import { ModeToggle } from "@/components/mode-toggle"
 import { PlatformHeader } from "@/components/platform-header"
 import { Link } from "@tanstack/react-router"
+import { format, parseISO } from "date-fns"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
 import { nearoConfig } from "../config"
@@ -10,35 +11,40 @@ type GameNavProps = {
   selectedDate: string | null
 }
 
-export const GameNav = ({ mode, selectedDate }: GameNavProps) => (
+const formatHeaderDate = (date: string | null) => {
+  if (!date) return format(new Date(), "EEE, dd MMM yyyy")
+
+  return format(parseISO(date), "EEE, dd MMM yyyy")
+}
+
+export const GameNav = ({ selectedDate }: GameNavProps) => (
   <PlatformHeader
     className="border-transparent"
-    contentClassName="h-16 max-w-[44rem] px-3 sm:px-4"
+    contentClassName="h-28 max-w-[43rem] px-6"
+    style={{ background: "transparent" }}
     leading={
-      <Link
-        to="/"
-        aria-label="Back to games"
-        className="flex items-center gap-2 font-display text-sm font-bold text-foreground no-underline"
-      >
+      <Link to="/" aria-label="Back to games" className="no-underline">
         <motion.span
-          whileTap={{ transform: "translateX(-2px) rotate(-8deg) scale(0.88)" }}
+          whileTap={{ transform: "translateX(-2px) scale(0.94)" }}
           transition={{ duration: 0.16, ease: [0.23, 1, 0.32, 1] }}
-          className="btn-press grid size-9 shrink-0 place-items-center rounded-full border border-border bg-card text-foreground shadow-sm"
+          className="btn-press grid size-10 shrink-0 place-items-center rounded-full border border-border bg-card text-foreground shadow-[0_0.25rem_0.75rem_color-mix(in_srgb,var(--foreground)_5%,transparent)]"
         >
-          <ArrowLeft className="size-4" />
+          <ArrowLeft className="size-5" strokeWidth={2.4} />
         </motion.span>
       </Link>
     }
     center={
-      <div className="text-center leading-tight">
-        <b className="block font-display text-xl leading-none font-bold">
+      <div className="text-center leading-none">
+        <b className="block font-serif text-3xl leading-none font-bold tracking-tight text-foreground">
           {nearoConfig.name}
         </b>
-        <span className="font-mono text-[10px] text-muted-foreground">
-          {mode === "archive" ? selectedDate : "TODAY"}
+        <span className="mt-2 block font-mono text-sm font-bold text-muted-foreground">
+          {formatHeaderDate(selectedDate)}
         </span>
       </div>
     }
-    trailing={<ModeToggle />}
+    trailing={
+      <ModeToggle className="size-10 bg-card shadow-[0_0.25rem_0.75rem_color-mix(in_srgb,var(--foreground)_5%,transparent)] [&_svg]:!size-5" />
+    }
   />
 )
