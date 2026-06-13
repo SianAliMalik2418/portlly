@@ -1,14 +1,7 @@
 import { queryOptions } from "@tanstack/react-query"
+import type { WordPuzzle } from "../types"
 
-export type WordPuzzle = {
-  version: number
-  puzzleId: string
-  answerHash: string
-  scoreScale: string
-  warmBandSize: number
-  scores: Record<string, number>
-  ranks: Record<string, number>
-}
+export type { WordPuzzle } from "../types"
 
 export const todaysPuzzleQueryKey = ["word", "puzzle", "today"] as const
 
