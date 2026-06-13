@@ -1,9 +1,12 @@
 import { HeadContent, Scripts, createRootRoute } from "@tanstack/react-router"
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools"
 import { TanStackDevtools } from "@tanstack/react-devtools"
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { ThemeProvider } from "@/components/theme-provider"
 
 import appCss from "../styles.css?url"
+
+const queryClient = new QueryClient()
 
 type RootDocumentProps = {
   children: React.ReactNode
@@ -15,9 +18,11 @@ export const RootDocument = ({ children }: RootDocumentProps) => (
       <HeadContent />
     </head>
     <body>
+      <QueryClientProvider client={queryClient}>
       <ThemeProvider defaultTheme="system" storageKey="portlly:theme">
         {children}
       </ThemeProvider>
+      </QueryClientProvider>
       <TanStackDevtools
         config={{ position: "bottom-right" }}
         plugins={[
