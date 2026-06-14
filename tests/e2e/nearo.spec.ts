@@ -1,0 +1,124 @@
+import { expect, test } from "@playwright/test"
+import type { Page } from "@playwright/test"
+
+const goToGame = async (page: Page) => {
+  await page.goto("/games/nearo")
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
+    timeout: 15_000,
+  })
+}
+
+const submitGuess = async (page: Page, word: string) => {
+  const input = page.getByRole("textbox", { name: "Guess word" })
+
+  await input.fill(word)
+  await input.press("Enter")
+}
+
+const guessHistory = (page: Page) => page.getByLabel("Guess history")
+
+test.beforeEach(async ({ page }) => {
+  await page.goto("/")
+  await page.evaluate(() => {
+    localStorage.clear()
+  })
+  await page.goto("about:blank")
+})
+
+test("hub renders and navigates to Nearo", async ({ page }) => {
+  await page.goto("/")
+
+  await expect(page.getByRole("heading", { name: /tiny games/i })).toBeVisible()
+  await expect(page.getByRole("link", { name: /play nearo/i })).toBeVisible()
+
+  await page.getByRole("link", { name: /play today's game/i }).click()
+
+  await expect(page).toHaveURL(/\/games\/nearo$/)
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
+    timeout: 15_000,
+  })
+})
+
+test("valid, unknown, and duplicate guesses are handled", async ({ page }) => {
+  await goToGame(page)
+
+  await submitGuess(page, "boat")
+
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+  await expect(guessHistory(page).getByText("#3")).toBeVisible()
+  await expect(guessHistory(page).getByText("92%")).toBeVisible()
+
+  await submitGuess(page, "notaword")
+
+  await expect(
+    page.getByText('"notaword" is not in our word list')
+  ).toBeVisible()
+  await expect(guessHistory(page).getByText("notaword")).toHaveCount(0)
+
+  await submitGuess(page, "BOAT")
+
+  await expect(page.getByText('Already tried "boat"')).toBeVisible()
+  await expect(guessHistory(page).getByText("boat")).toHaveCount(1)
+})
+
+test("guesses persist after refresh", async ({ page }) => {
+  await goToGame(page)
+
+  await submitGuess(page, "boat")
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+
+  await page.reload()
+
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+  await expect(guessHistory(page).getByText("#3")).toBeVisible()
+})
+
+test("answer guess opens solved state and persists it", async ({ page }) => {
+  await goToGame(page)
+
+  await submitGuess(page, "water")
+
+  await expect(
+    page.getByRole("heading", { name: "You found it!" })
+  ).toBeVisible()
+  await expect(page.getByRole("button", { name: "Share result" })).toBeVisible()
+
+  await page.reload()
+
+  await expect(
+    page.getByRole("heading", { name: "You found it!" })
+  ).toBeVisible()
+  await expect(page.getByRole("button", { name: "Share result" })).toBeVisible()
+})
+
+test("catch-up dates keep separate local progress", async ({ page }) => {
+  await goToGame(page)
+
+  await expect(
+    page.getByLabel("Recent puzzles").getByText("Today")
+  ).toBeVisible()
+
+  await submitGuess(page, "boat")
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+
+  await page.goto("/games/nearo/archive/2026-06-08")
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible({
+    timeout: 15_000,
+  })
+  await expect(page.getByText("Make your first guess.")).toBeVisible()
+  await expect(page.getByText("boat")).toHaveCount(0)
+
+  await submitGuess(page, "water")
+  await expect(guessHistory(page).getByText("water")).toBeVisible()
+
+  await page.reload()
+
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
+  await expect(guessHistory(page).getByText("water")).toBeVisible()
+
+  await page.goto("/games/nearo")
+  await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
+  await expect(guessHistory(page).getByText("boat")).toBeVisible()
+  await expect(guessHistory(page).getByText("water")).toHaveCount(0)
+})

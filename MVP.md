@@ -23,7 +23,7 @@ The game engine is a **static lookup**, not runtime compute. An offline Python p
 - Each game is a **route** under a routes-per-game structure; never hardcode "the word game" as the only game.
 - Normalize all guesses: lowercase, trim, strip accents. GloVe is lowercase/uncased — align to it.
 - Keep puzzle files immutable-per-day so they're CDN-cacheable.
-- **Identify puzzle files by puzzle ID, not by date.** The daily schedule is a separate (date → puzzle ID) mapping layered on top. This keeps the door open for **practice mode** (random puzzle IDs on demand) without restructuring data later.
+- **Identify puzzle files by puzzle ID, not by date.** The daily schedule is a separate (date → puzzle ID) mapping layered on top. This keeps daily catch-up/archive dates separate from puzzle storage and local progress.
 - **Keep the game engine pure and transport-agnostic** (no browser-only assumptions). The same scoring function must be able to run server-side unchanged — this is what makes future **multiplayer** (authoritative server scoring) possible without a rewrite.
 - After each phase, **stop and report** against that phase's "Done when" checklist before continuing.
 
@@ -69,8 +69,8 @@ The game engine is a **static lookup**, not runtime compute. An offline Python p
    - For each answer word: compute cosine similarity against the entire guess set; scale to a 0–100 score; sort to assign ranks for the **warm band (top ~5,000)**.
    - File contents: `{ scores: { word: score }, ranks: { word: rank }, answerHash, puzzleId }`. **No plaintext answer.**
    - `answerHash` = hash of the answer word (same hash the client will run on guesses).
-   - **Each file is identified by a stable `puzzleId`** (not by date). File name = hash of (puzzleId + secret) so it's not guessable. This lets practice mode reuse the exact same files later.
-6. **Date scheduling:** deterministic — shuffle `answer_set` once with a fixed seed; `word[N] = shuffled[N]` from a launch epoch date. Emit a manifest mapping **date → puzzleId** (the daily schedule is just a layer on top of the ID-keyed files; practice mode will pull puzzleIds directly, bypassing dates). The manifest must not leak future answers; client only resolves "today".
+   - **Each file is identified by a stable `puzzleId`** (not by date). File name = hash of (puzzleId + secret) so it's not guessable. Date routes resolve through the manifest and then reuse the same puzzle files.
+6. **Date scheduling:** deterministic — shuffle `answer_set` once with a fixed seed; `word[N] = shuffled[N]` from a launch epoch date. Emit a manifest mapping **date → puzzleId** (the daily schedule is just a layer on top of the ID-keyed files). The manifest must not leak future answers; the client only resolves today and server-approved catch-up dates.
 7. Write outputs to a local `dist/puzzles/` dir.
 
 **Done when:** running one command produces `guess_set.txt`, `answer_set.txt`, and ~200 puzzle JSON files locally; spot-checking a file shows sane scores (synonyms score high, unrelated words low) and no plaintext answer.
@@ -178,8 +178,8 @@ The game engine is a **static lookup**, not runtime compute. An offline Python p
 
 ## Explicitly deferred (post-MVP backlog — do not build now)
 
-Temperature/hot-cold bar · color-coded score-sorted history · give-up/reveal · next-puzzle countdown · plain-text copy share · expanding the answer set via the same pipeline.
+Temperature/hot-cold bar · give-up/reveal · next-puzzle countdown · plain-text copy share · expanding the answer set via the same pipeline.
 
-**Practice mode (unlimited levels):** reuses the same puzzle-ID-keyed files; pulls random puzzleIds on demand instead of via the date schedule. Cheap to add because Phase 1 already keys files by ID, not date. Will eventually want a larger answer pool (re-run the pipeline).
+**Daily catch-up/archive:** show the last seven official daily puzzles, including today, by resolving allowed dates through the manifest. Do not expose random puzzle IDs or future dates in the MVP.
 
 **Multiplayer:** the big one — forces in the pieces the MVP omits. Needs (a) a realtime layer — **Cloudflare Durable Objects** are the natural fit, one object per match, WebSocket-native; (b) **Neon + Drizzle** with a multi-game schema that includes **match/session tables** (a match has many players — shape it as matches + match_players, not just per-user results); (c) real accounts, upgrading `anon_id` → linked user on signup; (d) **authoritative server-side scoring** using the *same* pure engine from Phase 3 (the seam left open in guardrails). Do not design netcode before the single-player game is proven fun.

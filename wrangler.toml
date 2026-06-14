@@ -1,0 +1,21 @@
+"$schema" = "node_modules/wrangler/config-schema.json"
+
+name = "portlly"
+main = "@tanstack/react-start/server-entry"
+compatibility_date = "2026-06-12"
+compatibility_flags = ["nodejs_compat"]
+
+[[r2_buckets]]
+binding = "PUZZLE_BUCKET"
+bucket_name = "portlly-puzzles"
+
+[[routes]]
+pattern = "portlyy.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.portlyy.com"
+custom_domain = true
+
+[observability]
+enabled = true

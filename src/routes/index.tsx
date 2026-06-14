@@ -1,19 +1,65 @@
 import { createFileRoute } from "@tanstack/react-router"
-import { Button } from "@/components/ui/button"
+import { Home } from "@/features/home/home"
+import { homeAiQuestions } from "@/features/home/lib/ai-seo"
+import { games } from "@/features/home/lib/games"
+import {
+  AI_SEO_UPDATED,
+  SITE_DESCRIPTION,
+  SITE_NAME,
+  SITE_URL,
+  jsonLd,
+  seo,
+} from "@/lib/seo"
 
-export const Route = createFileRoute("/")({ component: App })
+const liveGames = games.filter((game) => game.status === "live" && game.href)
 
-function App() {
-  return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-      </div>
-    </div>
-  )
+const homeCollectionSchema = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  "@id": `${SITE_URL}/#home`,
+  name: `${SITE_NAME} - Free Daily Web Games`,
+  url: SITE_URL,
+  description: SITE_DESCRIPTION,
+  dateModified: AI_SEO_UPDATED,
+  isPartOf: { "@id": `${SITE_URL}/#website` },
+  mainEntity: {
+    "@type": "ItemList",
+    itemListElement: liveGames.map((game, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: game.name,
+      url: `${SITE_URL}${game.href}`,
+      description: game.description,
+    })),
+  },
 }
+
+const homeFaqSchema = {
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  mainEntity: homeAiQuestions.map((item) => ({
+    "@type": "Question",
+    name: item.question,
+    acceptedAnswer: {
+      "@type": "Answer",
+      text: item.answer,
+    },
+  })),
+}
+
+export const Route = createFileRoute("/")({
+  component: Home,
+  head: () => {
+    const meta = seo({
+      title: "Portlyy — Free Daily Web Games",
+      description:
+        "Your daily brain arcade. Play word games, trivia and party rounds right in your browser — no account, no download. New games drop regularly.",
+      path: "/",
+    })
+
+    return {
+      ...meta,
+      scripts: [jsonLd(homeCollectionSchema), jsonLd(homeFaqSchema)],
+    }
+  },
+})
