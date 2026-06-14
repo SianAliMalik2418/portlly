@@ -71,10 +71,10 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
       dispatch({ type: "reset" })
       setShowWin(false)
       setHintsUsed(0)
-      const starter = pickStarterWord(puzzle)
-      setInput(starter ?? "")
-      setHydratedPuzzleId(puzzle.puzzleId)
-      return
+      // const starter = pickStarterWord(puzzle)
+      // setInput(starter ?? "")
+      // setHydratedPuzzleId(puzzle.puzzleId)
+      // return
     }
 
     setInput("")

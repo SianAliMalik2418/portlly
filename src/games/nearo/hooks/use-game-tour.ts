@@ -39,9 +39,9 @@ export const useGameTour = (ready = true) => {
           {
             element: "#nearo-input",
             popover: {
-              title: "Start with a free word",
+              title: "Guess a word",
               description:
-                "We've filled in a starter word to get you going. Press enter to submit it, or clear it and type your own. You're trying to find the secret word by meaning — not spelling.",
+                "Type any word and press enter. You're trying to find the secret word by meaning — not spelling.",
               side: "top",
               align: "center",
             },
