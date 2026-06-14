@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import {
   Dialog,
   DialogContent,
@@ -9,33 +9,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { CircleHelp } from "lucide-react"
 import { motion } from "framer-motion"
-import { nearoConfig } from "../config"
-
-const SEEN_KEY = `${nearoConfig.storagePrefix}:how-to-play-seen`
-
-const hasSeenHowToPlay = () => {
-  try {
-    return localStorage.getItem(SEEN_KEY) === "1"
-  } catch {
-    return false
-  }
-}
-
-const markSeen = () => {
-  try {
-    localStorage.setItem(SEEN_KEY, "1")
-  } catch {}
-}
 
 export const HowToPlayDialog = () => {
   const [open, setOpen] = useState(false)
-
-  useEffect(() => {
-    if (!hasSeenHowToPlay()) {
-      setOpen(true)
-      markSeen()
-    }
-  }, [])
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>

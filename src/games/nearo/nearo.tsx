@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query"
 import { useGameState } from "./hooks/use-game-state"
+import { useGameTour } from "./hooks/use-game-tour"
 import { archiveDaysQueryOptions } from "./data/puzzle"
 import { GameNav } from "./components/game-nav"
 import { ArchiveStrip } from "./components/archive-strip"
@@ -15,6 +16,7 @@ type NearoProps = {
 
 export const Nearo = ({ mode, date }: NearoProps) => {
   const game = useGameState({ mode, date })
+  const { tourActive } = useGameTour()
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
   const selectedDate =
     mode === "archive"
@@ -67,6 +69,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
           latestId={game.latestId}
           shakingGuessId={game.shakingGuessId}
           pinnedGuessId={game.pinnedGuessId}
+          showExample={tourActive && game.guesses.length === 0}
         />
         <GuessInput
           input={game.input}
@@ -81,7 +84,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
       </div>
 
       <WinModal
-        open={game.showWin}
+        open={true}
         guesses={game.guesses}
         puzzleId={game.puzzle.puzzleId}
         onReset={game.reset}

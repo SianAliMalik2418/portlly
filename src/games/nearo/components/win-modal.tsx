@@ -6,9 +6,13 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useState } from "react"
-import { buildEmojiJourney } from "../lib/presentation"
+import { useEffect, useState } from "react"
+import { useQuery } from "@tanstack/react-query"
+import { format, parseISO } from "date-fns"
+import { CalendarDays, CheckCircle2, Circle, Clock3 } from "lucide-react"
 import type { WordGuess } from "../types"
+import { archiveDaysQueryOptions, type ArchiveDay } from "../data/puzzle"
+import { loadGameState } from "../lib/storage"
 
 type WinModalProps = {
   open: boolean
@@ -18,6 +22,16 @@ type WinModalProps = {
   onClose: () => void
 }
 
+type DayStatus = "new" | "started" | "solved"
+
+const getStatus = (puzzleId: string): DayStatus => {
+  const saved = loadGameState(puzzleId)
+  if (!saved) return "new"
+  if (saved.won) return "solved"
+  if (saved.guesses.length > 0) return "started"
+  return "new"
+}
+
 export const WinModal = ({
   open,
   guesses,
@@ -25,21 +39,32 @@ export const WinModal = ({
   onReset,
   onClose,
 }: WinModalProps) => {
-  const [copied, setCopied] = useState(false)
-  const journey = buildEmojiJourney(guesses)
+  const [showArchive, setShowArchive] = useState(false)
+  const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
+
   const best = guesses.reduce<WordGuess | null>(
     (b, g) => (!b || g.score > b.score ? g : b),
     null
   )
-  const shareText = `${nearoConfig.name} ${puzzleId} — solved in ${guesses.length} guesses\n${journey}\nplay at portlly`
 
-  const handleShare = async () => {
-    try {
-      await navigator.clipboard.writeText(shareText)
-      setCopied(true)
-      setTimeout(() => setCopied(false), 1600)
-    } catch {}
-  }
+  const [statuses, setStatuses] = useState<Record<string, DayStatus>>({})
+
+  useEffect(() => {
+    if (archiveDays.length === 0) return
+    setStatuses(
+      Object.fromEntries(
+        archiveDays.map((day) => {
+          const status =
+            day.puzzleId === puzzleId ? "solved" : getStatus(day.puzzleId)
+          return [day.date, status] as const
+        })
+      )
+    )
+  }, [archiveDays, puzzleId])
+
+  const sortedDays = [...archiveDays].sort((a, b) =>
+    b.date.localeCompare(a.date)
+  )
 
   return (
     <Dialog
@@ -58,7 +83,7 @@ export const WinModal = ({
             You found it!
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Puzzle solved summary and share options.
+            Puzzle solved summary.
           </DialogDescription>
 
           <div className="mt-4.5 flex gap-2.5">
@@ -79,26 +104,90 @@ export const WinModal = ({
             ))}
           </div>
 
-          <p className="my-4 text-xl leading-relaxed tracking-[3px]">
-            {journey}
-          </p>
-
-          <div className="flex flex-col gap-2.5">
+          <div className="mt-5 flex flex-col gap-2.5">
             <Button
-              className="btn-press rounded-full shadow-[0_0.1875rem_0_oklch(0.46_0.12_155)]"
-              onClick={handleShare}
+              className="btn-press rounded-full"
+              onClick={() => setShowArchive(!showArchive)}
             >
-              {copied ? "Copied! ✓" : "Share result"}
+              <CalendarDays className="size-4" />
+              {showArchive ? "Hide previous words" : "Play previous words"}
             </Button>
+
+            {showArchive && sortedDays.length > 0 && (
+              <div className="mt-1 max-h-[12rem] space-y-1.5 overflow-y-auto rounded-xl border border-border bg-background p-2 text-left">
+                {sortedDays.map((day) => {
+                  const status = statuses[day.date] ?? "new"
+                  const isCurrent = day.puzzleId === puzzleId
+                  const href = day.isToday
+                    ? nearoConfig.route
+                    : `${nearoConfig.archiveRoute}/${day.date}`
+                  const StatusIcon =
+                    status === "solved"
+                      ? CheckCircle2
+                      : status === "started"
+                        ? Clock3
+                        : Circle
+
+                  return (
+                    <a
+                      key={day.date}
+                      href={href}
+                      className={`flex items-center gap-3 rounded-lg px-3 py-2.5 no-underline transition-colors ${
+                        isCurrent
+                          ? "pointer-events-none bg-primary/8 text-primary"
+                          : status === "solved"
+                            ? "bg-emerald-500/5 text-foreground hover:bg-emerald-500/12"
+                            : "text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <StatusIcon
+                        className={`size-3.5 shrink-0 ${
+                          isCurrent
+                            ? "text-primary"
+                            : status === "solved"
+                              ? "text-emerald-500"
+                              : status === "started"
+                                ? "text-amber-500"
+                                : "text-muted-foreground/40"
+                        }`}
+                      />
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm leading-none font-semibold">
+                          {day.isToday
+                            ? "Today"
+                            : format(parseISO(day.date), "EEEE")}
+                        </span>
+                        <span className="mt-1 block font-mono text-[10px] leading-none text-muted-foreground">
+                          {format(parseISO(day.date), "MMM d")}
+                        </span>
+                      </span>
+                      {isCurrent && (
+                        <span className="rounded-full bg-primary/15 px-2 py-0.5 text-[10px] font-semibold text-primary">
+                          Current
+                        </span>
+                      )}
+                      {status === "solved" && !isCurrent && (
+                        <span className="rounded-full bg-emerald-500/12 px-2 py-0.5 text-[10px] font-semibold text-emerald-600">
+                          Solved
+                        </span>
+                      )}
+                      {status === "started" && (
+                        <span className="rounded-full bg-amber-500/12 px-2 py-0.5 text-[10px] font-semibold text-amber-600">
+                          In progress
+                        </span>
+                      )}
+                    </a>
+                  )
+                })}
+              </div>
+            )}
+
             <Button
               variant="outline"
               className="btn-press rounded-full"
               onClick={onReset}
             >
               Play again
-            </Button>
-            <Button variant="ghost" className="btn-press rounded-full" asChild>
-              <a href="/">More games →</a>
             </Button>
           </div>
         </div>

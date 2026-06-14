@@ -36,7 +36,7 @@ export const GuessInput = ({
         background: "color-mix(in srgb, var(--background) 88%, transparent)",
       }}
     >
-      <div className="relative rounded-[1.5rem] border border-border bg-card p-2.5 shadow-[0_0.5rem_1.25rem_color-mix(in_srgb,var(--foreground)_6%,transparent)]">
+      <div id="nearo-input" className="relative rounded-[1.5rem] border border-border bg-card p-2.5 shadow-[0_0.5rem_1.25rem_color-mix(in_srgb,var(--foreground)_6%,transparent)]">
         <div className="relative">
           <input
             className={cn(
@@ -61,6 +61,7 @@ export const GuessInput = ({
 
           <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1.5">
             <motion.button
+              id="nearo-hint"
               whileTap={
                 hintEnabled && !won
                   ? { transform: "translateY(2px) scale(0.95)" }

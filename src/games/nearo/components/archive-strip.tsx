@@ -54,7 +54,10 @@ export const ArchiveStrip = ({
   const [statuses, setStatuses] = useState<Record<string, DayStatus>>({})
   const activeDate = selectedDate ?? days.find((day) => day.isToday)?.date
   const [open, setOpen] = useState(false)
-  const orderedDays = useMemo(() => days, [days])
+  const orderedDays = useMemo(
+    () => [...days].sort((a, b) => a.date.localeCompare(b.date)),
+    [days]
+  )
 
   useEffect(() => {
     setStatuses(
@@ -129,10 +132,22 @@ export const ArchiveStrip = ({
                 className={`flex min-w-[5.25rem] shrink-0 items-center gap-2 rounded-lg border px-2.5 py-3 text-left no-underline ${
                   isActive
                     ? "border-primary bg-primary text-primary-foreground"
-                    : "border-border bg-background text-foreground hover:bg-muted"
+                    : status === "solved"
+                      ? "border-emerald-500/30 bg-emerald-500/8 text-foreground hover:bg-emerald-500/15"
+                      : "border-border bg-background text-foreground hover:bg-muted"
                 }`}
               >
-                <StatusIcon className="size-3.5 shrink-0" />
+                <StatusIcon
+                  className={`size-3.5 shrink-0 ${
+                    isActive
+                      ? ""
+                      : status === "solved"
+                        ? "text-emerald-500"
+                        : status === "started"
+                          ? "text-amber-500"
+                          : "text-muted-foreground/40"
+                  }`}
+                />
                 <span className="min-w-0">
                   <span className="block text-sm leading-none font-semibold">
                     {getDayLabel(day.date, day.isToday)}

@@ -151,6 +151,73 @@
     }
 }
 
+.nearo-tour.driver-popover {
+    background: var(--popover);
+    color: var(--popover-foreground);
+    border-radius: 1.25rem;
+    padding: 1.25rem;
+    box-shadow: 0 1rem 2.5rem rgba(0, 0, 0, 0.15);
+    border: 1px solid var(--border);
+}
+
+.nearo-tour .driver-popover-title {
+    font-family: var(--font-display, var(--font-serif));
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--foreground);
+}
+
+.nearo-tour .driver-popover-description {
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    line-height: 1.6;
+}
+
+.nearo-tour .driver-popover-progress-text {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+}
+
+.nearo-tour .driver-popover-navigation-btns button {
+    border-radius: 9999px !important;
+    padding: 0.375rem 1rem !important;
+    font-size: 0.8125rem !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    border: none !important;
+    text-shadow: none !important;
+}
+
+.nearo-tour .driver-popover-next-btn,
+.nearo-tour .driver-popover-next-btn:hover,
+.nearo-tour .driver-popover-next-btn:focus {
+    background: var(--primary) !important;
+    color: var(--primary-foreground) !important;
+}
+
+.nearo-tour .driver-popover-prev-btn,
+.nearo-tour .driver-popover-prev-btn:hover,
+.nearo-tour .driver-popover-prev-btn:focus {
+    background: var(--muted) !important;
+    color: var(--foreground) !important;
+}
+
+.nearo-tour .driver-popover-arrow-side-top {
+    border-bottom-color: var(--popover) !important;
+}
+
+.nearo-tour .driver-popover-arrow-side-bottom {
+    border-top-color: var(--popover) !important;
+}
+
+.nearo-tour .driver-popover-arrow-side-left {
+    border-right-color: var(--popover) !important;
+}
+
+.nearo-tour .driver-popover-arrow-side-right {
+    border-left-color: var(--popover) !important;
+}
+
 [data-sonner-toast] [data-close-button]:hover {
     background: var(--foreground) !important;
     color: var(--background) !important;

@@ -4,8 +4,8 @@ import { Link } from "@tanstack/react-router"
 import { format, parseISO } from "date-fns"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
-import { nearoConfig } from "../config"
 import { HowToPlayDialog } from "./how-to-play"
+import { NearoLogo } from "./nearo-logo"
 
 type GameNavProps = {
   mode: "daily" | "archive"
@@ -35,10 +35,9 @@ export const GameNav = ({ selectedDate }: GameNavProps) => (
       </Link>
     }
     center={
-      <div className="text-center leading-none">
-        <b className="block font-serif text-3xl leading-none font-bold tracking-tight text-foreground">
-          {nearoConfig.name}
-        </b>
+      <div className="flex flex-col items-center text-center leading-none">
+        <span className="sr-only">Nearo</span>
+        <NearoLogo />
         <span className="mt-2 block font-mono text-sm font-bold text-muted-foreground">
           {formatHeaderDate(selectedDate)}
         </span>

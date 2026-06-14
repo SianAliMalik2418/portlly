@@ -9,6 +9,7 @@ type GuessListProps = {
   latestId: number | null
   shakingGuessId: number | null
   pinnedGuessId: number | null
+  showExample?: boolean
 }
 
 export const GuessList = ({
@@ -16,10 +17,11 @@ export const GuessList = ({
   latestId,
   shakingGuessId,
   pinnedGuessId,
+  showExample = false,
 }: GuessListProps) => (
-  <div className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4">
+  <div id="nearo-guesses" className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4">
     {guesses.length === 0 ? (
-      <EmptyState />
+      <EmptyState showExample={showExample} />
     ) : (
       <LayoutGroup>
         <div className="mx-3 mt-2 mb-5 flex items-center gap-3 sm:mx-4">
