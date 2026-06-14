@@ -34,7 +34,7 @@ export const LiveGameCard = ({ game }: LiveGameCardProps) => (
       className="pointer-events-none absolute inset-0 hidden h-full w-full object-cover object-right dark:block"
     />
 
-    <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(45,60,45,0.78)_0%,rgba(45,60,45,0.5)_28%,rgba(45,60,45,0.12)_52%,transparent_100%)] dark:bg-[linear-gradient(90deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.45)_28%,rgba(0,0,0,0.08)_55%,transparent_100%)]" />
+    <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(45,60,45,0.82)_0%,rgba(45,60,45,0.5)_60%,rgba(45,60,45,0.2)_100%)] sm:bg-[linear-gradient(90deg,rgba(45,60,45,0.78)_0%,rgba(45,60,45,0.5)_28%,rgba(45,60,45,0.12)_52%,transparent_100%)] dark:bg-[linear-gradient(180deg,rgba(0,0,0,0.78)_0%,rgba(0,0,0,0.45)_60%,rgba(0,0,0,0.15)_100%)] dark:sm:bg-[linear-gradient(90deg,rgba(0,0,0,0.72)_0%,rgba(0,0,0,0.45)_28%,rgba(0,0,0,0.08)_55%,transparent_100%)]" />
 
     <div className="relative z-[2] flex flex-1 flex-col p-5 sm:p-6">
       <span className="mb-4 inline-flex w-fit items-center gap-1.5 rounded-full bg-[#1f5f35]/90 px-3 py-1.5 font-mono text-[0.625rem] font-bold tracking-[0.07em] text-white uppercase">
@@ -58,10 +58,10 @@ export const LiveGameCard = ({ game }: LiveGameCardProps) => (
         {demoGuesses.map((guess) => (
           <span
             key={guess.word}
-            className="inline-flex items-center gap-1.75 rounded-full px-2.75 py-1.5 font-mono text-xs font-semibold text-[#1a1813]"
+            className="inline-flex items-center gap-1.75 rounded-full px-2.75 py-1.5 font-mono text-xs font-medium text-[#1a1813]"
             style={{ background: getScoreColor(guess.score / 100) }}
           >
-            {guess.word} <b>{guess.score}</b>
+            {guess.word} <span className="font-semibold">{guess.score}</span>
           </span>
         ))}
       </div>

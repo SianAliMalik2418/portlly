@@ -17,6 +17,9 @@ import appCss from "../styles.css?url"
 
 const queryClient = new QueryClient()
 const FAVICON_VERSION = "20260614"
+const CF_BEACON_TOKEN = import.meta.env.VITE_CF_BEACON_TOKEN as
+  | string
+  | undefined
 
 const structuredData = {
   "@context": "https://schema.org",
@@ -70,7 +73,7 @@ export const RootDocument = ({ children }: RootDocumentProps) => (
     </head>
     <body>
       <QueryClientProvider client={queryClient}>
-        <ThemeProvider defaultTheme="system" storageKey="portlly:theme">
+        <ThemeProvider defaultTheme="light" storageKey="portlly:theme">
           {children}
         </ThemeProvider>
       </QueryClientProvider>
@@ -82,6 +85,13 @@ export const RootDocument = ({ children }: RootDocumentProps) => (
         ]}
       />
       <Scripts />
+      {CF_BEACON_TOKEN ? (
+        <script
+          defer
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon={JSON.stringify({ token: CF_BEACON_TOKEN })}
+        />
+      ) : null}
     </body>
   </html>
 )
