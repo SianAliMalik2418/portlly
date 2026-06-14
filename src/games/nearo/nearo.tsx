@@ -8,6 +8,17 @@ import { StatusCard } from "./components/status-card"
 import { GuessList } from "./components/guess-list"
 import { GuessInput } from "./components/guess-input"
 import { WinModal } from "./components/win-modal"
+import { Loader } from "@/components/ui/loader"
+import { Button } from "@/components/ui/button"
+import {
+  Empty,
+  EmptyContent,
+  EmptyDescription,
+  EmptyHeader,
+  EmptyMedia,
+  EmptyTitle,
+} from "@/components/ui/empty"
+import { RefreshCw, TriangleAlert } from "lucide-react"
 import type { ReactNode } from "react"
 
 type NearoProps = {
@@ -29,17 +40,55 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
   if (game.isPending) {
     return (
       <div className="flex h-dvh items-center justify-center bg-background">
-        <p className="text-muted-foreground">Loading puzzle…</p>
+        <Loader
+          label="Loading Nearo puzzle"
+          texts={[
+            mode === "archive"
+              ? "Loading the archived Nearo puzzle"
+              : "Loading today's Nearo puzzle",
+            "Calibrating meaning scores",
+            "Preparing your guess board",
+          ]}
+          iconClassName="size-11"
+          textContainerClassName="max-w-[18rem]"
+        />
       </div>
     )
   }
 
   if (game.error || !game.puzzle) {
+    const puzzleLabel =
+      mode === "archive" ? "this archived puzzle" : "today's puzzle"
+
     return (
-      <div className="flex h-dvh flex-col items-center justify-center gap-2 px-6 text-center">
-        <p className="text-muted-foreground">
-          Failed to load the puzzle. Try refreshing.
-        </p>
+      <div className="flex h-dvh items-center justify-center bg-background px-6">
+        <Empty className="max-w-[26rem] flex-none rounded-[1.5rem] border border-border bg-card p-6 shadow-[0_0.75rem_2rem_color-mix(in_srgb,var(--foreground)_7%,transparent)]">
+          <EmptyHeader>
+            <EmptyMedia
+              variant="icon"
+              className="size-12 rounded-full bg-destructive/10 text-destructive"
+            >
+              <TriangleAlert className="size-5" />
+            </EmptyMedia>
+            <EmptyTitle>Couldn&apos;t load Nearo</EmptyTitle>
+            <EmptyDescription>
+              We couldn&apos;t fetch {puzzleLabel}. Check your connection, then
+              try again.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="gap-3">
+            <Button
+              className="w-full rounded-full"
+              onClick={() => window.location.reload()}
+            >
+              <RefreshCw className="size-4" />
+              Try again
+            </Button>
+            <p className="text-xs leading-5 text-muted-foreground">
+              Any saved Nearo progress stays in this browser.
+            </p>
+          </EmptyContent>
+        </Empty>
       </div>
     )
   }
