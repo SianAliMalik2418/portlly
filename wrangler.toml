@@ -9,5 +9,13 @@ compatibility_flags = ["nodejs_compat"]
 binding = "PUZZLE_BUCKET"
 bucket_name = "portlly-puzzles"
 
+[[routes]]
+pattern = "portlyy.com"
+custom_domain = true
+
+[[routes]]
+pattern = "www.portlyy.com"
+custom_domain = true
+
 [observability]
 enabled = true

@@ -6,12 +6,13 @@ import {
   DialogDescription,
   DialogTitle,
 } from "@/components/ui/dialog"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import confetti from "canvas-confetti"
 import { useQuery } from "@tanstack/react-query"
 import { format, parseISO } from "date-fns"
 import { CalendarDays, CheckCircle2, Circle, Clock3 } from "lucide-react"
 import type { WordGuess } from "../types"
-import { archiveDaysQueryOptions, type ArchiveDay } from "../data/puzzle"
+import { archiveDaysQueryOptions } from "../data/puzzle"
 import { loadGameState } from "../lib/storage"
 
 type WinModalProps = {
@@ -41,11 +42,30 @@ export const WinModal = ({
 }: WinModalProps) => {
   const [showArchive, setShowArchive] = useState(false)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
+  const firedRef = useRef(false)
 
-  const best = guesses.reduce<WordGuess | null>(
-    (b, g) => (!b || g.score > b.score ? g : b),
-    null
-  )
+  useEffect(() => {
+    if (!open || firedRef.current) return
+    firedRef.current = true
+
+    const end = Date.now() + 600
+    const frame = () => {
+      confetti({
+        particleCount: 3,
+        angle: 60,
+        spread: 55,
+        origin: { x: 0, y: 0.7 },
+      })
+      confetti({
+        particleCount: 3,
+        angle: 120,
+        spread: 55,
+        origin: { x: 1, y: 0.7 },
+      })
+      if (Date.now() < end) requestAnimationFrame(frame)
+    }
+    frame()
+  }, [open])
 
   const [statuses, setStatuses] = useState<Record<string, DayStatus>>({})
 
@@ -89,8 +109,10 @@ export const WinModal = ({
           <div className="mt-4.5 flex gap-2.5">
             {[
               { value: guesses.length, label: "GUESSES" },
-              { value: puzzleId, label: "PUZZLE" },
-              { value: best ? Math.round(best.score) : 0, label: "BEST" },
+              {
+                value: guesses.find((g) => g.score === 100)?.word ?? "—",
+                label: "SECRET WORD",
+              },
             ].map((stat) => (
               <div
                 key={stat.label}

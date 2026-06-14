@@ -19,7 +19,6 @@ export const StatusCard = ({
   const progress = bestScore === null ? 0 : bestScore / 100
   const scoreColor =
     bestScore === null ? "var(--muted-foreground)" : getScoreColor(progress)
-  const guessLabel = `${guessCount} ${guessCount === 1 ? "guess" : "guesses"}`
   const circumference = 2 * Math.PI * 42
 
   return (

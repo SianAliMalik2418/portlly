@@ -84,7 +84,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
       </div>
 
       <WinModal
-        open={true}
+        open={game.showWin}
         guesses={game.guesses}
         puzzleId={game.puzzle.puzzleId}
         onReset={game.reset}
