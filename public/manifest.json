@@ -1,6 +1,7 @@
 {
-  "short_name": "Portlly",
-  "name": "Portlly",
+  "short_name": "Portlyy",
+  "name": "Portlyy — Free Daily Web Games",
+  "description": "Free daily web games — word games, trivia and party rounds you can play right in your browser. No account, no download.",
   "icons": [
     {
       "src": "favicon.svg",
@@ -14,8 +15,9 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#15140f",
+  "background_color": "#f6f4ee"
 }

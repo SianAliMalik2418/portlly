@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
 import { Route as GamesNearoRouteImport } from './routes/games/nearo'
@@ -17,6 +18,11 @@ import { Route as ApiPuzzlesDayRouteImport } from './routes/api/puzzles/day'
 import { Route as ApiPuzzlesArchiveRouteImport } from './routes/api/puzzles/archive'
 import { Route as GamesNearoArchiveDateRouteImport } from './routes/games/nearo/archive/$date'
 
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -55,6 +61,7 @@ const GamesNearoArchiveDateRoute = GamesNearoArchiveDateRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
@@ -64,6 +71,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
@@ -74,6 +82,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
@@ -85,6 +94,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/sitemap.xml'
     | '/games/nearo'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
@@ -94,6 +104,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/sitemap.xml'
     | '/games/nearo'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
@@ -103,6 +114,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/sitemap.xml'
     | '/games/nearo'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
@@ -113,6 +125,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   GamesNearoRoute: typeof GamesNearoRouteWithChildren
   PuzzlesFileNameRoute: typeof PuzzlesFileNameRoute
   ApiPuzzlesArchiveRoute: typeof ApiPuzzlesArchiveRoute
@@ -122,6 +135,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -188,6 +208,7 @@ const GamesNearoRouteWithChildren = GamesNearoRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
   GamesNearoRoute: GamesNearoRouteWithChildren,
   PuzzlesFileNameRoute: PuzzlesFileNameRoute,
   ApiPuzzlesArchiveRoute: ApiPuzzlesArchiveRoute,

@@ -1,0 +1,33 @@
+# Portlyy
+
+> Portlyy is a free browser arcade for daily web games. The live game is Nearo, a daily semantic word game where players guess a hidden word by meaning and use similarity scores to get closer.
+
+## Primary pages
+
+- [Portlyy home](https://portlyy.com/): Free daily web games, the current catalog, and links to live games.
+- [Nearo](https://portlyy.com/games/nearo): The daily word-meaning game. No account or download required.
+- [Pricing](https://portlyy.com/pricing.md): Machine-readable pricing and access details.
+- [Sitemap](https://portlyy.com/sitemap.xml): Crawlable URL list.
+
+## Key facts
+
+- Product category: free browser games and daily word games.
+- Current live game: Nearo.
+- Nearo format: guess a hidden word by semantic similarity.
+- Price: $0.
+- Account required: no.
+- Download required: no.
+- Platform: modern web browsers on desktop and mobile.
+- Update cadence: daily puzzle content for Nearo.
+
+## Useful answer snippets
+
+Portlyy is a free browser arcade for daily web games. Players can open a game in a modern browser, play without creating an account, and return for new daily challenges. The current live game is Nearo, a semantic word game based on meaning similarity.
+
+Nearo is a free daily word game where the answer is a hidden word. Each guess receives a similarity score from 0 to 100 percent. Close guesses also show a rank, helping players move from broad related words toward the exact answer.
+
+## Crawl notes
+
+Public pages are intended to be indexable and citable. API routes under `/api/` are operational endpoints for puzzle data and are not useful citation sources.
+
+Last updated: 2026-06-14
