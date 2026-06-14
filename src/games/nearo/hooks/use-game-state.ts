@@ -16,7 +16,7 @@ import {
 
 const pickStarterWord = (puzzle: WordPuzzle): string | null => {
   const entries = Object.entries(puzzle.scores)
-  const candidates = entries.filter(([, s]) => s >= 15 && s <= 35)
+  const candidates = entries.filter(([, s]) => s >= 35 && s <= 50)
   if (candidates.length === 0) return entries.length > 0 ? entries[0][0] : null
   const hash = puzzle.puzzleId
     .split("")

@@ -7,7 +7,7 @@ import { ArchiveStrip } from "./components/archive-strip"
 import { StatusCard } from "./components/status-card"
 import { GuessList } from "./components/guess-list"
 import { GuessInput } from "./components/guess-input"
-import { WinModal } from "./components/win-modal"
+import { WinView } from "./components/win-view"
 import { Loader } from "@/components/ui/loader"
 import { Button } from "@/components/ui/button"
 import {
@@ -28,7 +28,7 @@ type NearoProps = {
 export const Nearo = ({ mode, date }: NearoProps) => {
   const game = useGameState({ mode, date })
   const gameReady = !game.isPending && !game.error && !!game.puzzle
-  const { tourActive } = useGameTour(gameReady)
+  useGameTour(gameReady)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
   const selectedDate =
     mode === "archive"
@@ -102,49 +102,52 @@ export const Nearo = ({ mode, date }: NearoProps) => {
       >
         <div className="mx-auto flex min-h-0 w-full max-w-[43rem] flex-1 flex-col">
           <GameNav />
-          <ArchiveStrip
-            className="order-4 sm:order-none"
-            days={archiveDays}
-            selectedDate={selectedDate}
-            activePuzzleId={game.puzzle.puzzleId}
-            activeGuessCount={game.guesses.length}
-            activeWon={game.won}
-          />
-          <StatusCard
-            className="order-1 sm:order-none"
-            bestScore={game.bestScore}
-            bestGuess={game.bestGuess}
-            guessCount={game.guesses.length}
-            status={game.status}
-          />
-          <GuessList
-            className="order-3 sm:order-none"
-            guesses={game.sortedGuesses}
-            latestId={game.latestId}
-            shakingGuessId={game.shakingGuessId}
-            pinnedGuessId={game.pinnedGuessId}
-
-          />
-          <GuessInput
-            className="order-2 sm:order-none"
-            input={game.input}
-            shake={game.shake}
-            won={game.won}
-            hintEnabled={game.hintEnabled}
-            guessesUntilHint={game.guessesUntilHint}
-            onInputChange={game.setInput}
-            onSubmit={game.submit}
-            onHint={game.hint}
-          />
+          {game.showWin ? (
+            <WinView
+              guesses={game.guesses}
+              puzzleId={game.puzzle.puzzleId}
+              mode={mode}
+              date={date}
+              onReset={game.reset}
+            />
+          ) : (
+            <>
+              <ArchiveStrip
+                className="order-4 sm:order-none"
+                days={archiveDays}
+                selectedDate={selectedDate}
+                activePuzzleId={game.puzzle.puzzleId}
+                activeGuessCount={game.guesses.length}
+                activeWon={game.won}
+              />
+              <StatusCard
+                className="order-1 sm:order-none"
+                bestScore={game.bestScore}
+                bestGuess={game.bestGuess}
+                guessCount={game.guesses.length}
+                status={game.status}
+              />
+              <GuessList
+                className="order-3 sm:order-none"
+                guesses={game.sortedGuesses}
+                latestId={game.latestId}
+                shakingGuessId={game.shakingGuessId}
+                pinnedGuessId={game.pinnedGuessId}
+              />
+              <GuessInput
+                className="order-2 sm:order-none"
+                input={game.input}
+                shake={game.shake}
+                won={game.won}
+                hintEnabled={game.hintEnabled}
+                guessesUntilHint={game.guessesUntilHint}
+                onInputChange={game.setInput}
+                onSubmit={game.submit}
+                onHint={game.hint}
+              />
+            </>
+          )}
         </div>
-
-        <WinModal
-          open={game.showWin}
-          guesses={game.guesses}
-          puzzleId={game.puzzle.puzzleId}
-          onReset={game.reset}
-          onClose={() => game.setShowWin(false)}
-        />
       </div>
     </>
   )
