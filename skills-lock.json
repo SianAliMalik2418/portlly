@@ -25,6 +25,18 @@
       "skillPath": "skills/neon-postgres/SKILL.md",
       "computedHash": "3c53df29c959dc0a7f724ff8620063b20fabd2b1fa702ec97e3f17e6a23d5a1c"
     },
+    "programmatic-seo": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/programmatic-seo/SKILL.md",
+      "computedHash": "0bbdcbacfbe46fd78d774041ee49afd313505bb435b775dc246f4b8e6981d797"
+    },
+    "seo-audit": {
+      "source": "coreyhaines31/marketingskills",
+      "sourceType": "github",
+      "skillPath": "skills/seo-audit/SKILL.md",
+      "computedHash": "f2dc52130189068981f21e1c0bdc4471ac7cd9b08d8a1320604411aa0f950385"
+    },
     "tanstack-query-best-practices": {
       "source": "deckardger/tanstack-agent-skills",
       "sourceType": "github",

@@ -7,9 +7,9 @@ type NearoLogoProps = {
 export const NearoLogo = ({ className }: NearoLogoProps) => (
   <svg
     aria-hidden="true"
-    className={cn("h-12 w-auto text-foreground", className)}
+    className={cn("h-12 w-auto overflow-visible text-foreground", className)}
     fill="none"
-    viewBox="0 0 170 56"
+    viewBox="0 0 182 56"
     xmlns="http://www.w3.org/2000/svg"
   >
     <path

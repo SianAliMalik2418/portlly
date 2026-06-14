@@ -17,7 +17,15 @@ export const HomeFooter = () => (
         ))}
       </div>
       <span className="font-mono text-[0.6875rem] text-muted-foreground">
-        © 2026 portlly · made for fun
+        Made with ❤️ by{" "}
+        <a
+          href="https://github.com/SianAliMalik2418"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-foreground underline underline-offset-2 transition-colors duration-200 hover:text-primary"
+        >
+          Sian
+        </a>
       </span>
     </div>
   </footer>

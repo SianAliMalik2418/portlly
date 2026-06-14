@@ -27,7 +27,7 @@ export const HowToPlayDialog = () => {
 
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="font-serif text-xl font-bold">
+          <DialogTitle className="text-xl font-bold">
             How to play
           </DialogTitle>
         </DialogHeader>

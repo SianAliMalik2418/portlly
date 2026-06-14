@@ -5,7 +5,7 @@ import { format, parseISO } from "date-fns"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
 import { HowToPlayDialog } from "./how-to-play"
-import { NearoLogo } from "./nearo-logo"
+import { NearoLogo } from "@/components/nearo-logo"
 
 type GameNavProps = {
   mode: "daily" | "archive"
@@ -38,7 +38,7 @@ export const GameNav = ({ selectedDate }: GameNavProps) => (
       <div className="flex flex-col items-center text-center leading-none">
         <span className="sr-only">Nearo</span>
         <NearoLogo />
-        <span className="mt-2 block font-mono text-sm font-bold text-muted-foreground">
+        <span className="mt-0.5 ml-4 block font-mono text-xs font-bold text-muted-foreground">
           {formatHeaderDate(selectedDate)}
         </span>
       </div>

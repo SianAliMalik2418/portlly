@@ -8,19 +8,19 @@ export const HomeHero = () => (
 
     <div className="relative z-[1] mx-auto flex max-w-[47.5rem] flex-col items-center px-4.5 text-center">
       <span className="inline-flex items-center gap-1.5 font-mono text-xs tracking-[0.12em] text-[oklch(0.62_0.14_150)] uppercase">
-        ● new puzzle daily
+        <span className="inline-block size-2 animate-pulse rounded-full bg-[oklch(0.62_0.14_150)]" />
+        new games dropping soon
       </span>
 
       <h1 className="mt-5 font-display text-[clamp(3rem,8vw,5.5rem)] leading-[1.02] font-bold tracking-[-0.045em]">
-        Tiny games.
+        Your daily
         <br />
-        Big <span className="text-primary">brain</span> energy.
+        <span className="text-primary">brain</span> arcade.
       </h1>
 
       <p className="mt-6 max-w-[44ch] text-[1.0625rem] leading-8 text-muted-foreground">
-        A growing playground of quick, clever, ridiculously replayable games. No
-        downloads, no graphics arms race, just the good stuff. Play solo or race
-        a friend.
+        Word games, trivia, party rounds — all in your browser. New games
+        join the lineup regularly. Jump in, no account needed.
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">

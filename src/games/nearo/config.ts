@@ -8,7 +8,7 @@ export const nearoConfig = {
   status: "live",
   description:
     "Guess the hidden word by meaning. Each try gets a similarity score and a rank when you are close.",
-  meta: ["DAILY", "1-2 PLAYERS", "~4 MIN"],
+  meta: ["DAILY", "~4 MIN"],
   storagePrefix: "portlly:nearo",
   hintThreshold: 10,
 } as const

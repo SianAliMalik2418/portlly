@@ -16,7 +16,8 @@ type NearoProps = {
 
 export const Nearo = ({ mode, date }: NearoProps) => {
   const game = useGameState({ mode, date })
-  const { tourActive } = useGameTour()
+  const gameReady = !game.isPending && !game.error && !!game.puzzle
+  const { tourActive } = useGameTour(gameReady)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
   const selectedDate =
     mode === "archive"

@@ -19,11 +19,11 @@ const markSeen = () => {
   } catch {}
 }
 
-export const useGameTour = () => {
+export const useGameTour = (ready = true) => {
   const [tourActive, setTourActive] = useState(() => !hasSeen())
 
   useEffect(() => {
-    if (!tourActive) return
+    if (!tourActive || !ready) return
 
     const timeout = setTimeout(() => {
       const tour = driver({
@@ -87,7 +87,7 @@ export const useGameTour = () => {
     }, 600)
 
     return () => clearTimeout(timeout)
-  }, [tourActive])
+  }, [tourActive, ready])
 
   return { tourActive }
 }
