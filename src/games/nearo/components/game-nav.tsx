@@ -1,22 +1,11 @@
 import { ModeToggle } from "@/components/mode-toggle"
 import { PlatformHeader } from "@/components/platform-header"
 import { Link } from "@tanstack/react-router"
-import { format, parseISO } from "date-fns"
 import { motion } from "framer-motion"
 import { ArrowLeft } from "lucide-react"
 import { NearoLogo } from "@/components/nearo-logo"
 
-type GameNavProps = {
-  selectedDate: string | null
-}
-
-const formatHeaderDate = (date: string | null) => {
-  if (!date) return format(new Date(), "EEE, dd MMM yyyy")
-
-  return format(parseISO(date), "EEE, dd MMM yyyy")
-}
-
-export const GameNav = ({ selectedDate }: GameNavProps) => (
+export const GameNav = () => (
   <PlatformHeader
     className="border-transparent"
     contentClassName="h-28 max-w-[43rem] px-6"
@@ -36,9 +25,6 @@ export const GameNav = ({ selectedDate }: GameNavProps) => (
       <div className="flex flex-col items-center text-center leading-none">
         <span className="sr-only">Nearo</span>
         <NearoLogo />
-        <span className="mt-0.5 ml-4 block font-mono text-xs font-bold text-muted-foreground">
-          {formatHeaderDate(selectedDate)}
-        </span>
       </div>
     }
     trailing={

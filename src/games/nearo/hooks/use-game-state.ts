@@ -65,13 +65,14 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     if (saved) {
       dispatch({ type: "hydrate", guesses: saved.guesses, solved: saved.won })
       setShowWin(saved.won)
+      setHintsUsed(saved.hintsUsed ?? 0)
     } else {
       dispatch({ type: "reset" })
       setShowWin(false)
+      setHintsUsed(0)
     }
 
     setInput("")
-    setHintsUsed(0)
     setHydratedPuzzleId(puzzle.puzzleId)
   }, [puzzle, hydratedPuzzleId])
 
@@ -81,8 +82,9 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     saveGameState(puzzle.puzzleId, {
       guesses: state.guesses,
       won: state.solved,
+      hintsUsed,
     })
-  }, [puzzle, hydratedPuzzleId, state.guesses, state.solved])
+  }, [hintsUsed, puzzle, hydratedPuzzleId, state.guesses, state.solved])
 
   const bestScore = useMemo(
     () =>

@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { Nearo } from "@/games/nearo/nearo"
+import { NearoSeoContent } from "@/games/nearo/components/nearo-seo-content"
 import { nearoConfig } from "@/games/nearo/config"
 import { seo } from "@/lib/seo"
 
@@ -17,5 +18,10 @@ export const Route = createFileRoute("/games/nearo/archive/$date")({
 function ArchivePuzzleRoute() {
   const { date } = Route.useParams()
 
-  return <Nearo mode="archive" date={date} />
+  return (
+    <>
+      <Nearo mode="archive" date={date} />
+      <NearoSeoContent />
+    </>
+  )
 }

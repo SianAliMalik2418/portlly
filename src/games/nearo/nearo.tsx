@@ -101,7 +101,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
         }}
       >
         <div className="mx-auto flex min-h-0 w-full max-w-[43rem] flex-1 flex-col">
-          <GameNav selectedDate={selectedDate} />
+          <GameNav />
           <ArchiveStrip
             className="order-4 sm:order-none"
             days={archiveDays}
