@@ -5,7 +5,12 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion"
 import { AI_SEO_UPDATED } from "@/lib/seo"
-import { nearoDefinition, nearoFaqs, nearoHowToSteps } from "../seo"
+import {
+  nearoComparison,
+  nearoDefinition,
+  nearoFaqs,
+  nearoHowToSteps,
+} from "../seo"
 
 export const NearoSeoContent = () => (
   <section className="border-t border-border bg-muted/20">
@@ -14,12 +19,12 @@ export const NearoSeoContent = () => (
         <p className="font-mono text-xs tracking-[0.12em] text-primary uppercase">
           Game guide
         </p>
-        <h2
-          id="what-is-nearo"
+        <h1
+          id="nearo-guide"
           className="mt-3 font-display text-3xl leading-tight font-bold"
         >
-          What is Nearo?
-        </h2>
+          Nearo — the daily word-meaning game
+        </h1>
         <p className="mt-4 text-sm leading-7 text-muted-foreground">
           {nearoDefinition}
         </p>
@@ -29,9 +34,9 @@ export const NearoSeoContent = () => (
       </header>
 
       <section className="mt-9" aria-labelledby="how-to-play-nearo">
-        <h3 id="how-to-play-nearo" className="text-base font-semibold">
+        <h2 id="how-to-play-nearo" className="text-base font-semibold">
           How to play Nearo
-        </h3>
+        </h2>
         <ol className="mt-4 list-decimal space-y-2.5 pl-5 text-sm leading-7 text-muted-foreground">
           {nearoHowToSteps.map((step) => (
             <li key={step}>{step}</li>
@@ -39,10 +44,19 @@ export const NearoSeoContent = () => (
         </ol>
       </section>
 
+      <section className="mt-9" aria-labelledby="nearo-vs">
+        <h2 id="nearo-vs" className="text-base font-semibold">
+          Nearo vs Wordle and Semantle
+        </h2>
+        <p className="mt-4 text-sm leading-7 text-muted-foreground">
+          {nearoComparison}
+        </p>
+      </section>
+
       <section className="mt-9" aria-labelledby="nearo-questions">
-        <h3 id="nearo-questions" className="text-base font-semibold">
+        <h2 id="nearo-questions" className="text-base font-semibold">
           Nearo questions
-        </h3>
+        </h2>
         <Accordion
           type="single"
           collapsible

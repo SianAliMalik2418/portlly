@@ -16,6 +16,11 @@ export const HomeHero = () => (
         Your daily
         <br />
         <span className="text-primary">brain</span> arcade.
+        <span className="sr-only">
+          {" "}
+          — free daily web games: word games, trivia and party rounds you can
+          play in your browser.
+        </span>
       </h1>
 
       <p className="mt-6 max-w-[44ch] text-[1.0625rem] leading-8 text-muted-foreground">
