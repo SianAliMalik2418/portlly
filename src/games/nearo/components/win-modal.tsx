@@ -1,11 +1,11 @@
 import { Button } from "@/components/ui/button"
 import { nearoConfig } from "../config"
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { useEffect, useRef, useState } from "react"
 import confetti from "canvas-confetti"
 import { useQuery } from "@tanstack/react-query"
@@ -87,24 +87,24 @@ export const WinModal = ({
   )
 
   return (
-    <Dialog
+    <AlertDialog
       open={open}
       onOpenChange={(isOpen) => {
         if (!isOpen) onClose()
       }}
     >
-      <DialogContent
-        className="max-w-[26.25rem] rounded-[1.5rem] border-border p-0 text-center [&>button]:hidden"
+      <AlertDialogContent
+        className="w-[calc(100vw-2rem)] max-w-[26.25rem] gap-0 rounded-[1.5rem] border-border p-0 text-center data-[size=default]:max-w-[26.25rem] sm:data-[size=default]:max-w-[26.25rem]"
         style={{ animation: "dialogIn 300ms cubic-bezier(0.23,1,0.32,1)" }}
       >
         <div className="px-5.5 py-6.5">
           <span className="text-[3.25rem]">🏆</span>
-          <DialogTitle className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
+          <AlertDialogTitle className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
             You found it!
-          </DialogTitle>
-          <DialogDescription className="sr-only">
+          </AlertDialogTitle>
+          <AlertDialogDescription className="sr-only">
             Puzzle solved summary.
-          </DialogDescription>
+          </AlertDialogDescription>
 
           <div className="mt-4.5 flex gap-2.5">
             {[
@@ -128,7 +128,7 @@ export const WinModal = ({
 
           <div className="mt-5 flex flex-col gap-2.5">
             <Button
-              className="btn-press rounded-full"
+              className="rounded-full"
               onClick={() => setShowArchive(!showArchive)}
             >
               <CalendarDays className="size-4" />
@@ -206,14 +206,14 @@ export const WinModal = ({
 
             <Button
               variant="outline"
-              className="btn-press rounded-full"
+              className="rounded-full"
               onClick={onReset}
             >
               Play again
             </Button>
           </div>
         </div>
-      </DialogContent>
-    </Dialog>
+      </AlertDialogContent>
+    </AlertDialog>
   )
 }

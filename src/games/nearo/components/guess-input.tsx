@@ -64,12 +64,12 @@ export const GuessInput = ({
               id="nearo-hint"
               whileTap={
                 hintEnabled && !won
-                  ? { transform: "translateY(2px) scale(0.95)" }
+                  ? { y: 2, scale: 0.95 }
                   : undefined
               }
               transition={{ type: "spring", stiffness: 500, damping: 20 }}
               className={cn(
-                "btn-press grid size-10 place-items-center rounded-full transition-colors",
+                "grid size-10 place-items-center rounded-full transition-colors",
                 hintEnabled && !won
                   ? "bg-amber-500/15 text-amber-500 hover:bg-amber-500/25"
                   : "bg-muted text-muted-foreground/40 cursor-not-allowed"
@@ -90,9 +90,9 @@ export const GuessInput = ({
             </motion.button>
 
             <motion.button
-              whileTap={{ transform: "translateY(2px) scale(0.95)" }}
+              whileTap={{ y: 2, scale: 0.95 }}
               transition={{ type: "spring", stiffness: 500, damping: 20 }}
-              className="btn-press grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0.35rem_1rem_color-mix(in_srgb,var(--primary)_30%,transparent)]"
+              className="grid size-10 place-items-center rounded-full bg-primary text-primary-foreground shadow-[0_0.35rem_1rem_color-mix(in_srgb,var(--primary)_30%,transparent)]"
               onClick={onSubmit}
               disabled={won}
               aria-label="Submit guess"

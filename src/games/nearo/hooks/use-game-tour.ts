@@ -89,5 +89,5 @@ export const useGameTour = (ready = true) => {
     return () => clearTimeout(timeout)
   }, [tourActive, ready])
 
-  return { tourActive }
+  return { tourActive: ready && tourActive }
 }

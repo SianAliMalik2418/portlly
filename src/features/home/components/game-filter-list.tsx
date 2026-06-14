@@ -17,7 +17,7 @@ export const GameFilterList = ({
       <motion.button
         key={filter}
         type="button"
-        whileTap={{ transform: "scale(0.95)" }}
+        whileTap={{ scale: 0.95 }}
         transition={{ type: "spring", stiffness: 500, damping: 20 }}
         onClick={() => onFilterChange(filter)}
         aria-pressed={activeFilter === filter}

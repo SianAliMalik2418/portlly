@@ -14,7 +14,7 @@ type LiveGameCardProps = {
 export const LiveGameCard = ({ game }: LiveGameCardProps) => (
   <motion.div
     className="relative col-span-1 flex min-h-[20rem] overflow-hidden rounded-[1.625rem] border border-[#e7d9a8]/70 bg-[#07110d] text-white shadow-[0_1rem_2.5rem_rgba(26,24,19,0.12)] sm:col-span-2 lg:col-span-3"
-    whileTap={{ transform: "translateY(-1px) scale(0.99)" }}
+    whileTap={{ y: -1, scale: 0.99 }}
     transition={{ type: "spring", stiffness: 400, damping: 25 }}
   >
     <a
