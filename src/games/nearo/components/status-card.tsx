@@ -1,7 +1,9 @@
 import { getScoreColor } from "@/lib/score-color"
+import { cn } from "@/lib/utils"
 import type { GameStatus, WordGuess } from "../types"
 
 type StatusCardProps = {
+  className?: string
   bestScore: number | null
   bestGuess: WordGuess | null
   guessCount: number
@@ -9,6 +11,7 @@ type StatusCardProps = {
 }
 
 export const StatusCard = ({
+  className,
   bestScore,
   bestGuess,
   guessCount,
@@ -22,7 +25,13 @@ export const StatusCard = ({
   const circumference = 2 * Math.PI * 42
 
   return (
-    <div id="nearo-status" className="mx-6 mb-5 rounded-[1.125rem] border border-border bg-card px-4 py-4">
+    <div
+      id="nearo-status"
+      className={cn(
+        "mx-6 mb-5 rounded-[1.125rem] border border-border bg-card px-4 py-4",
+        className
+      )}
+    >
       <div className="flex items-center gap-4">
         <div className="min-w-18 shrink-0 rounded-[0.875rem] bg-foreground/10 px-3 py-3 text-center text-foreground sm:hidden">
           <b className="block font-display text-xl leading-none">

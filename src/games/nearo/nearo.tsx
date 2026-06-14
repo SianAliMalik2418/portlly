@@ -19,15 +19,13 @@ import {
   EmptyTitle,
 } from "@/components/ui/empty"
 import { RefreshCw, TriangleAlert } from "lucide-react"
-import type { ReactNode } from "react"
 
 type NearoProps = {
   mode: "daily" | "archive"
   date?: string
-  children?: ReactNode
 }
 
-export const Nearo = ({ mode, date, children }: NearoProps) => {
+export const Nearo = ({ mode, date }: NearoProps) => {
   const game = useGameState({ mode, date })
   const gameReady = !game.isPending && !game.error && !!game.puzzle
   const { tourActive } = useGameTour(gameReady)
@@ -39,23 +37,20 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
 
   if (game.isPending) {
     return (
-      <>
-        <div className="flex h-dvh items-center justify-center bg-background">
-          <Loader
-            label="Loading Nearo puzzle"
-            texts={[
-              mode === "archive"
-                ? "Loading the archived Nearo puzzle"
-                : "Loading today's Nearo puzzle",
-              "Calibrating meaning scores",
-              "Preparing your guess board",
-            ]}
-            iconClassName="size-11"
-            textContainerClassName="max-w-[18rem]"
-          />
-        </div>
-        {children}
-      </>
+      <div className="flex h-dvh items-center justify-center bg-background">
+        <Loader
+          label="Loading Nearo puzzle"
+          texts={[
+            mode === "archive"
+              ? "Loading the archived Nearo puzzle"
+              : "Loading today's Nearo puzzle",
+            "Calibrating meaning scores",
+            "Preparing your guess board",
+          ]}
+          iconClassName="size-11"
+          textContainerClassName="max-w-[18rem]"
+        />
+      </div>
     )
   }
 
@@ -64,38 +59,35 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
       mode === "archive" ? "this archived puzzle" : "today's puzzle"
 
     return (
-      <>
-        <div className="flex h-dvh items-center justify-center bg-background px-6">
-          <Empty className="max-w-[26rem] flex-none rounded-[1.5rem] border border-border bg-card p-6 shadow-[0_0.75rem_2rem_color-mix(in_srgb,var(--foreground)_7%,transparent)]">
-            <EmptyHeader>
-              <EmptyMedia
-                variant="icon"
-                className="size-12 rounded-full bg-destructive/10 text-destructive"
-              >
-                <TriangleAlert className="size-5" />
-              </EmptyMedia>
-              <EmptyTitle>Couldn&apos;t load Nearo</EmptyTitle>
-              <EmptyDescription>
-                We couldn&apos;t fetch {puzzleLabel}. Check your connection,
-                then try again.
-              </EmptyDescription>
-            </EmptyHeader>
-            <EmptyContent className="gap-3">
-              <Button
-                className="w-full rounded-full"
-                onClick={() => window.location.reload()}
-              >
-                <RefreshCw className="size-4" />
-                Try again
-              </Button>
-              <p className="text-xs leading-5 text-muted-foreground">
-                Any saved Nearo progress stays in this browser.
-              </p>
-            </EmptyContent>
-          </Empty>
-        </div>
-        {children}
-      </>
+      <div className="flex h-dvh items-center justify-center bg-background px-6">
+        <Empty className="max-w-[26rem] flex-none rounded-[1.5rem] border border-border bg-card p-6 shadow-[0_0.75rem_2rem_color-mix(in_srgb,var(--foreground)_7%,transparent)]">
+          <EmptyHeader>
+            <EmptyMedia
+              variant="icon"
+              className="size-12 rounded-full bg-destructive/10 text-destructive"
+            >
+              <TriangleAlert className="size-5" />
+            </EmptyMedia>
+            <EmptyTitle>Couldn&apos;t load Nearo</EmptyTitle>
+            <EmptyDescription>
+              We couldn&apos;t fetch {puzzleLabel}. Check your connection, then
+              try again.
+            </EmptyDescription>
+          </EmptyHeader>
+          <EmptyContent className="gap-3">
+            <Button
+              className="w-full rounded-full"
+              onClick={() => window.location.reload()}
+            >
+              <RefreshCw className="size-4" />
+              Try again
+            </Button>
+            <p className="text-xs leading-5 text-muted-foreground">
+              Any saved Nearo progress stays in this browser.
+            </p>
+          </EmptyContent>
+        </Empty>
+      </div>
     )
   }
 
@@ -111,6 +103,7 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
         <div className="mx-auto flex min-h-0 w-full max-w-[43rem] flex-1 flex-col">
           <GameNav selectedDate={selectedDate} />
           <ArchiveStrip
+            className="order-4 sm:order-none"
             days={archiveDays}
             selectedDate={selectedDate}
             activePuzzleId={game.puzzle.puzzleId}
@@ -118,12 +111,14 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
             activeWon={game.won}
           />
           <StatusCard
+            className="order-1 sm:order-none"
             bestScore={game.bestScore}
             bestGuess={game.bestGuess}
             guessCount={game.guesses.length}
             status={game.status}
           />
           <GuessList
+            className="order-3 sm:order-none"
             guesses={game.sortedGuesses}
             latestId={game.latestId}
             shakingGuessId={game.shakingGuessId}
@@ -131,6 +126,7 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
             showExample={tourActive && game.guesses.length === 0}
           />
           <GuessInput
+            className="order-2 sm:order-none"
             input={game.input}
             shake={game.shake}
             won={game.won}
@@ -150,8 +146,6 @@ export const Nearo = ({ mode, date, children }: NearoProps) => {
           onClose={() => game.setShowWin(false)}
         />
       </div>
-
-      {children}
     </>
   )
 }

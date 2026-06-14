@@ -1,10 +1,12 @@
 import { LayoutGroup } from "framer-motion"
 import { Sparkles } from "lucide-react"
+import { cn } from "@/lib/utils"
 import type { WordGuess } from "../types"
 import { EmptyState } from "./empty-state"
 import { GuessRow } from "./guess-row"
 
 type GuessListProps = {
+  className?: string
   guesses: WordGuess[]
   latestId: number | null
   shakingGuessId: number | null
@@ -13,13 +15,20 @@ type GuessListProps = {
 }
 
 export const GuessList = ({
+  className,
   guesses,
   latestId,
   shakingGuessId,
   pinnedGuessId,
   showExample = false,
 }: GuessListProps) => (
-  <div id="nearo-guesses" className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4">
+  <div
+    id="nearo-guesses"
+    className={cn(
+      "flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4",
+      className
+    )}
+  >
     {guesses.length === 0 ? (
       <EmptyState showExample={showExample} />
     ) : (

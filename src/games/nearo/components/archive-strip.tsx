@@ -12,11 +12,13 @@ import {
   Clock3,
 } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
+import { cn } from "@/lib/utils"
 import { nearoConfig } from "../config"
 import type { ArchiveDay } from "../data/puzzle"
 import { loadGameState } from "../lib/storage"
 
 type ArchiveStripProps = {
+  className?: string
   days: ArchiveDay[]
   selectedDate: string | null
   activePuzzleId: string | null
@@ -45,6 +47,7 @@ const getStatus = (puzzleId: string): DayStatus => {
 }
 
 export const ArchiveStrip = ({
+  className,
   days,
   selectedDate,
   activePuzzleId,
@@ -81,7 +84,11 @@ export const ArchiveStrip = ({
   if (orderedDays.length === 0) return null
 
   return (
-    <Collapsible open={open} onOpenChange={setOpen} className="px-6 pb-4">
+    <Collapsible
+      open={open}
+      onOpenChange={setOpen}
+      className={cn("px-6 pb-4", className)}
+    >
       <div className="mx-auto max-w-[44rem]">
         <CollapsibleTrigger
           className="flex w-full items-center gap-4 rounded-[1.125rem] border border-border bg-card px-4 py-3 text-left text-foreground outline-none hover:border-primary/40 focus-visible:ring-3 focus-visible:ring-ring/30"

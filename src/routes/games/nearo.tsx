@@ -99,8 +99,9 @@ function NearoRoute() {
   }
 
   return (
-    <Nearo mode="daily">
+    <>
+      <Nearo mode="daily" />
       <NearoSeoContent />
-    </Nearo>
+    </>
   )
 }
