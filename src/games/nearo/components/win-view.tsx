@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { format, isToday, isYesterday, parseISO } from "date-fns"
 import confetti from "canvas-confetti"
-import { CalendarDays, CheckCircle2, Circle, Clock3 } from "lucide-react"
+import { CalendarDays, CheckCircle2, Circle, Clock3, Lightbulb } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getScoreColor } from "@/lib/score-color"
 import { nearoConfig } from "../config"
@@ -16,6 +16,33 @@ type WinViewProps = {
   mode: "daily" | "archive"
   date?: string
   onReset: () => void
+}
+
+const getTimeUntilMidnightUtc = () => {
+  const now = new Date()
+  const tomorrow = new Date(
+    Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1)
+  )
+  return Math.max(0, tomorrow.getTime() - now.getTime())
+}
+
+const formatCountdown = (ms: number) => {
+  const totalSeconds = Math.floor(ms / 1000)
+  const h = Math.floor(totalSeconds / 3600)
+  const m = Math.floor((totalSeconds % 3600) / 60)
+  const s = totalSeconds % 60
+  return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`
+}
+
+const useCountdown = () => {
+  const [remaining, setRemaining] = useState(getTimeUntilMidnightUtc)
+
+  useEffect(() => {
+    const id = setInterval(() => setRemaining(getTimeUntilMidnightUtc()), 1000)
+    return () => clearInterval(id)
+  }, [])
+
+  return formatCountdown(remaining)
 }
 
 const getWinLabel = (mode: "daily" | "archive", date?: string) => {
@@ -38,6 +65,7 @@ const getStatus = (puzzleId: string): DayStatus => {
 }
 
 export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps) => {
+  const countdown = useCountdown()
   const [showArchive, setShowArchive] = useState(false)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
   const firedRef = useRef(false)
@@ -110,6 +138,15 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
               </span>
             </div>
           ))}
+        </div>
+
+        <div className="mt-4 text-center">
+          <span className="font-mono text-lg font-bold tracking-wider text-foreground">
+            {countdown}
+          </span>
+          <p className="mt-0.5 font-mono text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
+            Next puzzle
+          </p>
         </div>
 
         <div className="mx-auto mt-5 flex w-full max-w-sm flex-col gap-2.5">
@@ -216,8 +253,11 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
                   : "–"}
               </span>
               <span className="h-6 w-px shrink-0 bg-border" />
-              <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground lowercase">
+              <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-sm font-semibold text-foreground lowercase">
                 {guess.word}
+                {guess.isHint && (
+                  <Lightbulb className="size-3.5 shrink-0 text-amber-500" />
+                )}
               </span>
               <span
                 className="min-w-12 rounded-[0.75rem] border px-2.5 py-1.5 text-center font-mono text-xs font-bold"

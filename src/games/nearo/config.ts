@@ -11,4 +11,5 @@ export const nearoConfig = {
   meta: ["DAILY", "~4 MIN"],
   storagePrefix: "portlly:nearo",
   hintThreshold: 10,
+  maxHints: 5,
 } as const

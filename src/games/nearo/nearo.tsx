@@ -28,7 +28,7 @@ type NearoProps = {
 export const Nearo = ({ mode, date }: NearoProps) => {
   const game = useGameState({ mode, date })
   const gameReady = !game.isPending && !game.error && !!game.puzzle
-  useGameTour(gameReady)
+  const { tourActive } = useGameTour(gameReady)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
   const selectedDate =
     mode === "archive"
@@ -133,6 +133,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
                 latestId={game.latestId}
                 shakingGuessId={game.shakingGuessId}
                 pinnedGuessId={game.pinnedGuessId}
+                showExample={tourActive && game.guesses.length === 0}
               />
               <GuessInput
                 className="order-2 sm:order-none"
@@ -141,6 +142,8 @@ export const Nearo = ({ mode, date }: NearoProps) => {
                 won={game.won}
                 hintEnabled={game.hintEnabled}
                 guessesUntilHint={game.guessesUntilHint}
+                hintsUsed={game.hintsUsed}
+                maxHints={game.maxHints}
                 onInputChange={game.setInput}
                 onSubmit={game.submit}
                 onHint={game.hint}

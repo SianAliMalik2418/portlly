@@ -18,7 +18,7 @@ export type WordGameState = {
 }
 
 export type WordGameAction =
-  | { type: "submitGuess"; guess: string; puzzle: WordPuzzle }
+  | { type: "submitGuess"; guess: string; puzzle: WordPuzzle; isHint?: boolean }
   | { type: "hydrate"; guesses: Array<WordGuess>; solved?: boolean }
   | { type: "reset" }
 
@@ -91,6 +91,7 @@ export const wordGameReducer = (
     word: result.word,
     score: result.score,
     rank: result.rank,
+    isHint: action.isHint || undefined,
   }
   const guesses = [...state.guesses, guess]
   const solved = result.status === "win"

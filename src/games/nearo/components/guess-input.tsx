@@ -11,9 +11,11 @@ type GuessInputProps = {
   won: boolean
   hintEnabled: boolean
   guessesUntilHint: number
+  hintsUsed: number
+  maxHints: number
   onInputChange: (value: string) => void
   onSubmit: () => void
-  onHint: () => void
+  onHint: () => boolean
 }
 
 export const GuessInput = ({
@@ -23,11 +25,14 @@ export const GuessInput = ({
   won,
   hintEnabled,
   guessesUntilHint,
+  hintsUsed,
+  maxHints,
   onInputChange,
   onSubmit,
   onHint,
 }: GuessInputProps) => {
   const inputRef = useRef<HTMLInputElement>(null)
+  const remainingHints = Math.max(maxHints - hintsUsed, 0)
 
   const dismissMobileKeyboard = () => {
     if (typeof window === "undefined") return
@@ -56,7 +61,10 @@ export const GuessInput = ({
         background: "color-mix(in srgb, var(--background) 88%, transparent)",
       }}
     >
-      <div id="nearo-input" className="relative rounded-[1.5rem] border border-border bg-card p-2.5 shadow-[0_0.5rem_1.25rem_color-mix(in_srgb,var(--foreground)_6%,transparent)]">
+      <div
+        id="nearo-input"
+        className="relative rounded-[1.5rem] border border-border bg-card p-2.5 shadow-[0_0.5rem_1.25rem_color-mix(in_srgb,var(--foreground)_6%,transparent)]"
+      >
         <div className="relative">
           <input
             ref={inputRef}
@@ -83,31 +91,35 @@ export const GuessInput = ({
           <div className="absolute top-1/2 right-2 flex -translate-y-1/2 items-center gap-1.5">
             <motion.button
               id="nearo-hint"
-              whileTap={
-                hintEnabled && !won
-                  ? { y: 2, scale: 0.95 }
-                  : undefined
-              }
+              whileTap={hintEnabled && !won ? { y: 2, scale: 0.95 } : undefined}
               transition={{ type: "spring", stiffness: 500, damping: 20 }}
               className={cn(
-                "grid size-10 place-items-center rounded-full transition-colors",
+                "flex h-10 items-center gap-1.5 rounded-full px-3 text-xs font-bold transition-colors",
                 hintEnabled && !won
                   ? "bg-amber-500/15 text-amber-500 hover:bg-amber-500/25"
-                  : "bg-muted text-muted-foreground/40 cursor-not-allowed"
+                  : "cursor-not-allowed bg-muted text-muted-foreground/40"
               )}
               onClick={() => {
                 if (won) return
                 if (!hintEnabled) {
-                  toast.info(
-                    `Available in ${guessesUntilHint} more ${guessesUntilHint === 1 ? "guess" : "guesses"}`
-                  )
+                  if (hintsUsed >= maxHints) {
+                    toast.info(`All ${maxHints} hints used`)
+                  } else {
+                    toast.info(
+                      `Available in ${guessesUntilHint} more ${guessesUntilHint === 1 ? "guess" : "guesses"}`
+                    )
+                  }
                   return
                 }
-                onHint()
+                const hintApplied = onHint()
+                if (!hintApplied) {
+                  toast.warning("Hints are not available at this moment")
+                }
               }}
-              aria-label="Get a hint"
+              aria-label={`Get a hint (${remainingHints} remaining)`}
             >
-              <Lightbulb className="size-[1.125rem]" />
+              <Lightbulb className="size-4" />
+              <span>{remainingHints} left</span>
             </motion.button>
 
             <motion.button

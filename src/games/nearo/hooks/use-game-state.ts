@@ -4,8 +4,9 @@ import { toast } from "sonner"
 import { getPuzzleByDate, getTodaysPuzzle } from "../data/puzzle"
 import { scoreGuess } from "../engine"
 import { wordGameReducer, createWordGameState } from "../state"
-import type { WordGuess, WordPuzzle } from "../types"
+import type { WordGuess } from "../types"
 import { nearoConfig } from "../config"
+import { pickHintWord, pickStarterWord } from "../lib/hints"
 import { getStatusMessage, sortGuesses } from "../lib/presentation"
 import {
   clearGameState,
@@ -13,16 +14,6 @@ import {
   loadGameState,
   saveGameState,
 } from "../lib/storage"
-
-const pickStarterWord = (puzzle: WordPuzzle): string | null => {
-  const entries = Object.entries(puzzle.scores)
-  const candidates = entries.filter(([, s]) => s >= 35 && s <= 50)
-  if (candidates.length === 0) return entries.length > 0 ? entries[0][0] : null
-  const hash = puzzle.puzzleId
-    .split("")
-    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
-  return candidates[hash % candidates.length][0]
-}
 
 type GameMode = "daily" | "archive"
 
@@ -147,31 +138,23 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     setTimeout(() => setShakingGuessId(null), 340)
   }, [])
 
-  const maxHints = Math.floor(
-    state.guesses.length / nearoConfig.hintThreshold
+  const maxHints = nearoConfig.maxHints
+  const earnedHints = Math.min(
+    maxHints,
+    Math.floor(state.guesses.length / nearoConfig.hintThreshold)
   )
-  const canHint = !state.solved && hintsUsed < maxHints
+  const hintLimitReached = hintsUsed >= maxHints
+  const canHint = !state.solved && !hintLimitReached && hintsUsed < earnedHints
 
   const hint = useCallback(() => {
-    if (!puzzle || !canHint) return
-    const currentBest = bestScore ?? 0
-    const floor = currentBest + 5
-    const ceiling = 85
-    if (floor >= ceiling) return
+    if (!puzzle || !canHint) return false
+    const pick = pickHintWord(puzzle, state.guesses, hintsUsed)
+    if (!pick) return false
 
-    const guessedWords = new Set(state.guesses.map((g) => g.word))
-    const candidates = Object.entries(puzzle.scores)
-      .filter(
-        ([word, score]) =>
-          !guessedWords.has(word) && score > floor && score <= ceiling
-      )
-      .sort((a, b) => a[1] - b[1])
-
-    if (candidates.length === 0) return
-    const pick = candidates[Math.floor(candidates.length * 0.3)]
-    dispatch({ type: "submitGuess", guess: pick[0], puzzle })
+    dispatch({ type: "submitGuess", guess: pick, puzzle, isHint: true })
     setHintsUsed((prev) => prev + 1)
-  }, [puzzle, canHint, bestScore, state.guesses])
+    return true
+  }, [puzzle, canHint, hintsUsed, state.guesses])
 
   const submit = useCallback(() => {
     const word = input.trim()
@@ -241,10 +224,13 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
     submit,
     hint,
     hintEnabled: canHint,
-    guessesUntilHint: canHint
-      ? 0
-      : nearoConfig.hintThreshold -
-        (state.guesses.length % nearoConfig.hintThreshold),
+    hintsUsed,
+    maxHints,
+    guessesUntilHint:
+      canHint || hintLimitReached
+        ? 0
+        : nearoConfig.hintThreshold -
+          (state.guesses.length % nearoConfig.hintThreshold),
     reset,
   }
 }

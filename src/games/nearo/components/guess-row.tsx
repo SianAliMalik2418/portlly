@@ -1,5 +1,6 @@
 import { getScoreColor } from "@/lib/score-color"
 import { motion } from "framer-motion"
+import { Lightbulb } from "lucide-react"
 import type { WordGuess } from "../types"
 
 type GuessRowProps = {
@@ -48,8 +49,11 @@ export const GuessRow = ({
           : "–"}
       </span>
       <span className="h-6 w-px shrink-0 bg-border" />
-      <span className="min-w-0 flex-1 truncate text-sm font-semibold text-foreground lowercase">
+      <span className="flex min-w-0 flex-1 items-center gap-1.5 truncate text-sm font-semibold text-foreground lowercase">
         {guess.word}
+        {guess.isHint && (
+          <Lightbulb className="size-3.5 shrink-0 text-amber-500" />
+        )}
       </span>
       <span
         className="min-w-12 rounded-[0.75rem] border px-2.5 py-1.5 text-center font-mono text-xs font-bold"

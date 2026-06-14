@@ -18,6 +18,7 @@ export type WordGuess = {
   word: string
   score: number
   rank?: number
+  isHint?: boolean
 }
 
 export type GameStatus = {
