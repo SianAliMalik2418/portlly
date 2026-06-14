@@ -5,7 +5,7 @@ export const nearoComparison =
   "Nearo, Wordle, and Semantle are all daily word games, but they test different skills. Wordle is about spelling and letter positions. Semantle and Nearo are about meaning: you guess related words and follow a semantic similarity score toward the hidden answer. Nearo adds a rank for close guesses and a recent archive, making it an approachable Semantle alternative that still runs free in any modern browser."
 
 export const nearoHowToSteps = [
-  "Enter any valid word as a first guess.",
+  "A starter word is pre-filled in the input to help you begin — press enter to submit it, or type your own.",
   "Use the similarity score to see how close that word is in meaning.",
   "Follow high-scoring related words, synonyms, and category clues.",
   "Keep narrowing your guesses until one reaches 100 percent.",

@@ -2,7 +2,6 @@ import { LayoutGroup } from "framer-motion"
 import { Sparkles } from "lucide-react"
 import { cn } from "@/lib/utils"
 import type { WordGuess } from "../types"
-import { EmptyState } from "./empty-state"
 import { GuessRow } from "./guess-row"
 
 type GuessListProps = {
@@ -11,7 +10,6 @@ type GuessListProps = {
   latestId: number | null
   shakingGuessId: number | null
   pinnedGuessId: number | null
-  showExample?: boolean
 }
 
 export const GuessList = ({
@@ -20,7 +18,6 @@ export const GuessList = ({
   latestId,
   shakingGuessId,
   pinnedGuessId,
-  showExample = false,
 }: GuessListProps) => (
   <div
     id="nearo-guesses"
@@ -29,9 +26,7 @@ export const GuessList = ({
       className
     )}
   >
-    {guesses.length === 0 ? (
-      <EmptyState showExample={showExample} />
-    ) : (
+    {guesses.length === 0 ? null : (
       <LayoutGroup>
         <div className="mx-3 mt-2 mb-5 flex items-center gap-3 sm:mx-4">
           <Sparkles className="size-6 shrink-0 text-[oklch(0.80_0.16_75)]" />

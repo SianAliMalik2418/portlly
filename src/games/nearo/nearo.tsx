@@ -123,7 +123,7 @@ export const Nearo = ({ mode, date }: NearoProps) => {
             latestId={game.latestId}
             shakingGuessId={game.shakingGuessId}
             pinnedGuessId={game.pinnedGuessId}
-            showExample={tourActive && game.guesses.length === 0}
+
           />
           <GuessInput
             className="order-2 sm:order-none"

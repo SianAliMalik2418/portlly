@@ -4,7 +4,7 @@ import { toast } from "sonner"
 import { getPuzzleByDate, getTodaysPuzzle } from "../data/puzzle"
 import { scoreGuess } from "../engine"
 import { wordGameReducer, createWordGameState } from "../state"
-import type { WordGuess } from "../types"
+import type { WordGuess, WordPuzzle } from "../types"
 import { nearoConfig } from "../config"
 import { getStatusMessage, sortGuesses } from "../lib/presentation"
 import {
@@ -13,6 +13,16 @@ import {
   loadGameState,
   saveGameState,
 } from "../lib/storage"
+
+const pickStarterWord = (puzzle: WordPuzzle): string | null => {
+  const entries = Object.entries(puzzle.scores)
+  const candidates = entries.filter(([, s]) => s >= 15 && s <= 35)
+  if (candidates.length === 0) return entries.length > 0 ? entries[0][0] : null
+  const hash = puzzle.puzzleId
+    .split("")
+    .reduce((acc, ch) => acc + ch.charCodeAt(0), 0)
+  return candidates[hash % candidates.length][0]
+}
 
 type GameMode = "daily" | "archive"
 
@@ -70,6 +80,10 @@ export const useGameState = ({ mode, date }: UseGameStateOptions) => {
       dispatch({ type: "reset" })
       setShowWin(false)
       setHintsUsed(0)
+      const starter = pickStarterWord(puzzle)
+      setInput(starter ?? "")
+      setHydratedPuzzleId(puzzle.puzzleId)
+      return
     }
 
     setInput("")
