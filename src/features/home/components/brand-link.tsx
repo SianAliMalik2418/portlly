@@ -14,7 +14,7 @@ export const BrandLink = ({ animated = false }: BrandLinkProps) => {
     >
       {animated ? (
         <motion.span
-          whileTap={{ transform: "translateY(1px) rotate(-2deg) scale(0.97)" }}
+          whileTap={{ y: 1, rotate: -2, scale: 0.97 }}
           transition={{ type: "spring", stiffness: 500, damping: 20 }}
         >
           <PortllyLogo />

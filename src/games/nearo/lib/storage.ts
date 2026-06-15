@@ -4,6 +4,7 @@ import { nearoConfig } from "../config"
 type PersistedState = {
   guesses: WordGuess[]
   won: boolean
+  hintsUsed?: number
 }
 
 const STORAGE_PREFIX = nearoConfig.storagePrefix
@@ -57,7 +58,8 @@ const isPersistedState = (value: unknown): value is PersistedState => {
   return (
     Array.isArray(state.guesses) &&
     state.guesses.every(isPersistedGuess) &&
-    typeof state.won === "boolean"
+    typeof state.won === "boolean" &&
+    (state.hintsUsed === undefined || typeof state.hintsUsed === "number")
   )
 }
 

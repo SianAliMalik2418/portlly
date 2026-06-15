@@ -1,5 +1,8 @@
 export const nearoDefinition =
-  "Nearo is a free daily word game where the answer is a hidden word. Players guess related words and use semantic similarity scores to move closer. A 100 percent score means the hidden word has been found."
+  "Nearo is a free daily word game where the answer is a hidden word. Players guess related words and use semantic similarity scores to move closer. A 100 percent score means the hidden word has been found. If you like Wordle but want a meaning-based challenge, Nearo is a free Wordle and Semantle alternative you can play in your browser."
+
+export const nearoComparison =
+  "Nearo, Wordle, and Semantle are all daily word games, but they test different skills. Wordle is about spelling and letter positions. Semantle and Nearo are about meaning: you guess related words and follow a semantic similarity score toward the hidden answer. Nearo adds a rank for close guesses and a recent archive, making it an approachable Semantle alternative that still runs free in any modern browser."
 
 export const nearoHowToSteps = [
   "Enter any valid word as a first guess.",
@@ -23,6 +26,11 @@ export const nearoFaqs = [
     question: "Is Nearo the same as Wordle?",
     answer:
       "No. Wordle is based on spelling and letter positions, while Nearo is based on word meaning. In Nearo, a guess can be useful even if it shares no letters with the hidden answer.",
+  },
+  {
+    question: "Is Nearo a good Semantle alternative?",
+    answer:
+      "Yes. Like Semantle, Nearo is a semantic word game where you guess the hidden word by meaning and follow a similarity score. Nearo adds a rank for close guesses and a recent puzzle archive, and it is free to play in any modern browser with no account.",
   },
   {
     question: "Can I replay older Nearo puzzles?",

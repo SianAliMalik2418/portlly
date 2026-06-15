@@ -7,6 +7,11 @@ export const getStatusMessage = (bestScore: number | null): GameStatus => {
       sub: "Start broad: try a common object, place, or action.",
     }
   }
+  if (bestScore >= 100)
+    return {
+      lead: "You found it!",
+      sub: "That was the hidden word.",
+    }
   if (bestScore >= 92)
     return {
       lead: "Almost there — try close synonyms.",

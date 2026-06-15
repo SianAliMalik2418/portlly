@@ -143,12 +143,6 @@
 }
 
 @layer components {
-    .btn-press {
-        transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
-    }
-    .btn-press:active:not(:disabled) {
-        transform: scale(0.97);
-    }
 }
 
 .nearo-tour.driver-popover {

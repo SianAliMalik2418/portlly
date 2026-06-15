@@ -36,11 +36,13 @@ describe("nearo storage", () => {
 
     saveGameState("word-0001", {
       won: true,
+      hintsUsed: 1,
       guesses: [{ id: 1, word: "water", score: 100, rank: 1 }],
     })
 
     expect(loadGameState("word-0001")).toEqual({
       won: true,
+      hintsUsed: 1,
       guesses: [{ id: 1, word: "water", score: 100, rank: 1 }],
     })
     expect(loadGameState("word-0002")).toBeNull()
@@ -52,6 +54,23 @@ describe("nearo storage", () => {
     storage.setItem("portlly:nearo:word-0001", '{"won":"yes"}')
 
     expect(loadGameState("word-0001")).toBeNull()
+  })
+
+  it("loads older saves without a hint counter", () => {
+    const storage = createLocalStorage()
+    setLocalStorage(storage)
+    storage.setItem(
+      "portlly:nearo:word-0001",
+      JSON.stringify({
+        won: false,
+        guesses: [{ id: 1, word: "boat", score: 91.67, rank: 3 }],
+      })
+    )
+
+    expect(loadGameState("word-0001")).toEqual({
+      won: false,
+      guesses: [{ id: 1, word: "boat", score: 91.67, rank: 3 }],
+    })
   })
 
   it("keeps an anonymous id stable once minted", () => {
@@ -76,11 +95,13 @@ describe("nearo storage", () => {
 
     saveGameState("word-0001", {
       won: false,
+      hintsUsed: 2,
       guesses: [{ id: 7, word: "boat", score: 91.67, rank: 3 }],
     })
 
     expect(loadGameState("word-0001")).toEqual({
       won: false,
+      hintsUsed: 2,
       guesses: [{ id: 7, word: "boat", score: 91.67, rank: 3 }],
     })
   })
