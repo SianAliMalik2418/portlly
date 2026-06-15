@@ -1,4 +1,5 @@
 import { nearoConfig } from "@/games/nearo/config"
+import { tickrConfig } from "@/games/tickr/config"
 
 export type GameCategory = "word" | "trivia" | "draw" | "party"
 
@@ -23,6 +24,16 @@ export const games: Array<Game> = [
     href: nearoConfig.route,
     description: nearoConfig.description,
     meta: [...nearoConfig.meta],
+  },
+  {
+    id: tickrConfig.id,
+    category: tickrConfig.category,
+    name: tickrConfig.name,
+    glyph: tickrConfig.glyph,
+    status: tickrConfig.status,
+    href: tickrConfig.route,
+    description: tickrConfig.description,
+    meta: [...tickrConfig.meta],
   },
   {
     id: "snap-trivia",

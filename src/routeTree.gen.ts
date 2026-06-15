@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
+import { Route as GamesTickrRouteImport } from './routes/games/tickr'
 import { Route as GamesNearoRouteImport } from './routes/games/nearo'
 import { Route as ApiPuzzlesTodayRouteImport } from './routes/api/puzzles/today'
 import { Route as ApiPuzzlesDayRouteImport } from './routes/api/puzzles/day'
@@ -31,6 +32,11 @@ const IndexRoute = IndexRouteImport.update({
 const PuzzlesFileNameRoute = PuzzlesFileNameRouteImport.update({
   id: '/puzzles/$fileName',
   path: '/puzzles/$fileName',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GamesTickrRoute = GamesTickrRouteImport.update({
+  id: '/games/tickr',
+  path: '/games/tickr',
   getParentRoute: () => rootRouteImport,
 } as any)
 const GamesNearoRoute = GamesNearoRouteImport.update({
@@ -63,6 +69,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
+  '/games/tickr': typeof GamesTickrRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
+  '/games/tickr': typeof GamesTickrRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/games/nearo': typeof GamesNearoRouteWithChildren
+  '/games/tickr': typeof GamesTickrRoute
   '/puzzles/$fileName': typeof PuzzlesFileNameRoute
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap.xml'
     | '/games/nearo'
+    | '/games/tickr'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap.xml'
     | '/games/nearo'
+    | '/games/tickr'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/'
     | '/sitemap.xml'
     | '/games/nearo'
+    | '/games/tickr'
     | '/puzzles/$fileName'
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
@@ -127,6 +139,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
   GamesNearoRoute: typeof GamesNearoRouteWithChildren
+  GamesTickrRoute: typeof GamesTickrRoute
   PuzzlesFileNameRoute: typeof PuzzlesFileNameRoute
   ApiPuzzlesArchiveRoute: typeof ApiPuzzlesArchiveRoute
   ApiPuzzlesDayRoute: typeof ApiPuzzlesDayRoute
@@ -154,6 +167,13 @@ declare module '@tanstack/react-router' {
       path: '/puzzles/$fileName'
       fullPath: '/puzzles/$fileName'
       preLoaderRoute: typeof PuzzlesFileNameRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/games/tickr': {
+      id: '/games/tickr'
+      path: '/games/tickr'
+      fullPath: '/games/tickr'
+      preLoaderRoute: typeof GamesTickrRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/games/nearo': {
@@ -210,6 +230,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
   GamesNearoRoute: GamesNearoRouteWithChildren,
+  GamesTickrRoute: GamesTickrRoute,
   PuzzlesFileNameRoute: PuzzlesFileNameRoute,
   ApiPuzzlesArchiveRoute: ApiPuzzlesArchiveRoute,
   ApiPuzzlesDayRoute: ApiPuzzlesDayRoute,
