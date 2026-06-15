@@ -18,6 +18,8 @@ zero.
   live HUD, question card, and basic result screen are playable.
 - **Phase 5:** start screen presets, per-preset local best scores,
   seen-question persistence, result screen, and play-again flow are wired.
+- **Phase 6:** route SEO schemas and Tickr Playwright smoke coverage are in
+  place. Deploy remains a manual release step.
 
 ## Game Loop
 
@@ -171,6 +173,15 @@ selected preset. `components/result-screen.tsx` shows correct count, survived
 time, best streak, stored best, and "New best" when the run beats the previous
 score. Play Again restarts with the same preset; Change Clock returns to the
 start screen.
+
+## SEO And Tests
+
+`seo.ts` exports the game definition, HowTo steps, and FAQ content consumed by
+the `/games/tickr` route as JSON-LD. The route emits VideoGame, HowTo, FAQPage,
+and BreadcrumbList schemas.
+
+E2E coverage lives in `tests/e2e/tickr.spec.ts` and uses the smoke question
+buckets uploaded by `bun run e2e:setup`.
 
 ## Jumpscare Mode
 

@@ -19,7 +19,7 @@
     "preprocess:puzzles": "scripts/preprocess/.venv/bin/python scripts/preprocess/pipeline.py all",
     "preprocess:tickr": "python3 scripts/preprocess/tickr_pipeline.py all",
     "preprocess:tickr:smoke": "python3 scripts/preprocess/tickr_pipeline.py smoke",
-    "e2e:setup": "bun run preprocess:smoke && PORTLLY_PUZZLE_DIST=dist/puzzles-smoke bun run r2:upload:local",
+    "e2e:setup": "bun run preprocess:smoke && bun run preprocess:tickr:smoke && PORTLLY_PUZZLE_DIST=dist/puzzles-smoke bun run r2:upload:local && PORTLLY_TICKR_DIST=dist/tickr-smoke bun run r2:upload:tickr:local",
     "r2:create-bucket": "wrangler r2 bucket create portlly-puzzles",
     "r2:upload": "node scripts/r2/upload-puzzles.mjs",
     "r2:upload:local": "node scripts/r2/upload-puzzles.mjs --local",
