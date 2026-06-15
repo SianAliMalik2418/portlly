@@ -140,14 +140,16 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
           ))}
         </div>
 
-        <div className="mt-4 text-center">
-          <span className="font-mono text-lg font-bold tracking-wider text-foreground">
-            {countdown}
-          </span>
-          <p className="mt-0.5 font-mono text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
-            Next puzzle
-          </p>
-        </div>
+        {mode === "daily" && (
+          <div className="mt-4 text-center">
+            <span className="font-mono text-lg font-bold tracking-wider text-foreground">
+              {countdown}
+            </span>
+            <p className="mt-0.5 font-mono text-[10px] tracking-[0.08em] text-muted-foreground uppercase">
+              Next puzzle
+            </p>
+          </div>
+        )}
 
         <div className="mx-auto mt-5 flex w-full max-w-sm flex-col gap-2.5">
           <Button

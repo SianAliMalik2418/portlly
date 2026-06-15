@@ -2,7 +2,7 @@ import type { WordGuess, WordPuzzle } from "../types"
 
 const STARTER_MIN_RANK_RATIO = 0.6
 const STARTER_MAX_RANK_RATIO = 0.85
-const HINT_CLOSEST_RANK = 25
+const HINT_CLOSEST_RANK = 15
 const HINT_MAX_IMPROVEMENT = 0.4
 
 type RankedWord = {
