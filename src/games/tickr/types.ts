@@ -62,3 +62,14 @@ export type TickrRunState = {
   seenIds: string[]
   lastAnswer: TickrLastAnswer | null
 }
+
+export type TickrRunResult = {
+  presetSeconds: TickrTimerPreset
+  correctCount: number
+  wrongCount: number
+  elapsedSeconds: number
+  bestStreak: number
+  previousBest: number | null
+  bestScore: number
+  newBest: boolean
+}

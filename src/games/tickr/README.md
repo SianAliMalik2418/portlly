@@ -16,6 +16,8 @@ zero.
   implemented with unit tests.
 - **Phase 4:** requestAnimationFrame run loop, question advancement, timer bar,
   live HUD, question card, and basic result screen are playable.
+- **Phase 5:** start screen presets, per-preset local best scores,
+  seen-question persistence, result screen, and play-again flow are wired.
 
 ## Game Loop
 
@@ -156,8 +158,19 @@ Phase 4 UI components:
 - `components/run-hud.tsx`
 - `components/question-card.tsx`
 
-Persistence, polished results, best scores, and the full start-screen flow stay
-in Phase 5.
+## Persistence And Results
+
+`lib/storage.ts` owns browser persistence with an in-memory fallback for tests
+and unavailable localStorage:
+
+- best score per timer preset at `portlly:tickr:best:<seconds>`
+- seen question IDs at `portlly:tickr:seen-question-ids`
+
+`components/start-screen.tsx` shows timer presets and the stored best for the
+selected preset. `components/result-screen.tsx` shows correct count, survived
+time, best streak, stored best, and "New best" when the run beats the previous
+score. Play Again restarts with the same preset; Change Clock returns to the
+start screen.
 
 ## Jumpscare Mode
 
