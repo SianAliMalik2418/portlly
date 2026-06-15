@@ -4,14 +4,14 @@ A platform of small, polished browser games at [portlyy.com](https://portlyy.com
 
 ## Live Games
 
-| Game | Type | Mode | Route |
-|------|------|------|-------|
+| Game      | Type              | Mode            | Route          |
+| --------- | ----------------- | --------------- | -------------- |
 | **Nearo** | Word / Similarity | Daily + Archive | `/games/nearo` |
 
 ## Upcoming
 
-| Game | Type | Mode |
-|------|------|------|
+| Game        | Type   | Mode |
+| ----------- | ------ | ---- |
 | Answer game | Trivia |
 
 ## Tech Stack
@@ -37,7 +37,8 @@ src/
 │   ├── api/puzzles/         # Server-side puzzle resolution
 │   └── sitemap[.]xml.ts    # Dynamic sitemap
 ├── games/
-│   └── nearo/               # Game module (see src/games/nearo/README.md)
+│   ├── nearo/               # Game module (see src/games/nearo/README.md)
+│   └── tickr/               # Game module (see src/games/tickr/README.md)
 ├── features/
 │   └── home/                # Landing page, game catalog, registry
 ├── components/
@@ -79,9 +80,14 @@ src/games/<game-id>/
 ```
 
 Rules:
+
 - Keep browser APIs out of `engine.ts` and `state.ts` so logic can run server-side
 - Game-specific storage, normalization, and hashing stay in the game folder
 - Only promote to `src/lib/` if truly game-agnostic
+- Every game must maintain its own `README.md` at
+  `src/games/<game-id>/README.md`, modeled after Nearo's README. Update it
+  whenever architecture, commands, data shape, persistence, routes, or gameplay
+  behavior changes.
 
 ## Scripts
 
@@ -103,6 +109,8 @@ bunx playwright test     # E2E tests (starts dev server automatically)
 # Puzzle Pipeline
 bun run preprocess:smoke    # Tiny fixture puzzles (no network)
 bun run preprocess:puzzles  # Full production puzzles (downloads GloVe)
+bun run preprocess:tickr:smoke # Tiny Tickr trivia fixtures (no network)
+bun run preprocess:tickr       # Full Tickr OpenTDB trivia harvest
 
 # R2 / Deployment
 bun run r2:upload:local  # Upload puzzles to local Miniflare R2
@@ -138,6 +146,7 @@ The app deploys to Cloudflare Workers with R2 for puzzle storage.
 1. Create an R2 API token at **Cloudflare Dashboard > R2 > Manage R2 API Tokens** (S3 Auth, read/write on `portlly-puzzles`)
 
 2. Set environment variables (or `.env.local`):
+
    ```bash
    export CLOUDFLARE_ACCOUNT_ID=<account-id>
    export R2_ACCESS_KEY_ID=<key>
@@ -145,6 +154,7 @@ The app deploys to Cloudflare Workers with R2 for puzzle storage.
    ```
 
 3. Create bucket and upload puzzles:
+
    ```bash
    bun run r2:create-bucket
    bun run preprocess:puzzles
@@ -184,7 +194,8 @@ Puzzle uploads are idempotent — only files in `puzzle_index.json` get pushed.
 9. **Add unit tests** — engine, state, and lib modules
 10. **Add E2E tests** — core flows in `tests/e2e/<game-id>.spec.ts`
 11. **Update sitemap** — include new route
-12. **Add game README** — at `src/games/<game-id>/README.md`
+12. **Add and maintain game README** — at
+    `src/games/<game-id>/README.md`; keep it current as the game evolves
 
 ## Environment
 
@@ -202,5 +213,7 @@ pip install -r scripts/preprocess/requirements.txt
 
 - `bun run preprocess:smoke` — tiny fixture set, no network, for tests
 - `bun run preprocess:puzzles` — full pipeline (GloVe 6B 300d, ~50k vocab, ~200 puzzles)
+- `bun run preprocess:tickr:smoke` — tiny Tickr question buckets, no network
+- `bun run preprocess:tickr` — full Tickr OpenTDB harvest into difficulty buckets
 
 Puzzle JSON never contains plaintext answers. Win detection uses answer hash comparison client-side.

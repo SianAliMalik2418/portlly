@@ -1,7 +1,9 @@
-# Word Puzzle Preprocessing
+# Puzzle Preprocessing
 
 Phase 1 builds local-only vocabulary files and static puzzle JSON files for the
-Semantle-style word game. The app never computes embeddings at runtime.
+Semantle-style word game. Tickr uses a separate trivia harvester in this same
+directory. The app never computes embeddings or calls third-party question APIs
+at runtime.
 
 ## Setup
 
@@ -20,6 +22,12 @@ bun run preprocess:smoke
 
 # Full pipeline. Downloads GloVe 6B and the English word list if missing.
 bun run preprocess:puzzles
+
+# Tickr smoke fixtures. No network.
+bun run preprocess:tickr:smoke
+
+# Tickr full trivia harvest from OpenTDB.
+bun run preprocess:tickr
 ```
 
 Generated files are intentionally local-only:
@@ -29,6 +37,8 @@ Generated files are intentionally local-only:
 - `data/preprocess/answer_candidates.txt` - heuristic answer candidate pool.
 - `data/preprocess/answer_set.txt` - production answer list used by generation.
 - `dist/puzzles/` - generated puzzle files and local manifests.
+- `dist/tickr-smoke/` - deterministic Tickr smoke question buckets.
+- `dist/tickr/` - production Tickr question buckets.
 
 Both `data/` and `dist/` are gitignored.
 
@@ -59,3 +69,24 @@ name derived from the puzzle ID and secret. Puzzle JSON includes:
 The plaintext answer is deliberately omitted from `scores` and `ranks`, even
 though it is in the local `answer_set.txt`. Win detection must compare the
 normalized guess hash with `answerHash`.
+
+## Tickr Question File Shape
+
+Tickr writes one JSON array per difficulty bucket:
+
+- `easy.json`
+- `medium.json`
+- `hard.json`
+
+Each question includes:
+
+- `id`
+- `question`
+- `correct`
+- `options` (exactly four strings)
+- `category`
+- `difficulty`
+
+The Tickr harvester keeps only OpenTDB multiple-choice questions, decodes HTML
+entities, dedupes by question text, filters over-long questions/answers, and
+uses a session token to avoid duplicate API responses during a harvest.
