@@ -1,0 +1,74 @@
+[
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "easy",
+    "question": "What color do you get when you mix blue and yellow paint?",
+    "correct_answer": "Green",
+    "incorrect_answers": ["Purple", "Orange", "Brown"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "easy",
+    "question": "How many days are there in a leap year?",
+    "correct_answer": "366",
+    "incorrect_answers": ["365", "364", "367"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "easy",
+    "question": "Which common object is used to tell time?",
+    "correct_answer": "Clock",
+    "incorrect_answers": ["Compass", "Thermometer", "Scale"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "medium",
+    "question": "What is the name of the international distress signal made of three letters?",
+    "correct_answer": "SOS",
+    "incorrect_answers": ["MAY", "RED", "911"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "medium",
+    "question": "Which board game uses hotels and houses as purchasable pieces?",
+    "correct_answer": "Monopoly",
+    "incorrect_answers": ["Clue", "Risk", "Scrabble"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "medium",
+    "question": "What is the term for a word that reads the same backward and forward?",
+    "correct_answer": "Palindrome",
+    "incorrect_answers": ["Acronym", "Anagram", "Synonym"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "hard",
+    "question": "What is the name for a word or phrase formed from the first letters of other words?",
+    "correct_answer": "Acronym",
+    "incorrect_answers": ["Palindrome", "Homonym", "Portmanteau"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "hard",
+    "question": "In NATO phonetic alphabet, which word represents the letter Z?",
+    "correct_answer": "Zulu",
+    "incorrect_answers": ["Zebra", "Zero", "Zephyr"]
+  },
+  {
+    "category": "General Knowledge",
+    "type": "multiple",
+    "difficulty": "hard",
+    "question": "What is the name of the symbol formed by combining two or more letters into one character?",
+    "correct_answer": "Ligature",
+    "incorrect_answers": ["Diacritic", "Glyph", "Serif"]
+  }
+]
