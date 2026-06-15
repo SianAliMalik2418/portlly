@@ -14,6 +14,8 @@ zero.
   question bank utilities are in place.
 - **Phase 3:** pure scoring, timer math, difficulty mapping, and run reducer are
   implemented with unit tests.
+- **Phase 4:** requestAnimationFrame run loop, question advancement, timer bar,
+  live HUD, question card, and basic result screen are playable.
 
 ## Game Loop
 
@@ -137,6 +139,25 @@ can advance without waiting on network requests.
 - `endRun` / `reset` — explicit terminal and reset transitions.
 
 The reducer contains no timers, browser APIs, persistence, or DOM access.
+
+## Run Loop UI
+
+`hooks/use-run.ts` owns browser-only runtime behavior:
+
+- starts runs from a selected timer preset
+- drives the clock with `requestAnimationFrame`
+- loads the current difficulty bucket from the in-memory question bank
+- advances immediately after an answer
+- ends the run when the reducer reports timer death
+
+Phase 4 UI components:
+
+- `components/timer-bar.tsx`
+- `components/run-hud.tsx`
+- `components/question-card.tsx`
+
+Persistence, polished results, best scores, and the full start-screen flow stay
+in Phase 5.
 
 ## Jumpscare Mode
 
