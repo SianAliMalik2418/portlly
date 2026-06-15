@@ -6,7 +6,7 @@ import { scoreGuess } from "../engine"
 import { wordGameReducer, createWordGameState } from "../state"
 import type { WordGuess } from "../types"
 import { nearoConfig } from "../config"
-import { pickHintWord, pickStarterWord } from "../lib/hints"
+import { pickHintWord } from "../lib/hints"
 import { getStatusMessage, sortGuesses } from "../lib/presentation"
 import {
   clearGameState,

@@ -3,6 +3,7 @@ import type { WordGuess, WordPuzzle } from "../types"
 const STARTER_MIN_RANK_RATIO = 0.6
 const STARTER_MAX_RANK_RATIO = 0.85
 const HINT_CLOSEST_RANK = 15
+const HINT_FINAL_CLOSEST_RANK = 5
 const HINT_MAX_IMPROVEMENT = 0.4
 
 type RankedWord = {
@@ -151,15 +152,31 @@ const getBestRank = (guesses: WordGuess[]) =>
     return bestRank === null ? guess.rank : Math.min(bestRank, guess.rank)
   }, null)
 
-const fallbackHintWord = (puzzle: WordPuzzle, guesses: WordGuess[]) => {
+const getInitialHintRankFloor = (puzzle: WordPuzzle) =>
+  Math.max(
+    HINT_FINAL_CLOSEST_RANK,
+    Math.min(HINT_CLOSEST_RANK, puzzle.rankBandSize)
+  )
+
+const getHintRankFloor = (puzzle: WordPuzzle, bestRank: number | null) => {
+  const initialHintRankFloor = getInitialHintRankFloor(puzzle)
+
+  return bestRank !== null && bestRank <= initialHintRankFloor
+    ? HINT_FINAL_CLOSEST_RANK
+    : initialHintRankFloor
+}
+
+const fallbackHintWord = (
+  puzzle: WordPuzzle,
+  guesses: WordGuess[],
+  rankFloor: number
+) => {
   const guessedWords = new Set(guesses.map((guess) => guess.word))
   const scoredWords = getScoredWords(puzzle, guessedWords)
-  const closestHintRank = Math.min(HINT_CLOSEST_RANK, puzzle.rankBandSize)
   const safeScoredWords = scoredWords.filter(
-    ({ rank }) => typeof rank !== "number" || rank >= closestHintRank
+    ({ rank }) => typeof rank !== "number" || rank >= rankFloor
   )
-  const fallbackPool =
-    safeScoredWords.length > 0 ? safeScoredWords : scoredWords
+  const fallbackPool = safeScoredWords
   const bestScore =
     guesses.length === 0
       ? 0
@@ -195,8 +212,8 @@ export const pickHintWord = (
 ): string | null => {
   const guessedWords = new Set(guesses.map((guess) => guess.word))
   const rankedWords = getRankedWords(puzzle, guessedWords)
-  const closestHintRank = Math.min(HINT_CLOSEST_RANK, puzzle.rankBandSize)
   const bestRank = getBestRank(guesses)
+  const closestHintRank = getHintRankFloor(puzzle, bestRank)
 
   if (bestRank === null) {
     const minRank = Math.ceil(puzzle.rankBandSize * STARTER_MIN_RANK_RATIO)
@@ -205,8 +222,9 @@ export const pickHintWord = (
     const candidates = rankedWords.filter(
       ({ rank }) => rank >= minRank && rank <= maxRank
     )
+    const entryRankFloor = getInitialHintRankFloor(puzzle)
     const safeCandidates = rankedWords.filter(
-      ({ rank }) => rank >= closestHintRank
+      ({ rank }) => rank >= entryRankFloor
     )
 
     return (
@@ -220,8 +238,12 @@ export const pickHintWord = (
         targetRank,
         `${puzzle.puzzleId}:hint:${hintIndex}:entry-any-rank`
       ) ??
-      fallbackHintWord(puzzle, guesses)
+      fallbackHintWord(puzzle, guesses, entryRankFloor)
     )
+  }
+
+  if (bestRank <= HINT_FINAL_CLOSEST_RANK) {
+    return null
   }
 
   const targetRank = Math.max(
@@ -238,6 +260,22 @@ export const pickHintWord = (
   const weakerSafeCandidates = safeRankedWords.filter(
     ({ rank }) => rank >= bestRank
   )
+  const isFinalHintBand = bestRank <= getInitialHintRankFloor(puzzle)
+
+  if (isFinalHintBand) {
+    return (
+      pickClosestToRank(
+        cappedCandidates,
+        targetRank,
+        `${puzzle.puzzleId}:hint:${hintIndex}:final-rank`
+      ) ??
+      pickClosestToRank(
+        betterCandidates,
+        targetRank,
+        `${puzzle.puzzleId}:hint:${hintIndex}:final-any-rank`
+      )
+    )
+  }
 
   return (
     pickClosestToRank(
@@ -255,6 +293,6 @@ export const pickHintWord = (
       targetRank,
       `${puzzle.puzzleId}:hint:${hintIndex}:safe-better-rank`
     ) ??
-    fallbackHintWord(puzzle, guesses)
+    fallbackHintWord(puzzle, guesses, closestHintRank)
   )
 }

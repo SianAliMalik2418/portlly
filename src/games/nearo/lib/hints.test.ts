@@ -47,7 +47,7 @@ describe("rank-based Nearo hints", () => {
   it("uses a score fallback instead of a word inside the close-rank cap", () => {
     const puzzle = makePuzzle(
       {
-        tooClose: 24,
+        tooClose: 14,
         current: 30,
       },
       {
@@ -63,10 +63,10 @@ describe("rank-based Nearo hints", () => {
     expect(pickHintWord(puzzle, guesses)).toBe("fallback")
   })
 
-  it("allows hints down to rank twenty five", () => {
+  it("allows normal hints down to rank fifteen", () => {
     const puzzle = makePuzzle({
-      tooClose: 24,
-      cap: 25,
+      tooClose: 14,
+      cap: 15,
       current: 30,
     })
     const guesses: WordGuess[] = [
@@ -74,6 +74,46 @@ describe("rank-based Nearo hints", () => {
     ]
 
     expect(pickHintWord(puzzle, guesses)).toBe("cap")
+  })
+
+  it("unlocks closer hints once rank fifteen has been reached", () => {
+    const puzzle = makePuzzle({
+      tooClose: 4,
+      finalHint: 9,
+      weakImprovement: 14,
+      current: 15,
+    })
+    const guesses: WordGuess[] = [
+      { id: 1, word: "current", score: 90, rank: 15 },
+    ]
+
+    expect(pickHintWord(puzzle, guesses)).toBe("finalHint")
+  })
+
+  it("allows final-band hints down to rank five", () => {
+    const puzzle = makePuzzle({
+      tooClose: 4,
+      cap: 5,
+      current: 9,
+    })
+    const guesses: WordGuess[] = [
+      { id: 1, word: "current", score: 95, rank: 9 },
+    ]
+
+    expect(pickHintWord(puzzle, guesses)).toBe("cap")
+  })
+
+  it("stops hints once rank five has been reached", () => {
+    const puzzle = makePuzzle({
+      tooClose: 4,
+      weaker: 6,
+      current: 5,
+    })
+    const guesses: WordGuess[] = [
+      { id: 1, word: "current", score: 98, rank: 5 },
+    ]
+
+    expect(pickHintWord(puzzle, guesses)).toBeNull()
   })
 
   it("uses a weak ranked word when the player has no ranked guesses", () => {

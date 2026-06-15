@@ -1,200 +1,210 @@
-# Portlly
+# Portlyy
 
-Portlly is a TanStack Start app for small browser games. The MVP is a
-Semantle-style word game powered by static puzzle files generated offline.
+A platform of small, polished browser games at [portlyy.com](https://portlyy.com). Each game is a self-contained module under one codebase — daily puzzles, party games, and solo challenges.
 
-## Stack
+## Live Games
 
-- TanStack Start, React 19, Vite, TypeScript
-- Tailwind CSS 4 via `@tailwindcss/vite`
-- shadcn/ui components in `src/components/ui`
-- Bun for local scripts
-- Cloudflare Workers and R2 for deployment and puzzle file hosting
+| Game | Type | Mode | Route |
+|------|------|------|-------|
+| **Nearo** | Word / Similarity | Daily + Archive | `/games/nearo` |
+
+## Upcoming
+
+| Game | Type | Mode |
+|------|------|------|
+| Snap Trivia | Trivia | Party (2-8 players) |
+| Scrawl | Drawing | Party (3-10 players) |
+| Chain | Word | Daily / Solo |
+| Bluff | Party | Party (4-12 players) |
+| Higher / Lower | Trivia | Endless / Solo |
+
+## Tech Stack
+
+- **Framework:** TanStack Start (React 19, Vite, file-based routing)
+- **Language:** TypeScript
+- **Styling:** Tailwind CSS 4, shadcn/ui, Framer Motion
+- **State:** TanStack Query, React reducers, localStorage persistence
+- **Hosting:** Cloudflare Workers + R2 (puzzle/asset storage)
+- **Testing:** Vitest (unit), Playwright (E2E)
+- **Tooling:** Bun, ESLint, Prettier
+- **Preprocessing:** Python (offline puzzle generation from GloVe embeddings)
+
+## Project Structure
+
+```
+src/
+├── routes/                  # TanStack Router file-based routes
+│   ├── index.tsx            # Platform landing page
+│   ├── games/
+│   │   ├── nearo.tsx        # Nearo daily route
+│   │   └── nearo/archive/   # Nearo archive routes
+│   ├── api/puzzles/         # Server-side puzzle resolution
+│   └── sitemap[.]xml.ts    # Dynamic sitemap
+├── games/
+│   └── nearo/               # Game module (see src/games/nearo/README.md)
+├── features/
+│   └── home/                # Landing page, game catalog, registry
+├── components/
+│   ├── ui/                  # shadcn/ui primitives (vendor-style, don't edit)
+│   ├── platform-header.tsx  # Shared header
+│   └── mode-toggle.tsx      # Dark/light mode
+├── lib/                     # Shared utilities (score-color, seo, utils)
+└── styles.css               # Tailwind entry
+
+scripts/
+├── preprocess/              # Python pipeline for puzzle generation
+└── r2/                      # R2 upload scripts (local + remote)
+
+tests/
+└── e2e/                     # Playwright E2E tests
+
+data/                        # Local-only artifacts (gitignored)
+dist/                        # Build output + puzzle artifacts (gitignored)
+```
+
+## Game Module Convention
+
+Each game lives at `src/games/<game-id>/` with this structure:
+
+```
+src/games/<game-id>/
+├── <game-id>.tsx            # Entry component (rendered by route)
+├── config.ts                # Game metadata (id, name, routes, tuning params)
+├── types.ts                 # Game-specific types
+├── engine.ts                # Pure scoring/logic (no browser APIs)
+├── state.ts                 # Reducer / state machine
+├── components/              # UI components
+├── hooks/                   # React hooks (game state, tours, etc.)
+├── lib/                     # Utilities (storage, normalization, hints)
+├── data/                    # Data fetching (API calls, query options)
+├── server/                  # Server-side logic (R2 access, etc.)
+├── seo.ts                   # Structured data / SEO schema
+└── *.test.ts                # Unit tests for engine/state/lib
+```
+
+Rules:
+- Keep browser APIs out of `engine.ts` and `state.ts` so logic can run server-side
+- Game-specific storage, normalization, and hashing stay in the game folder
+- Only promote to `src/lib/` if truly game-agnostic
 
 ## Scripts
 
 ```bash
-bun run dev
-bun run build
-bun run lint
-bun run format
-bun run check
-bun run typecheck
-bun run preprocess:smoke
-bun run preprocess:puzzles
-bun run cf-typegen
-bun run r2:upload:local
-bun run r2:create-bucket
-bun run r2:upload
-bun run deploy
+# Development
+bun run dev              # Start dev server (Vite + Cloudflare local)
+bun run build            # Production build
+bun run typecheck        # TypeScript check
+
+# Quality
+bun run lint             # ESLint
+bun run format           # Prettier
+bun run check            # lint + format check
+
+# Testing
+bun run test             # Vitest unit tests
+bunx playwright test     # E2E tests (starts dev server automatically)
+
+# Puzzle Pipeline
+bun run preprocess:smoke    # Tiny fixture puzzles (no network)
+bun run preprocess:puzzles  # Full production puzzles (downloads GloVe)
+
+# R2 / Deployment
+bun run r2:upload:local  # Upload puzzles to local Miniflare R2
+bun run r2:create-bucket # Create remote R2 bucket (first time)
+bun run r2:upload        # Upload puzzles to production R2
+bun run deploy           # Deploy to Cloudflare Workers
 ```
 
-## Folder Conventions
+## Local Development
 
-- `src/routes/` - TanStack Router file-based routes.
-- `src/games/nearo/` - Nearo route entry, React UI, browser
-  hooks, pure engine, reducer, data access, and game-only utilities.
-- `src/features/home/` - platform landing page, game catalog, and the games
-  registry used by `/`.
-- `src/lib/` - shared utilities that are not tied to a single game.
-- `src/components/ui/` - generated shadcn/ui primitives. Treat these as vendor-style
-  generated code and keep app-specific composition outside this folder.
-- `scripts/preprocess/` - Python preprocessing pipeline for GloVe vocabulary and
-  puzzle JSON generation.
-- `data/` - local-only intermediate artifacts such as downloaded embeddings,
-  generated word lists, and scratch preprocessing outputs. This directory is
-  gitignored.
-- `dist/puzzles/` - generated puzzle artifacts before upload to R2. Build output
-  under `dist/` is gitignored.
+```bash
+# 1. Install dependencies
+bun install
+
+# 2. Generate puzzle fixtures for local play
+bun run preprocess:smoke
+
+# 3. Upload to local R2 (Miniflare)
+bun run r2:upload:local
+
+# 4. Start dev server
+bun run dev
+```
+
+The app runs at `http://localhost:3000`. Local R2 state lives in `.wrangler/state/` (gitignored).
+
+## Deployment
+
+The app deploys to Cloudflare Workers with R2 for puzzle storage.
+
+### First-time setup
+
+1. Create an R2 API token at **Cloudflare Dashboard > R2 > Manage R2 API Tokens** (S3 Auth, read/write on `portlly-puzzles`)
+
+2. Set environment variables (or `.env.local`):
+   ```bash
+   export CLOUDFLARE_ACCOUNT_ID=<account-id>
+   export R2_ACCESS_KEY_ID=<key>
+   export R2_SECRET_ACCESS_KEY=<secret>
+   ```
+
+3. Create bucket and upload puzzles:
+   ```bash
+   bun run r2:create-bucket
+   bun run preprocess:puzzles
+   bun run r2:upload
+   ```
+
+4. Deploy:
+   ```bash
+   bun run deploy
+   ```
+
+### Routine deploys
+
+```bash
+bun run build && bun run deploy
+```
+
+Puzzle uploads are idempotent — only files in `puzzle_index.json` get pushed.
+
+## SEO
+
+- Dynamic `sitemap.xml` generated at build time
+- Structured data (JSON-LD) per game: VideoGame, HowTo, FAQ, BreadcrumbList
+- Archive pages are `noindex` to avoid thin content duplication
+- Each game exports its own SEO schema from `seo.ts`
+
+## Adding a New Game — Checklist
+
+1. **Create game module** at `src/games/<game-id>/` following the convention above
+2. **Add route** at `src/routes/games/<game-id>.tsx`
+3. **Register in catalog** — add entry to `src/features/home/lib/games.ts`
+4. **Add config** with id, name, route, category, glyph, status, description, meta
+5. **Implement engine** — pure scoring/logic, no browser deps
+6. **Implement state** — reducer with hydrate/reset/submit actions
+7. **Implement persistence** — localStorage keyed by `portlly:<game-id>:<puzzle-id>`
+8. **Add SEO** — structured data schema in `seo.ts`
+9. **Add unit tests** — engine, state, and lib modules
+10. **Add E2E tests** — core flows in `tests/e2e/<game-id>.spec.ts`
+11. **Update sitemap** — include new route
+12. **Add game README** — at `src/games/<game-id>/README.md`
 
 ## Environment
 
-Copy `.env.example` to `.env.local` for local-only values. Do not commit real
-secrets, downloaded embeddings, or generated large data files.
+Copy `.env.example` to `.env.local` for local values. Never commit secrets, embeddings, or generated data.
 
-## Phase 0 Baseline
+## Preprocessing (Puzzle Generation)
 
-Tailwind is wired through `vite.config.ts` and `src/styles.css`. ESLint and
-Prettier are configured for project-owned source. Generated shadcn primitives,
-TanStack route output, local skill templates, build output, and local data are
-excluded from baseline formatting/linting so the commands stay stable.
-
-## Phase 1 Preprocessing
-
-The word game uses static puzzle JSON generated offline. Set up the isolated
-Python environment before running the full pipeline:
+Games that use offline-generated puzzles share a Python pipeline:
 
 ```bash
 python3 -m venv scripts/preprocess/.venv
-scripts/preprocess/.venv/bin/python -m pip install -r scripts/preprocess/requirements.txt
+source scripts/preprocess/.venv/bin/activate
+pip install -r scripts/preprocess/requirements.txt
 ```
 
-Use `bun run preprocess:smoke` for a tiny no-network fixture run. Use
-`bun run preprocess:puzzles` for production artifacts; it downloads and verifies
-GloVe 6B 300d, builds `guess_set.txt`, drafts `answer_candidates.txt` from a
-curated seed list plus frequency heuristics, drafts `answer_set.txt`, and writes
-hashed puzzle files plus local manifests to
-`dist/puzzles/`.
+- `bun run preprocess:smoke` — tiny fixture set, no network, for tests
+- `bun run preprocess:puzzles` — full pipeline (GloVe 6B 300d, ~50k vocab, ~200 puzzles)
 
-Review `data/preprocess/answer_set.txt` manually before production upload. That
-file is intentionally generated from heuristics first, then narrowed to roughly
-200 fair daily answers by a human pass. Puzzle JSON never includes the plaintext
-answer; the answer is omitted from score/rank maps and checked later by hash.
-
-## Phase 2 R2 Data Access
-
-Cloudflare is wired through the official Vite plugin in `vite.config.ts`.
-`wrangler.toml` binds the R2 bucket as `PUZZLE_BUCKET` and uses
-`@tanstack/react-start/server-entry` for the Worker entry.
-
-Puzzle artifacts are uploaded to R2 with:
-
-- `puzzles/<hashed-file>.json` - immutable puzzle files, served by
-  `GET /puzzles/$fileName` with one-year immutable cache headers.
-- `manifests/daily_manifest.json` and `manifests/puzzle_index.json` - private
-  lookup files used only server-side by `GET /api/puzzles/today`.
-
-The client should use `getTodaysPuzzle()` from
-`src/games/nearo/data/puzzle.ts`.
-That function fetches `/api/puzzles/today`; the Worker resolves the current UTC
-date to a single `puzzleId`, redirects to that hashed file, and never exposes the
-future date-to-file map to the browser.
-
-### Generating puzzles (first time only)
-
-Set up the Python environment and run the full preprocessing pipeline:
-
-```bash
-python3 -m venv scripts/preprocess/.venv
-scripts/preprocess/.venv/bin/python -m pip install -r scripts/preprocess/requirements.txt
-bun run preprocess:puzzles
-```
-
-This downloads GloVe 6B 300d (~860 MB, cached in `data/`), builds a ~50k-word
-guess vocabulary, generates ~200 puzzle JSON files, and writes everything to
-`dist/puzzles/`. Review `data/preprocess/answer_set.txt` before production
-upload — it is the one manual eyeball step.
-
-For a quick smoke test with a tiny vocabulary (no network required):
-
-```bash
-bun run preprocess:smoke
-```
-
-### Uploading to local R2
-
-```bash
-bun run r2:upload:local
-bun run dev
-curl -L http://127.0.0.1:3000/api/puzzles/today
-```
-
-If Vite selects another port, use the printed local URL. Local R2 data is stored
-under `.wrangler/state` and is gitignored. Local uploads use Miniflare to write
-directly to `.wrangler/state/v3`.
-
-### Uploading to remote R2 (production)
-
-1. Create an R2 API token at **Cloudflare Dashboard → R2 → Manage R2 API
-   Tokens**. Select S3 Auth and grant read/write on the `portlly-puzzles`
-   bucket.
-
-2. Set the required environment variables (or add them to `.env.local`):
-
-```bash
-export CLOUDFLARE_ACCOUNT_ID=<your account id>
-export R2_ACCESS_KEY_ID=<token access key>
-export R2_SECRET_ACCESS_KEY=<token secret key>
-```
-
-3. Create the bucket (first time only) and upload:
-
-```bash
-bun run r2:create-bucket
-bun run r2:upload
-```
-
-Remote uploads use `@aws-sdk/client-s3` with 10 parallel connections. Both local
-and remote uploads are idempotent: they overwrite the same keys and only upload
-files listed in `puzzle_index.json`, so stale local puzzle files are never pushed
-accidentally.
-
-## Phase 5 Persistence
-
-Nearo persists browser progress locally and never sends it to the
-server. On first visit the client mints a local `portlly:anon_id` so future
-account-linking or stats can attach to the same browser without changing the
-current gameplay flow. Guesses and solved state are stored per puzzle at
-`portlly:nearo:<puzzleId>`, so a new daily puzzle starts clean while
-refreshing the current puzzle restores progress.
-
-Nearo also exposes the last seven official daily puzzles as catch-up days. The
-server resolves each requested date through the same daily manifest and refuses
-future dates, while local progress still stays keyed by the resolved
-`puzzleId`.
-
-If `localStorage` is unavailable or blocked, the game falls back to in-memory
-state for the current tab session.
-
-## Phase 6 Platform Shell
-
-The platform front door lives at `/` and renders the catalog from
-`src/features/home/lib/games.ts`. Shared page chrome starts with
-`src/components/platform-header.tsx`, while each game keeps its gameplay UI,
-browser hooks, pure logic, and data access under `src/games/<game-id>/`.
-
-To add game #2:
-
-1. Create `src/games/<game-id>/` for the game entry component, React
-   components, hooks, pure engine, state, data access, and tests. Keep browser
-   APIs out of the pure engine/state modules so the logic can run server-side
-   later.
-2. Add `src/routes/games/<game-id>.tsx` and render the game entry component
-   from that route.
-3. Add one entry to the `games` registry in `src/features/home/lib/games.ts`
-   with `id`, `category`, `name`, `status`, `href`, `description`, and `meta`.
-4. Reuse shared utilities from `src/lib/` only when they are game-agnostic.
-   Game-specific normalization, scoring, persistence, or hashing belongs under
-   that game's folder.
-5. Add focused unit tests for the pure game logic and an e2e smoke path once the
-   route is playable.
+Puzzle JSON never contains plaintext answers. Win detection uses answer hash comparison client-side.
