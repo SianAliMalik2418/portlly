@@ -113,7 +113,7 @@ src/games/tickr/
 ### Phase 1 — Offline question harvest (Python pipeline)
 
 - New script under `scripts/preprocess/` (sibling to the Nearo pipeline), wired to a `bun run preprocess:tickr` command.
-- Harvest from **OpenTDB**: paginate respecting the **~5s rate limit**, use a **session token** to avoid duplicates, loop until exhausted.
+- Harvest from **OpenTDB General Knowledge only**: paginate respecting the **~5s rate limit**, use a **session token** to avoid duplicates, loop until exhausted.
 - Transform: **multiple-choice only** (drop true/false), **decode HTML entities**, **filter out over-long questions** (reading-time cap for the ticking clock), **dedupe**, keep `category` + `difficulty`.
 - Output **difficulty-bucketed files**: `tickr/easy.json`, `medium.json`, `hard.json`. Schema per item: `{ id, question, correct, options[4], category, difficulty }`. (Pre-shuffle options or shuffle client-side — pick one and be consistent.)
 - Provide a **smoke fixture** set (tiny, deterministic, no network) for tests, mirroring Nearo's `preprocess:smoke`.

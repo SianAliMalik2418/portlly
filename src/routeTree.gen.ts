@@ -14,6 +14,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as PuzzlesFileNameRouteImport } from './routes/puzzles/$fileName'
 import { Route as GamesTickrRouteImport } from './routes/games/tickr'
 import { Route as GamesNearoRouteImport } from './routes/games/nearo'
+import { Route as ApiTickrQuestionsRouteImport } from './routes/api/tickr/questions'
 import { Route as ApiPuzzlesTodayRouteImport } from './routes/api/puzzles/today'
 import { Route as ApiPuzzlesDayRouteImport } from './routes/api/puzzles/day'
 import { Route as ApiPuzzlesArchiveRouteImport } from './routes/api/puzzles/archive'
@@ -42,6 +43,11 @@ const GamesTickrRoute = GamesTickrRouteImport.update({
 const GamesNearoRoute = GamesNearoRouteImport.update({
   id: '/games/nearo',
   path: '/games/nearo',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTickrQuestionsRoute = ApiTickrQuestionsRouteImport.update({
+  id: '/api/tickr/questions',
+  path: '/api/tickr/questions',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiPuzzlesTodayRoute = ApiPuzzlesTodayRouteImport.update({
@@ -74,6 +80,7 @@ export interface FileRoutesByFullPath {
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/api/tickr/questions': typeof ApiTickrQuestionsRoute
   '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRoutesByTo {
@@ -85,6 +92,7 @@ export interface FileRoutesByTo {
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/api/tickr/questions': typeof ApiTickrQuestionsRoute
   '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRoutesById {
@@ -97,6 +105,7 @@ export interface FileRoutesById {
   '/api/puzzles/archive': typeof ApiPuzzlesArchiveRoute
   '/api/puzzles/day': typeof ApiPuzzlesDayRoute
   '/api/puzzles/today': typeof ApiPuzzlesTodayRoute
+  '/api/tickr/questions': typeof ApiTickrQuestionsRoute
   '/games/nearo/archive/$date': typeof GamesNearoArchiveDateRoute
 }
 export interface FileRouteTypes {
@@ -110,6 +119,7 @@ export interface FileRouteTypes {
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
     | '/api/puzzles/today'
+    | '/api/tickr/questions'
     | '/games/nearo/archive/$date'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -121,6 +131,7 @@ export interface FileRouteTypes {
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
     | '/api/puzzles/today'
+    | '/api/tickr/questions'
     | '/games/nearo/archive/$date'
   id:
     | '__root__'
@@ -132,6 +143,7 @@ export interface FileRouteTypes {
     | '/api/puzzles/archive'
     | '/api/puzzles/day'
     | '/api/puzzles/today'
+    | '/api/tickr/questions'
     | '/games/nearo/archive/$date'
   fileRoutesById: FileRoutesById
 }
@@ -144,6 +156,7 @@ export interface RootRouteChildren {
   ApiPuzzlesArchiveRoute: typeof ApiPuzzlesArchiveRoute
   ApiPuzzlesDayRoute: typeof ApiPuzzlesDayRoute
   ApiPuzzlesTodayRoute: typeof ApiPuzzlesTodayRoute
+  ApiTickrQuestionsRoute: typeof ApiTickrQuestionsRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -181,6 +194,13 @@ declare module '@tanstack/react-router' {
       path: '/games/nearo'
       fullPath: '/games/nearo'
       preLoaderRoute: typeof GamesNearoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/tickr/questions': {
+      id: '/api/tickr/questions'
+      path: '/api/tickr/questions'
+      fullPath: '/api/tickr/questions'
+      preLoaderRoute: typeof ApiTickrQuestionsRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/puzzles/today': {
@@ -235,6 +255,7 @@ const rootRouteChildren: RootRouteChildren = {
   ApiPuzzlesArchiveRoute: ApiPuzzlesArchiveRoute,
   ApiPuzzlesDayRoute: ApiPuzzlesDayRoute,
   ApiPuzzlesTodayRoute: ApiPuzzlesTodayRoute,
+  ApiTickrQuestionsRoute: ApiTickrQuestionsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

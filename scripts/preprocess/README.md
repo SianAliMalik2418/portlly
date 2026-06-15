@@ -87,6 +87,21 @@ Each question includes:
 - `category`
 - `difficulty`
 
-The Tickr harvester keeps only OpenTDB multiple-choice questions, decodes HTML
-entities, dedupes by question text, filters over-long questions/answers, and
-uses a session token to avoid duplicate API responses during a harvest.
+The Tickr harvester requests OpenTDB category `9` (General Knowledge), keeps
+only multiple-choice General Knowledge questions, decodes HTML entities, dedupes
+by question text, filters over-long questions/answers, and uses a session token
+to avoid duplicate API responses during a harvest.
+
+Upload generated Tickr buckets to R2 with:
+
+```bash
+bun run r2:upload:tickr:local
+bun run r2:upload:tickr
+```
+
+For smoke buckets, mirror the Nearo local fixture pattern:
+
+```bash
+bun run preprocess:tickr:smoke
+PORTLLY_TICKR_DIST=dist/tickr-smoke bun run r2:upload:tickr:local
+```

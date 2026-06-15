@@ -60,14 +60,22 @@ loop belongs in `hooks/use-run.ts`.
 
 ## Question Preprocessing
 
-Tickr uses static question buckets generated offline from OpenTDB. The runtime
-game must never call OpenTDB directly.
+Tickr uses static General Knowledge question buckets generated offline from
+OpenTDB category `9`. The runtime game must never call OpenTDB directly.
 
 Run:
 
 ```bash
 bun run preprocess:tickr:smoke
 bun run preprocess:tickr
+bun run r2:upload:tickr:local
+bun run r2:upload:tickr
+```
+
+For local smoke data, use the same env-driven pattern as Nearo:
+
+```bash
+PORTLLY_TICKR_DIST=dist/tickr-smoke bun run r2:upload:tickr:local
 ```
 
 Outputs:
@@ -93,8 +101,19 @@ Each question has:
 ```
 
 The preprocessor decodes HTML entities, keeps only multiple-choice questions,
-filters over-long questions/answers, dedupes by question text, and writes one
-bucket per difficulty.
+keeps only General Knowledge questions, filters over-long questions/answers,
+dedupes by question text, and writes one bucket per difficulty.
+
+## Data Access
+
+- R2 keys: `tickr/easy.json`, `tickr/medium.json`, `tickr/hard.json`,
+  `tickr/manifest.json`
+- API route: `GET /api/tickr/questions?difficulty=easy|medium|hard`
+- Client fetcher: `data/questions.ts`
+- In-memory runtime bank: `lib/bank.ts`
+
+The start screen preloads the easy bucket and prefetches medium/hard so gameplay
+can advance without waiting on network requests.
 
 ## Jumpscare Mode
 

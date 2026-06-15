@@ -1,8 +1,32 @@
+import { useEffect } from "react"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { tickrConfig } from "./config"
+import { tickrQuestionBucketQueryOptions } from "./data/questions"
+import { setLoadedBucket } from "./lib/bank"
 import { Clock3, ShieldAlert, Zap } from "lucide-react"
 
 export const Tickr = () => {
+  const queryClient = useQueryClient()
+  const easyQuestions = useQuery(tickrQuestionBucketQueryOptions("easy"))
+
+  useEffect(() => {
+    if (easyQuestions.data) {
+      setLoadedBucket("easy", easyQuestions.data)
+    }
+  }, [easyQuestions.data])
+
+  useEffect(() => {
+    void queryClient.prefetchQuery(tickrQuestionBucketQueryOptions("medium"))
+    void queryClient.prefetchQuery(tickrQuestionBucketQueryOptions("hard"))
+  }, [queryClient])
+
+  const questionBankStatus = easyQuestions.isPending
+    ? "Loading question bank"
+    : easyQuestions.isError
+      ? "Question bank unavailable"
+      : `${easyQuestions.data.length} easy questions ready`
+
   return (
     <main className="min-h-dvh bg-background text-foreground">
       <div className="mx-auto flex min-h-dvh w-full max-w-[52rem] flex-col px-5 py-5 sm:px-8">
@@ -67,6 +91,10 @@ export const Tickr = () => {
                 </p>
               </div>
             </div>
+
+            <p className="mt-4 text-center font-mono text-[0.6875rem] font-bold tracking-[0.08em] text-muted-foreground uppercase">
+              {questionBankStatus}
+            </p>
 
             <Button className="mt-5 w-full" size="lg" disabled>
               Start soon

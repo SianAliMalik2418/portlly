@@ -114,8 +114,10 @@ bun run preprocess:tickr       # Full Tickr OpenTDB trivia harvest
 
 # R2 / Deployment
 bun run r2:upload:local  # Upload puzzles to local Miniflare R2
+bun run r2:upload:tickr:local # Upload Tickr buckets to local Miniflare R2
 bun run r2:create-bucket # Create remote R2 bucket (first time)
 bun run r2:upload        # Upload puzzles to production R2
+bun run r2:upload:tickr  # Upload Tickr buckets to production R2
 bun run deploy           # Deploy to Cloudflare Workers
 ```
 
