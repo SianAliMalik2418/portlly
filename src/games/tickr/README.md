@@ -10,6 +10,10 @@ zero.
   placeholder start screen are in place.
 - **Phase 1:** offline Tickr question preprocessing is available through the
   OpenTDB harvester and deterministic smoke fixtures.
+- **Phase 2:** R2 upload, bucket serving, TanStack Query fetching, and in-memory
+  question bank utilities are in place.
+- **Phase 3:** pure scoring, timer math, difficulty mapping, and run reducer are
+  implemented with unit tests.
 
 ## Game Loop
 
@@ -114,6 +118,25 @@ dedupes by question text, and writes one bucket per difficulty.
 
 The start screen preloads the easy bucket and prefetches medium/hard so gameplay
 can advance without waiting on network requests.
+
+## Engine And State
+
+`engine.ts` exports pure helpers:
+
+- `scoreAnswer(question, choice)` — exact multiple-choice scoring.
+- `applyTimeDelta(clock, delta, ceiling)` — timer math clamped to `[0, preset]`.
+- `difficultyForIndex(questionNumber, thresholds)` — deterministic
+  easy/medium/hard thresholds.
+
+`state.ts` exports the pure run reducer:
+
+- `startRun` — initializes clock from the selected preset.
+- `answer` — scores the choice, applies time bonus/penalty, tracks seen IDs,
+  correct/wrong counts, question index, current streak, and best streak.
+- `tick` — subtracts elapsed seconds from the clock and ends the run at zero.
+- `endRun` / `reset` — explicit terminal and reset transitions.
+
+The reducer contains no timers, browser APIs, persistence, or DOM access.
 
 ## Jumpscare Mode
 

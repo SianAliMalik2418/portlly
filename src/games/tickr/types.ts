@@ -26,3 +26,39 @@ export type TickrQuestionManifest = {
     }
   >
 }
+
+export type TickrTimerPreset = number
+
+export type TickrDifficultyThresholds = {
+  medium: number
+  hard: number
+}
+
+export type TickrAnswerScore = {
+  correct: boolean
+  questionId: string
+  choice: string
+  correctAnswer: string
+}
+
+export type TickrLastAnswer = TickrAnswerScore & {
+  timeDelta: number
+  clockBefore: number
+  clockAfter: number
+}
+
+export type TickrRunStatus = "idle" | "running" | "ended"
+
+export type TickrRunState = {
+  status: TickrRunStatus
+  presetSeconds: TickrTimerPreset | null
+  clockSeconds: number
+  elapsedSeconds: number
+  questionIndex: number
+  correctCount: number
+  wrongCount: number
+  currentStreak: number
+  bestStreak: number
+  seenIds: string[]
+  lastAnswer: TickrLastAnswer | null
+}
