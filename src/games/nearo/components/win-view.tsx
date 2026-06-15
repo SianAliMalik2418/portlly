@@ -2,7 +2,13 @@ import { useEffect, useRef, useState } from "react"
 import { useQuery } from "@tanstack/react-query"
 import { format, isToday, isYesterday, parseISO } from "date-fns"
 import confetti from "canvas-confetti"
-import { CalendarDays, CheckCircle2, Circle, Clock3, Lightbulb } from "lucide-react"
+import {
+  CalendarDays,
+  CheckCircle2,
+  Circle,
+  Clock3,
+  Lightbulb,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { getScoreColor } from "@/lib/score-color"
 import { nearoConfig } from "../config"
@@ -64,7 +70,13 @@ const getStatus = (puzzleId: string): DayStatus => {
   return "new"
 }
 
-export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps) => {
+export const WinView = ({
+  guesses,
+  puzzleId,
+  mode,
+  date,
+  onReset,
+}: WinViewProps) => {
   const countdown = useCountdown()
   const [showArchive, setShowArchive] = useState(false)
   const { data: archiveDays = [] } = useQuery(archiveDaysQueryOptions())
@@ -116,7 +128,7 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
   const sorted = [...guesses].sort((a, b) => b.score - a.score)
 
   return (
-    <div className="flex min-h-0 flex-1 flex-col overflow-y-auto px-3 py-1 [scrollbar-width:none] sm:px-4">
+    <div className="flex min-h-0 flex-1 [scrollbar-width:none] flex-col overflow-y-auto px-3 py-1 sm:px-4">
       <div className="px-3 pt-6 pb-4 text-center sm:px-4">
         <span className="text-[3.25rem]">🏆</span>
         <h2 className="mt-1.5 font-display text-[1.875rem] font-bold tracking-[-0.02em]">
@@ -229,11 +241,7 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
             </div>
           )}
 
-          <Button
-            variant="outline"
-            className="rounded-full"
-            onClick={onReset}
-          >
+          <Button variant="outline" className="rounded-full" onClick={onReset}>
             Play again
           </Button>
         </div>
@@ -269,9 +277,7 @@ export const WinView = ({ guesses, puzzleId, mode, date, onReset }: WinViewProps
                   color,
                 }}
               >
-                {guess.rank === 1
-                  ? 100
-                  : Math.min(99, Math.round(guess.score))}
+                {guess.rank === 1 ? 100 : Math.min(99, Math.round(guess.score))}
                 %
               </span>
             </div>

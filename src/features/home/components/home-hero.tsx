@@ -24,8 +24,8 @@ export const HomeHero = () => (
       </h1>
 
       <p className="mt-6 max-w-[44ch] text-[1.0625rem] leading-8 text-muted-foreground">
-        Word games, trivia, party rounds — all in your browser. New games
-        join the lineup regularly. Jump in, no account needed.
+        Word games, trivia, party rounds — all in your browser. New games join
+        the lineup regularly. Jump in, no account needed.
       </p>
 
       <div className="mt-8 flex flex-wrap justify-center gap-3">

@@ -8,10 +8,7 @@ type BrandLinkProps = {
 
 export const BrandLink = ({ animated = false }: BrandLinkProps) => {
   return (
-    <Link
-      to="/"
-      className="flex items-center text-inherit no-underline"
-    >
+    <Link to="/" className="flex items-center text-inherit no-underline">
       {animated ? (
         <motion.span
           whileTap={{ y: 1, rotate: -2, scale: 0.97 }}

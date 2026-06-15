@@ -79,18 +79,14 @@ test("answer guess opens solved state and persists it", async ({ page }) => {
 
   await submitGuess(page, "water")
 
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Play previous words" })
   ).toBeVisible()
 
   await page.reload()
 
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
   await expect(
     page.getByRole("button", { name: "Play previous words" })
   ).toBeVisible()
@@ -152,9 +148,7 @@ test("input is disabled after solving", async ({ page }) => {
 
   await submitGuess(page, "water")
 
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
 
   const input = page.getByRole("textbox", { name: "Guess word" })
   await expect(input).toBeDisabled()
@@ -165,9 +159,7 @@ test("play again resets all game state", async ({ page }) => {
   await goToGame(page)
 
   await submitGuess(page, "water")
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
 
   await page.getByRole("button", { name: "Play again" }).click()
 
@@ -184,9 +176,7 @@ test("win view shows guess count and secret word", async ({ page }) => {
   await submitGuess(page, "boat")
   await submitGuess(page, "water")
 
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
   await expect(page.getByText("2")).toBeVisible()
   await expect(page.getByText("water")).toBeVisible()
   await expect(page.getByText("GUESSES")).toBeVisible()
@@ -197,9 +187,7 @@ test("win view countdown timer is displayed", async ({ page }) => {
   await goToGame(page)
 
   await submitGuess(page, "water")
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
 
   await expect(page.getByText("Next puzzle")).toBeVisible()
   await expect(page.getByText(/\d{2}:\d{2}:\d{2}/)).toBeVisible()
@@ -209,9 +197,7 @@ test("win view archive list toggles", async ({ page }) => {
   await goToGame(page)
 
   await submitGuess(page, "water")
-  await expect(
-    page.getByRole("heading", { name: /You found/i })
-  ).toBeVisible()
+  await expect(page.getByRole("heading", { name: /You found/i })).toBeVisible()
 
   await page.getByRole("button", { name: "Play previous words" }).click()
   await expect(
@@ -293,9 +279,9 @@ test("hint count persists after refresh", async ({ page }) => {
   await page.reload()
   await expect(page.getByRole("textbox", { name: "Guess word" })).toBeVisible()
 
-  await expect(
-    page.getByRole("button", { name: /Get a hint/ })
-  ).toHaveText(/4 left/)
+  await expect(page.getByRole("button", { name: /Get a hint/ })).toHaveText(
+    /4 left/
+  )
 })
 
 test("status message updates as score improves", async ({ page }) => {

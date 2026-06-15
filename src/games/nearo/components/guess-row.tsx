@@ -39,9 +39,7 @@ export const GuessRow = ({
         transition: "box-shadow 0.24s ease",
       }}
     >
-      <span
-        className="grid h-8 w-16 shrink-0 place-items-center rounded-full bg-muted/50 font-mono text-xs font-bold text-muted-foreground"
-      >
+      <span className="grid h-8 w-16 shrink-0 place-items-center rounded-full bg-muted/50 font-mono text-xs font-bold text-muted-foreground">
         {guess.rank
           ? guess.rank === 1
             ? "★"

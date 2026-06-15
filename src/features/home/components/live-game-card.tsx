@@ -76,7 +76,10 @@ export const LiveGameCard = ({ game }: LiveGameCardProps) => (
             size="lg"
             className="rounded-full bg-[#3d9a54] px-5 text-white shadow-[0_0.1875rem_0_#1e6531] hover:bg-[#49aa61]"
           >
-            <a href={game.href ?? "/"} className="inline-flex items-center gap-2">
+            <a
+              href={game.href ?? "/"}
+              className="inline-flex items-center gap-2"
+            >
               Play now
               <ArrowRight className="size-4" />
             </a>

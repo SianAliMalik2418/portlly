@@ -18,7 +18,12 @@ export const StatusCard = ({
   status,
 }: StatusCardProps) => {
   const isAnswer = bestGuess?.rank === 1
-  const score = bestScore === null ? null : isAnswer ? 100 : Math.min(99, Math.round(bestScore))
+  const score =
+    bestScore === null
+      ? null
+      : isAnswer
+        ? 100
+        : Math.min(99, Math.round(bestScore))
   const progress = bestScore === null ? 0 : bestScore / 100
   const scoreColor =
     bestScore === null ? "var(--muted-foreground)" : getScoreColor(progress)
