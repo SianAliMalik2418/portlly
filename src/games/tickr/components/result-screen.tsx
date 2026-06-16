@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button"
 import type { TickrRunResult } from "../types"
+import { GameNav } from "./game-nav"
 
 type ResultScreenProps = {
   result: TickrRunResult
@@ -13,8 +14,9 @@ export const ResultScreen = ({
   onChangePreset,
 }: ResultScreenProps) => (
   <main className="min-h-dvh bg-background text-foreground">
-    <div className="mx-auto flex min-h-dvh w-full max-w-[34rem] items-center px-5 py-8">
-      <section className="w-full rounded-lg border border-border bg-card p-5 text-center shadow-[0_1rem_2rem_color-mix(in_srgb,var(--foreground)_8%,transparent)]">
+    <GameNav />
+    <div className="mx-auto flex w-full max-w-[52rem] items-center px-5 py-8 sm:px-8">
+      <section className="mx-auto w-full max-w-[34rem] rounded-lg border border-border bg-card p-5 text-center shadow-[0_1rem_2rem_color-mix(in_srgb,var(--foreground)_8%,transparent)]">
         <p className="font-mono text-xs font-bold tracking-[0.08em] text-muted-foreground uppercase">
           {result.newBest ? "New best" : "Run ended"}
         </p>

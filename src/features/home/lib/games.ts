@@ -88,12 +88,6 @@ export const gameFilters = ["all", "word", "trivia", "draw", "party"] as const
 
 export type GameFilter = (typeof gameFilters)[number]
 
-export const demoGuesses = [
-  { word: "planet", score: 94 },
-  { word: "orbit", score: 68 },
-  { word: "cloud", score: 41 },
-] as const
-
 export const floatingWords = [
   { word: "river", x: 15, y: 25, rotation: -7, delay: 0 },
   { word: "galaxy", x: 72, y: 22, rotation: 5, delay: 0.5 },

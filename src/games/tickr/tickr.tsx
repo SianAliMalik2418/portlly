@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { Button } from "@/components/ui/button"
 import { tickrConfig } from "./config"
+import { GameNav } from "./components/game-nav"
 import { QuestionCard } from "./components/question-card"
 import { ResultScreen } from "./components/result-screen"
 import { RunHud } from "./components/run-hud"
@@ -41,14 +42,9 @@ export const Tickr = () => {
   if (run.phase === "running" || run.phase === "loading") {
     return (
       <main className="min-h-dvh bg-background text-foreground">
-        <div className="mx-auto flex min-h-dvh w-full max-w-[44rem] flex-col gap-4 px-5 py-5 sm:px-8">
-          <nav className="flex items-center justify-between gap-4 py-2">
-            <a
-              href="/"
-              className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
-            >
-              Portlyy
-            </a>
+        <GameNav />
+        <div className="mx-auto flex w-full max-w-[52rem] flex-col gap-4 px-5 py-5 sm:px-8">
+          <nav className="flex items-center justify-end gap-4 py-2">
             <Button variant="ghost" size="sm" onClick={run.reset}>
               <RotateCcw className="size-4" />
               Reset
@@ -67,7 +63,7 @@ export const Tickr = () => {
             questionIndex={run.state.questionIndex}
           />
 
-          <div className="flex flex-1 items-center">
+          <div className="flex w-full flex-1 items-center">
             {run.currentQuestion ? (
               <QuestionCard
                 question={run.currentQuestion}

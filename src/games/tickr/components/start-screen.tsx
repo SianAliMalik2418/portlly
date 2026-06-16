@@ -2,6 +2,7 @@ import { useMemo, useState } from "react"
 import { Button } from "@/components/ui/button"
 import { tickrConfig } from "../config"
 import type { TickrTimerPreset } from "../types"
+import { GameNav } from "./game-nav"
 import { Clock3, ShieldAlert, Zap } from "lucide-react"
 
 type StartScreenProps = {
@@ -27,18 +28,8 @@ export const StartScreen = ({
 
   return (
     <main className="min-h-dvh bg-background text-foreground">
+      <GameNav />
       <div className="mx-auto flex min-h-dvh w-full max-w-[52rem] flex-col px-5 py-5 sm:px-8">
-        <nav className="flex items-center justify-between gap-4 py-2">
-          <a
-            href="/"
-            className="text-sm font-semibold text-muted-foreground transition-colors hover:text-foreground"
-          >
-            Portlyy
-          </a>
-          <span className="rounded-full border border-border bg-card px-3 py-1 font-mono text-[0.6875rem] font-bold tracking-[0.08em] text-muted-foreground uppercase">
-            Phase 5
-          </span>
-        </nav>
 
         <section className="grid flex-1 items-center gap-8 py-8 md:grid-cols-[1fr_22rem]">
           <div className="min-w-0">

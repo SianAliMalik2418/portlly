@@ -12,7 +12,7 @@ export const QuestionCard = ({
   disabled = false,
   onAnswer,
 }: QuestionCardProps) => (
-  <section className="rounded-lg border border-border bg-card p-4 shadow-[0_1rem_2rem_color-mix(in_srgb,var(--foreground)_8%,transparent)]">
+  <section className="w-full rounded-lg border border-border bg-card p-4 shadow-[0_1rem_2rem_color-mix(in_srgb,var(--foreground)_8%,transparent)]">
     <div className="mb-3 flex flex-wrap items-center gap-2">
       <span className="rounded-full bg-muted px-2.5 py-1 font-mono text-[0.625rem] font-bold tracking-[0.08em] text-muted-foreground uppercase">
         {question.difficulty}
